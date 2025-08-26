@@ -1,12 +1,35 @@
-.theme-colorful {
-  --primary: #1f84ec;
-  --accent-1: #ff3c4c; /* CTA red */
+:root {
+  --accent-primary: #1f84ec;
+  --accent-1: #f0757f;
   --accent-2: #f8d63c;
   --accent-3: #90d039;
   --accent-4: #3abff0;
+  --accent-5: #ff3c4c; /* CTA red */
   --muted: #475569;
-  --bg-section: rgba(31, 132, 236, 0.04);
-  --card-bg: #ffffff;
-  --faq-bg: #ffffff;
+  --accent-bg-section: rgba(31, 132, 236, 0.04);
   --footer-bg: #123456;
+}
+
+.bg-accent-primary {
+  background-color: var(--accent-primary);
+}
+
+.bg-accent-1 {
+  background-color: var(--accent-1);
+}
+
+.bg-accent-2 {
+  background-color: var(--accent-2);
+}
+
+.bg-accent-3 {
+  background-color: var(--accent-3);
+}
+
+.bg-accent-4 {
+  background-color: var(--accent-4);
+}
+
+.bg-accent-5 {
+  background-color: var(--accent-5);
 }
