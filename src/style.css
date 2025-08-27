@@ -33,3 +33,20 @@
 .bg-accent-5 {
   background-color: var(--accent-5);
 }
+
+.navbar-brand img {
+  margin-top: 13%;
+  margin-bottom: auto;
+}
+
+nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
+  color: #fe6565;
+}
+
+.card-data-list .card-data:hover {
+  background-color: #fe6565 !important;
+}
+
+.btn-pill-light:hover {
+  background-color: #fe6565;
+}

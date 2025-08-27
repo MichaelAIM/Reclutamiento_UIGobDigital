@@ -1,5 +1,6 @@
 <template>
   <header>
+    <!-- Menu Principal -->
     <nav
       class="navbar navbar-lg navbar-expand-lg navbar-light bg-light with-fixed-navbar-lg fixed-top"
     >
@@ -26,7 +27,12 @@
           <ul class="navbar-nav me-auto">
             <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Como Postular</a>
+              <a class="nav-link" href="#procesos-vigentes"
+                >Procesos Vigentes</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#como-postular">Como Postular</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Centro de Ayuda</a>
@@ -77,54 +83,99 @@
         </div>
       </div>
     </nav>
-  </header>
 
-  <main class="container-fluid px-0">
     <!-- Banner Principal -->
-    <section class="banner-custom">
+    <section class="banner-custom mt-5">
       <div class="w-75 mx-auto px-0 py-5 my-5">
         <div class="row align-items-center">
-          <div class="col-12 col-md-6 col-lg-5 bg-wts borde-difuminado">
-            <h1 class="display-4 fw-bold mb-5">¡Buscamos tu talento!</h1>
-            <p class="lead mb-4 text-white">
-              Únete al equipo del SLEP Chinchorro y forma parte del desarrollo y
-              la transformación educativa en las comunas de:
+          <div class="col-12 col-md-6 col-lg-5">
+            <h1 class="mb-5 display-4 ltr-1">¡Buscamos tu talento!</h1>
+            <p
+              class="mb-4 text-white font-level-3 ltr-1"
+              style="line-height: 2rem"
+            >
+              Únete al equipo SLEP Chinchorro y forma parte del desarrollo y la
+              transformación educativa en las comunas de:
             </p>
             <div class="mb-5">
               <span class="comunas-badge bg-accent-5 text-white">Arica</span>
               <span class="comunas-badge bg-accent-2">Camarones</span>
               <span class="comunas-badge bg-accent-3">General Lagos</span>
-              <span class="comunas-badge bg-accent-4">Putre</span>
+              <span class="comunas-badge bg-accent-4 text-white">Putre</span>
             </div>
-            <div class="row">
-              <div class="col-6 col-md-4">
-                <a href="#" class="btn btn-outline-light btn-lg px-4"
-                  >Postular ahora</a
-                >
+            <div class="mt-5"></div>
+          </div>
+          <div class="col-lg-6 offset-lg-1">
+            <div class="card-data-list">
+              <div class="card-data h-100 bg-transparent text-normal">
+                <div class="card-data-title">
+                  <div class="card-data-quantity">3</div>
+                  <h5>Convocatorias Abiertas</h5>
+                </div>
               </div>
-              <div class="col-6 col-md-4">
-                <a href="#como-postular" class="btn btn-secondary btn-lg px-4"
-                  >Iniciar Sesión</a
-                >
+              <div class="card-data h-100 bg-transparent text-normal">
+                <div class="card-data-title">
+                  <div class="card-data-quantity">23</div>
+                  <h5>Convocatorias Realizadas 2025</h5>
+                </div>
+              </div>
+              <div class="card-data h-100 bg-transparent text-normal">
+                <div class="card-data-title">
+                  <div class="card-data-quantity">100</div>
+                  <h5>Vacantes históricas ofrecidas</h5>
+                </div>
               </div>
             </div>
+          </div>
+          <div class="col-12">
+            <button
+              class="btn btn-pill-light text-decoration-none"
+              type="button"
+            >
+              Revisar Convocatorias Disponibles
+            </button>
           </div>
         </div>
       </div>
     </section>
+  </header>
+
+  <main class="container-fluid px-0">
+    <!-- Cómo Postular Section -->
+    <section id="como-postular" class="section py-5">
+      <div class="w-75 mx-auto">
+        <div class="section-header mt-3">
+          <h2 class="pb-2 border-bottom border-accent" id="secciones">
+            ¿Cómo Postular?
+          </h2>
+        </div>
+        <div class="section-body">
+          <p>Sigue estos sencillos pasos para completar tu postulación</p>
+        </div>
+
+        <div class="row g-4 mt-5">
+          <div class="col-md-4 mt-4" v-for="step in steps" :key="step.number">
+            <div class="text-center">
+              <div
+                class="step-number mx-auto text-white"
+                :class="step.colorClass"
+              >
+                {{ step.number }}
+              </div>
+              <h4 class="my-3">{{ step.title }}</h4>
+              <p>{{ step.description }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-5">
+          <a href="#" class="btn btn-primary-accent btn-lg">Comenzar ahora</a>
+        </div>
+      </div>
+    </section>
+
     <!-- Funcionalidades Section -->
     <section id="funcionalidades" class="section-padding bg-light">
       <div class="w-75 mx-auto">
-        <section class="section mb-5">
-          <div class="section-header mt-3">
-            <h2 class="pb-2 border-bottom border-accent" id="secciones">
-              Funcionalidades del Sistema
-            </h2>
-          </div>
-          <div class="section-body">
-            <p>Descubre todas las herramientas que ponemos a tu disposición</p>
-          </div>
-        </section>
         <div class="row g-4 mb-5">
           <div
             class="col-md-6 col-lg-3"
@@ -149,48 +200,19 @@
       </div>
     </section>
 
-    <!-- Cómo Postular Section -->
-    <section id="como-postular" class="section-padding">
+    <!-- Procesos Vigentes -->
+    <section id="procesos-vigentes" class="section py-5">
       <div class="w-75 mx-auto">
-        <div class="row mb-5">
-          <div class="col-12 text-center">
-            <h2 class="fw-bold">¿Cómo Postular?</h2>
-            <p class="lead text-muted">
-              Sigue estos sencillos pasos para completar tu postulación
-            </p>
-          </div>
-        </div>
-        <div class="row g-4">
-          <div class="col-md-4" v-for="step in steps" :key="step.number">
-            <div class="text-center">
-              <div
-                class="step-number mx-auto text-white"
-                :class="step.colorClass"
-              >
-                {{ step.number }}
-              </div>
-              <h4 class="my-3">{{ step.title }}</h4>
-              <p>{{ step.description }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="text-center mt-5">
-          <a href="#" class="btn btn-primary-accent btn-lg">Comenzar ahora</a>
-        </div>
-      </div>
-    </section>
-    <div class="container">
-      <section class="section">
         <div class="section-header mt-3">
           <h2 class="pb-2 border-bottom border-accent" id="secciones">
-            Funcionalidades del Sistema
+            Procesos Vigentes
           </h2>
         </div>
         <div class="section-body">
-          <p>Descubre todas las herramientas que ponemos a tu disposición</p>
+          <p>Encuentra una oportunidad de empleo en el Slep Chinchorro</p>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </main>
 </template>
 
@@ -314,6 +336,12 @@ const steps = ref<Step[]>([
   box-shadow: 0 0 0 5px rgba(53, 76, 115, 0.2); /* color institucional con transparencia */
 }
 
+.ltr-1 {
+  color: white;
+  -webkit-text-stroke: 0.2px #3a9cf8;
+  text-shadow: 0px 1px 4px #23430c;
+}
+
 .step-number {
   width: 50px;
   height: 50px;
@@ -329,10 +357,5 @@ const steps = ref<Step[]>([
 .card-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-}
-
-.navbar-brand img {
-  margin-top: 13%;
-  margin-bottom: auto;
 }
 </style>
