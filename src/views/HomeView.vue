@@ -69,17 +69,26 @@
                 >Registrar</a
               >
             </li>
-            <li class="nav-item">
+            <li class="nav-item mr-md-5">
               <a class="btn btn-block btn-secondary" href="#">Iniciar sesión</a>
             </li>
-            <li class="nav-behavior">
-              <a class="nav-link text-uppercase text-underline" href="#">en</a>
-            </li>
-            <li class="nav-separator"></li>
-            <li class="nav-behavior">
-              <a class="nav-link" href="#"><i class="cl cl-login"></i></a>
-            </li>
           </ul>
+        </div>
+        <div class="row bg-accent-1">
+          <div class="doc-icons">
+            <div class="doc-icon m-1">
+              <span class="cl cl-social text-white cl-facebook mb-2"></span>
+            </div>
+            <div class="doc-icon m-1">
+              <span class="cl cl-social text-white cl-instagram mb-2"></span>
+            </div>
+            <div class="doc-icon m-1">
+              <span class="cl cl-social text-white cl-twitter mb-2"></span>
+            </div>
+            <div class="doc-icon m-1">
+              <span class="cl cl-social text-white cl-youtube mb-2"></span>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
@@ -153,7 +162,7 @@
           <p>Sigue estos sencillos pasos para completar tu postulación</p>
         </div>
 
-        <div class="row g-4 mt-5">
+        <div class="row g-4 mt-5 pt-5">
           <div class="col-md-4 mt-4" v-for="step in steps" :key="step.number">
             <div class="text-center">
               <div
@@ -173,8 +182,89 @@
       </div>
     </section>
 
+    <!-- Procesos Vigentes -->
+    <section id="procesos-vigentes" class="section py-5 bg-light">
+      <div class="w-75 mx-auto">
+        <div class="section-header mt-3">
+          <h2 class="pb-2 border-bottom border-accent" id="secciones">
+            Procesos Vigentes
+          </h2>
+        </div>
+        <div class="section-body">
+          <p>Encuentra una oportunidad de empleo en el Slep Chinchorro</p>
+        </div>
+        <div class="row my-5 py-5">
+          <div class="col-md-4">
+            <a class="banner border mb-3 flex-wrap bg-white" href="#banners">
+              <div class="line"></div>
+              <div class="pb-2 border-bottom border-accent banner-header w-100">
+                <h4 class="banner-text flex-column">
+                  <span class="font-weight-bold font-level-7"
+                    >Profesor de Matemáticas</span
+                  ><span class="font-level-8">SLEP-EDU-001-2025</span>
+                </h4>
+                <span class="banner-icon ml-auto" aria-hidden="true">
+                  <div class="badge badge-danger font-level-7">Abierta</div>
+                </span>
+              </div>
+              <!--               <div class="d-flex w-100 my-2">
+                <p class="banner-text flex-column"></p>
+                <span class="banner-icon ml-auto" aria-hidden="true">
+                  <div class="badge badge-info font-level-7">$ 1.200.000</div>
+                </span>
+              </div> -->
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">
+                  Tipo de vacante:
+                </p>
+                <p class="banner-icon ml-auto mb-0">Contrata</p>
+              </div>
+              <div class="d-flex w-100">
+                <p class="banner-text flex-column font-level-9">Ciudad:</p>
+                <p class="banner-icon ml-auto mb-0">Arica</p>
+              </div>
+              <div class="d-flex w-100">
+                <p class="banner-text flex-column font-level-9">Institución:</p>
+                <p class="banner-icon ml-auto mb-0">
+                  Liceo B-4 Antonio Varas de la Barra.
+                </p>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <h4
+                  class="banner-text flex-column font-level-7 font-weight-bold"
+                >
+                  Descripción:
+                </h4>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">
+                  Buscamos un profesional titulado para la enseñanza en
+                  matemáticas en educación básica, con experiencia en
+                  metodologías innovadoras.
+                </p>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <h4
+                  class="banner-text flex-column font-level-7 font-weight-bold"
+                >
+                  Descripción:
+                </h4>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">
+                  Buscamos un profesional titulado para la enseñanza en
+                  matemáticas en educación básica, con experiencia en
+                  metodologías innovadoras.
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Funcionalidades Section -->
-    <section id="funcionalidades" class="section-padding bg-light">
+    <section id="funcionalidades" class="section-padding">
       <div class="w-75 mx-auto">
         <div class="row g-4 mb-5">
           <div
@@ -196,20 +286,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Procesos Vigentes -->
-    <section id="procesos-vigentes" class="section py-5">
-      <div class="w-75 mx-auto">
-        <div class="section-header mt-3">
-          <h2 class="pb-2 border-bottom border-accent" id="secciones">
-            Procesos Vigentes
-          </h2>
-        </div>
-        <div class="section-body">
-          <p>Encuentra una oportunidad de empleo en el Slep Chinchorro</p>
         </div>
       </div>
     </section>
@@ -291,6 +367,40 @@ const steps = ref<Step[]>([
 </script>
 
 <style scoped>
+.line::after {
+  position: absolute;
+  right: 0;
+  bottom: -10px;
+  left: 0;
+  height: 5px;
+  content: "";
+  background: linear-gradient(
+    to right,
+    #3abff0 0,
+    #90d039 50%,
+    #f8d63c 50%,
+    #f0757f 100%
+  );
+}
+
+nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
+  color: #fe6565 !important;
+}
+
+.card-data-list .card-data:hover {
+  background-color: #fe6565 !important;
+}
+
+.btn-pill-light:hover {
+  background-color: #fe6565 !important;
+}
+
+.banner-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .banner-custom {
   background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
   color: white;

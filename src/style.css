@@ -39,14 +39,14 @@
   margin-bottom: auto;
 }
 
-nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
-  color: #fe6565;
+@media (min-width: 768px) {
+  .font-level-9 {
+    font-size: 0.7685rem !important;
+    line-height: 1.5rem !important;
+  }
 }
 
-.card-data-list .card-data:hover {
-  background-color: #fe6565 !important;
-}
-
-.btn-pill-light:hover {
-  background-color: #fe6565;
+.font-level-9 {
+  font-size: 0.7685rem !important;
+  line-height: 1.5rem !important;
 }
