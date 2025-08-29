@@ -197,7 +197,7 @@
           <div class="col-md-4">
             <a class="banner border mb-3 flex-wrap bg-white" href="#banners">
               <div class="line"></div>
-              <div class="pb-2 border-bottom border-accent banner-header w-100">
+              <div class="py-4 border-bottom border-accent banner-header w-100">
                 <h4 class="banner-text flex-column">
                   <span class="font-weight-bold font-level-7"
                     >Profesor de Matemáticas</span
@@ -207,34 +207,38 @@
                   <div class="badge badge-danger font-level-7">Abierta</div>
                 </span>
               </div>
-              <!--               <div class="d-flex w-100 my-2">
-                <p class="banner-text flex-column"></p>
-                <span class="banner-icon ml-auto" aria-hidden="true">
-                  <div class="badge badge-info font-level-7">$ 1.200.000</div>
-                </span>
-              </div> -->
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
                   Tipo de vacante:
                 </p>
-                <p class="banner-icon ml-auto mb-0">Contrata</p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  Contrata
+                </p>
               </div>
               <div class="d-flex w-100">
                 <p class="banner-text flex-column font-level-9">Ciudad:</p>
-                <p class="banner-icon ml-auto mb-0">Arica</p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  Arica
+                </p>
               </div>
               <div class="d-flex w-100">
                 <p class="banner-text flex-column font-level-9">Institución:</p>
-                <p class="banner-icon ml-auto mb-0">
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
                   Liceo B-4 Antonio Varas de la Barra.
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
-                <h4
-                  class="banner-text flex-column font-level-7 font-weight-bold"
+                <h5
+                  class="banner-text flex-column font-level-9 font-weight-bolder"
                 >
                   Descripción:
-                </h4>
+                </h5>
               </div>
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
@@ -244,11 +248,11 @@
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
-                <h4
-                  class="banner-text flex-column font-level-7 font-weight-bold"
+                <h5
+                  class="banner-text flex-column font-level-9 font-weight-bolder"
                 >
-                  Descripción:
-                </h4>
+                  Requisitos:
+                </h5>
               </div>
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
@@ -256,6 +260,121 @@
                   matemáticas en educación básica, con experiencia en
                   metodologías innovadoras.
                 </p>
+              </div>
+
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">Adjuntos:</p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  <span
+                    class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
+                  ></span>
+                  <span
+                    class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
+                  ></span>
+                </p>
+              </div>
+
+              <div class="py-1 border-bottom d-flex w-100 border-accent"></div>
+              <div class="d-flex w-100 my-3">
+                <div class="banner-text flex-column">
+                  <div class="badge badge-info font-level-8">
+                    Postulación hasta 05/09/2025 8:00:00
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-4">
+            <a class="banner border mb-3 flex-wrap bg-white" href="#banners">
+              <div class="line"></div>
+              <div class="py-4 border-bottom border-accent banner-header w-100">
+                <h4 class="banner-text flex-column">
+                  <span class="font-weight-bold font-level-7"
+                    >Psicólogo/a Educacional</span
+                  ><span class="font-level-8">SLEP-EDU-001-2025</span>
+                </h4>
+                <span class="banner-icon ml-auto" aria-hidden="true">
+                  <div class="badge badge-danger font-level-7">Abierta</div>
+                </span>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">
+                  Tipo de vacante:
+                </p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  Contrata
+                </p>
+              </div>
+              <div class="d-flex w-100">
+                <p class="banner-text flex-column font-level-9">Ciudad:</p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  Putre
+                </p>
+              </div>
+              <div class="d-flex w-100">
+                <p class="banner-text flex-column font-level-9">Institución:</p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  Liceo Técnico Profesional Granaderos de Putre.
+                </p>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <h5
+                  class="banner-text flex-column font-level-9 font-weight-bolder"
+                >
+                  Descripción:
+                </h5>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">
+                  Únete a nuestro equipo de bienestar para apoyar el desarrollo
+                  integral de los estudiantes.
+                </p>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <h5
+                  class="banner-text flex-column font-level-9 font-weight-bolder"
+                >
+                  Requisitos:
+                </h5>
+              </div>
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">
+                  Buscamos un profesional titulado para la enseñanza en
+                  matemáticas en educación básica, con experiencia en
+                  metodologías innovadoras.
+                </p>
+              </div>
+
+              <div class="d-flex w-100 mt-2">
+                <p class="banner-text flex-column font-level-9">Adjuntos:</p>
+                <p
+                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                >
+                  <span
+                    class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
+                  ></span>
+                  <span
+                    class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
+                  ></span>
+                </p>
+              </div>
+
+              <div class="py-1 border-bottom d-flex w-100 border-accent"></div>
+              <div class="d-flex w-100 my-3">
+                <div class="banner-text flex-column">
+                  <div class="badge badge-info font-level-8">
+                    Postulación hasta 05/09/2025 8:00:00
+                  </div>
+                </div>
               </div>
             </a>
           </div>
@@ -467,5 +586,9 @@ nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
 .card-icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+}
+
+.fw-900 {
+  font-weight: 900;
 }
 </style>

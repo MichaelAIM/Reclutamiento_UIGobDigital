@@ -34,6 +34,10 @@
   background-color: var(--accent-5);
 }
 
+.color-accent-3 {
+  color: var(--accent-3);
+}
+
 .navbar-brand img {
   margin-top: 13%;
   margin-bottom: auto;
