@@ -41,10 +41,11 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { onMounted, ref } from "vue";
 import DataTable from "datatables.net-bs5";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 const tabla = ref(null);
 
@@ -171,20 +172,58 @@ const candidatos = ref([
   },
 ]);
 
-function exportarExcel() {
-  const datos = candidatos.value.map((c) => ({
-    Nombre: c.nombre,
-    Cargo: c.cargo,
-    Especialidad: c.especialidad,
-    Ubicación: c.ubicacion,
-    Disponibilidad: c.disponibilidad,
-  }));
+async function exportarExcel() {
+  try {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Candidatos");
 
-  const hoja = XLSX.utils.json_to_sheet(datos);
-  const libro = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(libro, hoja, "Candidatos");
+    // Definir columnas
+    worksheet.columns = [
+      { header: "Nombre", key: "Nombre", width: 20 },
+      { header: "Cargo", key: "Cargo", width: 20 },
+      { header: "Especialidad", key: "Especialidad", width: 20 },
+      { header: "Ubicación", key: "Ubicación", width: 20 },
+      { header: "Disponibilidad", key: "Disponibilidad", width: 20 },
+    ];
 
-  XLSX.writeFile(libro, "BancoCandidatos.xlsx");
+    // Añadir datos
+    const datos = candidatos.value.map((c) => ({
+      Nombre: c.nombre,
+      Cargo: c.cargo,
+      Especialidad: c.especialidad,
+      Ubicación: c.ubicacion,
+      Disponibilidad: c.disponibilidad,
+    }));
+
+    worksheet.addRows(datos);
+
+    // Estilizar encabezados
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFE0E0E0" },
+      };
+    });
+
+    // Escribir archivo
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "BancoCandidatos.xlsx";
+    link.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error al exportar a Excel:", error);
+    alert(
+      "Ocurrió un error al exportar el archivo. Por favor, intenta nuevamente."
+    );
+  }
 }
 
 onMounted(() => {
@@ -207,6 +246,7 @@ onMounted(() => {
   }
 });
 </script>
+
 <style scoped>
 .table th,
 .table td {

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gobdigital-cl/gob.cl": "^1.3.9",
+    "@gobdigital-cl/gob.cl": "^3.0.10",
     "axios": "^1.11.0",
     "base-x": "^5.0.1",
     "bootstrap": "^5.3.7",
@@ -18,10 +18,10 @@
     "crypto-js": "^4.2.0",
     "datatables.net": "^2.3.4",
     "datatables.net-bs5": "^2.3.4",
+    "exceljs": "^4.4.0",
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
-    "sheetjs": "^2.0.0",
     "sweetalert2": "^11.23.0",
     "vue": "^3.5.18",
     "vue-multiselect": "^3.3.1",

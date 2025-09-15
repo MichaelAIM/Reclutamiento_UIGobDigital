@@ -68,7 +68,7 @@
                     class="form-select"
                     v-model="form.estado_civil_id"
                   >
-                    <option value="">Selecciona región</option>
+                    <option value="">Selecciona estado civil</option>
                     <option v-for="r in estadosCivil" :key="r.id" :value="r.id">
                       {{ r.nombre }}
                     </option>
@@ -76,13 +76,13 @@
                 </div>
                 <div class="col-md-4 my-2">
                   <label for="fecha_nac" class="form-label"
-                    >fecha nacimiento</label
+                    >Fecha nacimiento</label
                   >
                   <input
                     type="date"
                     class="form-control"
                     id="fecha_nac"
-                    v-model="form.telefono"
+                    v-model="form.fecha_nacimiento"
                   />
                 </div>
                 <div class="col-md-4 my-2">
@@ -94,7 +94,7 @@
                     class="form-select"
                     v-model="form.nacionalidad_id"
                   >
-                    <option value="">Selecciona región</option>
+                    <option value="">Selecciona nacionalidad</option>
                     <option
                       v-for="r in store.estados.nacionalidades"
                       :key="r.id"
@@ -206,30 +206,86 @@
                 >
               </div>
 
+              <!-- Nuevos campos multiselect para jornadas -->
               <div class="my-3">
-                <label for="Especialidad" class="form-label"
-                  >Especialidad</label
-                >
-                <input type="text" id="Especialidad" class="form-control" />
+                <label class="form-label">Jornadas de trabajo</label>
+                <div class="multiselect-container">
+                  <div
+                    v-for="jornada in store.estados.jornadas"
+                    :key="jornada.id"
+                    class="form-check"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      :id="'jornada_' + jornada.id"
+                      :value="jornada.id"
+                      v-model="form.jornadas_seleccionadas"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="'jornada_' + jornada.id"
+                    >
+                      {{ jornada.nombre }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nuevos campos multiselect para modalidades horarias -->
+              <div class="my-3">
+                <label class="form-label">Modalidades horarias</label>
+                <div class="multiselect-container">
+                  <div
+                    v-for="modalidad in store.estados.modalidades_horarias"
+                    :key="modalidad.id"
+                    class="form-check"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      :id="'modalidad_' + modalidad.id"
+                      :value="modalidad.id"
+                      v-model="form.modalidades_seleccionadas"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="'modalidad_' + modalidad.id"
+                    >
+                      {{ modalidad.nombre }}
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <div class="my-3">
-                <label for="comuna" class="form-label"
+                <label for="especialidad" class="form-label"
+                  >Especialidad</label
+                >
+                <input
+                  type="text"
+                  id="especialidad"
+                  class="form-control"
+                  v-model="form.especialidad"
+                />
+              </div>
+
+              <div class="my-3">
+                <label for="titulo_profesional" class="form-label"
                   >Título Profesional</label
                 >
                 <select
-                  id="comuna"
+                  id="titulo_profesional"
                   class="form-select"
-                  v-model="form.comuna_id"
-                  :disabled="!form.region_id"
+                  v-model="form.titulo_profesional_id"
                 >
-                  <option value="">Selecciona comuna</option>
+                  <option value="">Selecciona título profesional</option>
                   <option
-                    v-for="c in store.estados.comunas"
-                    :key="c.id"
-                    :value="c.id"
+                    v-for="t in store.estados.titulos_profesionales"
+                    :key="t.id"
+                    :value="t.id"
                   >
-                    {{ c.nombre }}
+                    {{ t.nombre }}
                   </option>
                 </select>
               </div>
@@ -267,8 +323,14 @@
               >
                 <div class="d-flex align-items-center">
                   <div class="doc-icon me-3">
-                    <i v-if="doc.archivo?.guardado" class="bi bi-check-all"></i>
-                    <i v-else class="bi bi-file-earmark-text-fill"></i>
+                    <i
+                      v-if="doc.archivo?.guardado"
+                      class="bi bi-check-all text-success"
+                    ></i>
+                    <i
+                      v-else
+                      class="bi bi-file-earmark-text-fill text-primary"
+                    ></i>
                   </div>
                   <div class="d-flex flex-column">
                     <span class="fw-medium">{{ doc.nombre }}</span>
@@ -357,6 +419,9 @@ const form = reactive({
   cargos: [],
   titulo_profesional_id: null,
   estado_candidato_id: 1,
+  jornadas_seleccionadas: [], // Nuevo array para jornadas
+  modalidades_seleccionadas: [], // Nuevo array para modalidades
+  especialidad: "",
 });
 
 const documentosEsperados = reactive<DocumentoEsperado[]>([]);
@@ -502,11 +567,7 @@ function onRegionChange() {
   padding: 0.5rem 1rem;
   transition: all 0.2s ease-in-out;
 }
-.form-control:focus,
-.form-select:focus {
-  border-color: #fe6565;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
+
 .doc-item {
   border: 1px solid #e2e8f0;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -602,5 +663,27 @@ label {
 .form-check-input {
   cursor: pointer;
   position: relative !important;
+}
+
+.min-vh-100 {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #2c3e50, #1a2530);
+}
+
+.card {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.multiselect-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 10px;
+}
+
+.form-check {
+  margin-bottom: 0.5rem;
 }
 </style>

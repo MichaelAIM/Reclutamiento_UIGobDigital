@@ -1,146 +1,6 @@
 <template>
   <header>
-<<<<<<< HEAD
-    <div class="top-header fixed-top" :class="visibility">
-      <div class="doc-icons">
-        <div class="doc-icon">
-          <a href="#" class="text-decoration-none">
-            <span class="cl cl-social text-white cl-facebook"></span>
-          </a>
-        </div>
-        <div class="doc-icon">
-          <a href="#" class="text-decoration-none">
-            <span class="cl cl-social text-white cl-instagram"></span>
-          </a>
-        </div>
-        <div class="doc-icon">
-          <a href="#" class="text-decoration-none">
-            <span class="cl cl-social text-white cl-twitter"></span>
-          </a>
-        </div>
-        <div class="doc-icon">
-          <a href="#" class="text-decoration-none">
-            <span class="cl cl-social text-white cl-youtube"></span>
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- Menu Principal -->
-    <nav
-      class="navbar navbar-lg navbar-expand-lg with-fixed-navbar-lg"
-      :class="{ 'fixed-top': isScrolled }"
-      :style="{
-        backgroundColor: isScrolled ? 'rgba(255,255,255,0.95)' : 'transparent',
-        boxShadow: isScrolled ? '0 2px 0 0 #e3e5ef' : 'none',
-      }"
-    >
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/"
-          ><i class="fa fa-spinner fa-spin page-loading-icon"></i
-          ><img
-            :src="Logo"
-            class="ml-5"
-            :style="{
-              height: isScrolled ? '70%' : '90%',
-              marginTop: isScrolled ? '1rem' : '0.5rem',
-            }"
-        /></a>
-        <button
-          class="navbar-toggler collapsed"
-          type="button"
-          aria-controls="navbarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarLgLightExampleCollapse"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div
-          class="navbar-collapse collapse justify-content-end"
-          id="navbarLgLightExampleCollapse"
-        >
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                :style="{ color: isScrolled ? '#000' : '#fff' }"
-                href="#"
-                >Inicio</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                :style="{ color: isScrolled ? '#000' : '#fff' }"
-                href="#procesos-vigentes"
-                >Procesos Vigentes</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                :style="{ color: isScrolled ? '#000' : '#fff' }"
-                href="#como-postular"
-                >Como Postular</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                :style="{ color: isScrolled ? '#000' : '#fff' }"
-                href="#centro-ayuda"
-                >Centro de Ayuda</a
-              >
-            </li>
-            <ul class="navbar-nav">
-              <form class="simple-search search">
-                <input
-                  class="form-control"
-                  type="text"
-                  name="search"
-                  placeholder="search"
-                  aria-label="search"
-                  aria-describedby="searchLineAction"
-                />
-                <div class="search-action">
-                  <button
-                    class="btn btn-outline-search dom-search-behavior-cancel d-none"
-                    type="button"
-                  >
-                    <i class="icon cl cl-close"></i>
-                  </button>
-                  <button
-                    class="btn btn-outline-search"
-                    id="searchLineAction"
-                    type="submit"
-                  >
-                    <i class="icon cl cl-search"></i>
-                  </button>
-                </div>
-              </form>
-            </ul>
-            <li class="nav-item ml-md-3">
-              <a
-                class="btn btn-block"
-                :class="
-                  isScrolled ? 'btn-outline-secondary' : 'btn-outline-light'
-                "
-                href="#"
-                >Registrar</a
-              >
-            </li>
-            <li class="nav-item mr-md-5">
-              <a class="btn btn-block btn-secondary" href="#">Iniciar sesión</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-=======
     <NavBar />
->>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
     <!-- Banner Principal -->
     <section class="banner-custom mt-4">
       <div class="w-75 mx-auto px-0 py-5 my-5">
@@ -183,30 +43,14 @@
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-          <!--           <div class="col-12">
-            <button
-              class="btn btn-pill-light text-decoration-none"
-              type="button"
-            >
-              Revisar Convocatorias Disponibles
-            </button>
-          </div> -->
-=======
->>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
         </div>
       </div>
     </section>
   </header>
 
   <main class="container-fluid px-0">
-<<<<<<< HEAD
-    <!-- Cómo Postular Section -->
-    <section id="como-postular" class="section-padding">
-=======
     <!-- Funcionalidades Section -->
     <section id="funcionalidades" class="section-padding">
->>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
       <div class="w-75 mx-auto">
         <div class="row g-4 mb-5">
           <div
@@ -534,131 +378,21 @@
         </div>
       </div>
     </section>
-
-    <!-- Centro de Ayuda Section -->
-    <section id="centro-ayuda" class="section-padding bg-light">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6">
-            <h2 class="fw-bold mb-4">Centro de Ayuda</h2>
-            <p class="lead mb-4">
-              ¿Tienes dudas o necesitas asistencia? Contáctanos y te
-              responderemos a la brevedad.
-            </p>
-            <div class="mb-4">
-              <h5>Soporte Institucional</h5>
-              <p>
-                Nuestro equipo de Reclutamiento y Selección está disponible para
-                ayudarte con cualquier consulta relacionada con el proceso de
-                postulación.
-              </p>
-              <p><i class="bi bi-envelope me-2"></i>{{ contactInfo.email }}</p>
-              <p><i class="bi bi-telephone me-2"></i>{{ contactInfo.phone }}</p>
-              <p><i class="bi bi-clock me-2"></i>{{ contactInfo.hours }}</p>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="card border-0 shadow">
-              <div class="card-body p-4">
-                <h4 class="card-title mb-4">Formulario de Contacto</h4>
-                <form @submit.prevent="submitForm">
-                  <div class="mb-3">
-                    <label for="nombre" class="form-label"
-                      >Nombre completo</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="nombre"
-                      v-model="formData.name"
-                      required
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <label for="correo" class="form-label"
-                      >Correo electrónico</label
-                    >
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="correo"
-                      v-model="formData.email"
-                      required
-                    />
-                  </div>
-                  <div class="mb-3">
-                    <label for="mensaje" class="form-label">Mensaje</label>
-                    <textarea
-                      class="form-control"
-                      id="mensaje"
-                      rows="4"
-                      v-model="formData.message"
-                      required
-                    ></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-secondary float-right">
-                    Enviar mensaje
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
-<<<<<<< HEAD
-  <footer>
-    <div class="container">
-      <a class="footer-logo" href="#">
-        <img
-          class="footer-default-logo"
-          src="../assets/img/Logotipo-Chinchorro-web-02.png"
-          width="300"
-        />
-        <img
-          class="footer-mobile-logo"
-          src="../assets/img/Logotipo-Chinchorro-web-02.png"
-          width="100"
-        />
-        <div class="line"></div>
-      </a>
-      <div class="row">
-        <div class="col-xl-8">
-          <div class="row footer-links">
-            <div class="col-md-6"><a href="#">Link 1</a></div>
-            <div class="col-md-6"><a href="#">Link 2</a></div>
-          </div>
-        </div>
-        <div class="col-xl-4 align-self-center">
-          <a
-            class="btn btn-secondary btn-block"
-            href="https://chinchorro.educacionpublica.cl//"
-            target="_blank"
-            >Visita nuestra web</a
-          >
-        </div>
-      </div>
-    </div>
-=======
 
   <footer class="align-content-center">
     <Footer />
->>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
   </footer>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
-<<<<<<< HEAD
-=======
 import { useRouter } from "vue-router";
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
 
 const router = useRouter();
 
->>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
 // Datos para las funcionalidades
 interface Feature {
   icon: string;
@@ -810,21 +544,6 @@ const submitForm = () => {
   );
 }
 
-<<<<<<< HEAD
-.navbar {
-  position: fixed;
-  top: 40px;
-  transition: top 0.5s ease;
-  width: 100%;
-  z-index: 1000;
-}
-
-.fixed-top {
-  top: 0px;
-}
-
-=======
->>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
 .banner-header {
   position: relative;
   display: flex;
