@@ -1,8 +1,17 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
-import router from "./router";
+import { router } from "./router";
 import { createPinia } from "pinia";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import { Buffer } from "buffer";
+
+declare global {
+  interface Window {
+    Buffer: typeof Buffer;
+  }
+}
+window.Buffer = Buffer;
 
 import "@gobdigital-cl/gob.cl/dist/css/gob.cl.css";
 
@@ -10,8 +19,13 @@ import "@gobdigital-cl/gob.cl/dist/css/gob.cl.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-const app = createApp(App);
+import "datatables.net-bs5";
+import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 
-app.use(createPinia()); //
+const app = createApp(App);
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
+app.use(pinia);
 app.use(router);
 app.mount("#app");

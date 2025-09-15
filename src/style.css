@@ -8,6 +8,9 @@
   --muted: #475569;
   --accent-bg-section: rgba(31, 132, 236, 0.04);
   --footer-bg: #123456;
+  --bg-letra: #3abff0;
+  --color-primario: #0056b3;
+  --color-acento: #00a6a6;
 }
 
 .bg-accent-primary {
@@ -34,13 +37,12 @@
   background-color: var(--accent-5);
 }
 
-.color-accent-3 {
-  color: var(--accent-3);
+.bg-letra {
+  background-color: var(--bg-letra);
 }
 
-.navbar-brand img {
-  margin-top: 13%;
-  margin-bottom: auto;
+.color-accent-3 {
+  color: var(--accent-3);
 }
 
 @media (min-width: 768px) {
@@ -53,4 +55,19 @@
 .font-level-9 {
   font-size: 0.7685rem !important;
   line-height: 1.5rem !important;
+}
+
+.navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
+  color: #fe6565 !important;
+}
+
+.card-data-list .card-data:hover {
+  background-color: #fe6565 !important;
+}
+
+.btn-pill-light:hover {
+  background-color: #fe6565 !important;
+}
+.pointer {
+  cursor: pointer;
 }

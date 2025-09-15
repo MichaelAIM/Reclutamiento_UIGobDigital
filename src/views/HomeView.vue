@@ -1,108 +1,15 @@
 <template>
   <header>
-    <!-- Menu Principal -->
-    <nav
-      class="navbar navbar-lg navbar-expand-lg navbar-light bg-light with-fixed-navbar-lg fixed-top"
-    >
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/"
-          ><i class="fa fa-spinner fa-spin page-loading-icon"></i
-          ><img :src="Logo" class="ml-4"
-        /></a>
-        <button
-          class="navbar-toggler collapsed"
-          type="button"
-          aria-controls="navbarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarLgLightExampleCollapse"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div
-          class="navbar-collapse collapse justify-content-end"
-          id="navbarLgLightExampleCollapse"
-        >
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
-            <li class="nav-item">
-              <a class="nav-link" href="#procesos-vigentes"
-                >Procesos Vigentes</a
-              >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#como-postular">Como Postular</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Centro de Ayuda</a>
-            </li>
-            <ul class="navbar-nav">
-              <form class="simple-search search">
-                <input
-                  class="form-control"
-                  type="text"
-                  name="search"
-                  placeholder="search"
-                  aria-label="search"
-                  aria-describedby="searchLineAction"
-                />
-                <div class="search-action">
-                  <button
-                    class="btn btn-outline-search dom-search-behavior-cancel d-none"
-                    type="button"
-                  >
-                    <i class="icon cl cl-close"></i>
-                  </button>
-                  <button
-                    class="btn btn-outline-search"
-                    id="searchLineAction"
-                    type="submit"
-                  >
-                    <i class="icon cl cl-search"></i>
-                  </button>
-                </div>
-              </form>
-            </ul>
-            <li class="nav-item ml-md-3">
-              <a class="btn btn-block btn-outline-secondary" href="#"
-                >Registrar</a
-              >
-            </li>
-            <li class="nav-item mr-md-5">
-              <a class="btn btn-block btn-secondary" href="#">Iniciar sesión</a>
-            </li>
-          </ul>
-        </div>
-        <div class="row bg-accent-1">
-          <div class="doc-icons">
-            <div class="doc-icon m-1">
-              <span class="cl cl-social text-white cl-facebook mb-2"></span>
-            </div>
-            <div class="doc-icon m-1">
-              <span class="cl cl-social text-white cl-instagram mb-2"></span>
-            </div>
-            <div class="doc-icon m-1">
-              <span class="cl cl-social text-white cl-twitter mb-2"></span>
-            </div>
-            <div class="doc-icon m-1">
-              <span class="cl cl-social text-white cl-youtube mb-2"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-
+    <NavBar />
     <!-- Banner Principal -->
-    <section class="banner-custom mt-5">
+    <section class="banner-custom mt-4">
       <div class="w-75 mx-auto px-0 py-5 my-5">
         <div class="row align-items-center">
           <div class="col-12 col-md-6 col-lg-5">
-            <h1 class="mb-5 display-4 ltr-1">¡Buscamos tu talento!</h1>
-            <p
-              class="mb-4 text-white font-level-3 ltr-1"
-              style="line-height: 2rem"
-            >
+            <h1 class="mb-5 display-4">
+              <span class="bg-letra">¡Buscamos tu talento!</span>
+            </h1>
+            <p class="mb-4 text-white font-level-3" style="line-height: 2rem">
               Únete al equipo SLEP Chinchorro y forma parte del desarrollo y la
               transformación educativa en las comunas de:
             </p>
@@ -136,54 +43,41 @@
               </div>
             </div>
           </div>
-          <div class="col-12">
-            <button
-              class="btn btn-pill-light text-decoration-none"
-              type="button"
-            >
-              Revisar Convocatorias Disponibles
-            </button>
-          </div>
         </div>
       </div>
     </section>
   </header>
 
   <main class="container-fluid px-0">
-    <!-- Cómo Postular Section -->
-    <section id="como-postular" class="section py-5">
+    <!-- Funcionalidades Section -->
+    <section id="funcionalidades" class="section-padding">
       <div class="w-75 mx-auto">
-        <div class="section-header mt-3">
-          <h2 class="pb-2 border-bottom border-accent" id="secciones">
-            ¿Cómo Postular?
-          </h2>
-        </div>
-        <div class="section-body">
-          <p>Sigue estos sencillos pasos para completar tu postulación</p>
-        </div>
-
-        <div class="row g-4 mt-5 pt-5">
-          <div class="col-md-4 mt-4" v-for="step in steps" :key="step.number">
-            <div class="text-center">
-              <div
-                class="step-number mx-auto text-white"
-                :class="step.colorClass"
-              >
-                {{ step.number }}
+        <div class="row g-4 mb-5">
+          <div
+            class="col-md-6 col-lg-3"
+            v-for="feature in features"
+            :key="feature.title"
+          >
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body text-center p-4">
+                <div
+                  class="card-icon text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                  :class="feature.colorClass"
+                  style="width: 70px; height: 70px"
+                >
+                  <i :class="feature.icon"></i>
+                </div>
+                <h4 class="card-title">{{ feature.title }}</h4>
+                <p class="card-text">{{ feature.description }}</p>
               </div>
-              <h4 class="my-3">{{ step.title }}</h4>
-              <p>{{ step.description }}</p>
             </div>
           </div>
-        </div>
-        <div class="text-center mt-5">
-          <a href="#" class="btn btn-primary-accent btn-lg">Comenzar ahora</a>
         </div>
       </div>
     </section>
 
     <!-- Procesos Vigentes -->
-    <section id="procesos-vigentes" class="section py-5 bg-light">
+    <section id="procesos-vigentes" class="section-padding bg-light">
       <div class="w-75 mx-auto">
         <div class="section-header mt-3">
           <h2 class="pb-2 border-bottom border-accent" id="secciones">
@@ -193,7 +87,7 @@
         <div class="section-body">
           <p>Encuentra una oportunidad de empleo en el Slep Chinchorro</p>
         </div>
-        <div class="row my-5 py-5">
+        <div class="row py-5">
           <div class="col-md-4">
             <a class="banner border mb-3 flex-wrap bg-white" href="#banners">
               <div class="line"></div>
@@ -234,11 +128,9 @@
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
-                <h5
-                  class="banner-text flex-column font-level-9 font-weight-bolder"
-                >
+                <p class="banner-text flex-column font-level-9 fw-800">
                   Descripción:
-                </h5>
+                </p>
               </div>
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
@@ -248,11 +140,9 @@
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
-                <h5
-                  class="banner-text flex-column font-level-9 font-weight-bolder"
-                >
+                <p class="banner-text flex-column font-level-9 fw-800">
                   Requisitos:
-                </h5>
+                </p>
               </div>
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
@@ -261,12 +151,11 @@
                   metodologías innovadoras.
                 </p>
               </div>
-
               <div class="d-flex w-100 mt-2">
-                <p class="banner-text flex-column font-level-9">Adjuntos:</p>
-                <p
-                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
-                >
+                <p class="banner-text flex-column font-level-9 fw-800">
+                  Adjuntos:
+                </p>
+                <p class="banner-icon ml-auto mb-0 font-level-9">
                   <span
                     class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
                   ></span>
@@ -275,7 +164,6 @@
                   ></span>
                 </p>
               </div>
-
               <div class="py-1 border-bottom d-flex w-100 border-accent"></div>
               <div class="d-flex w-100 my-3">
                 <div class="banner-text flex-column">
@@ -283,6 +171,9 @@
                     Postulación hasta 05/09/2025 8:00:00
                   </div>
                 </div>
+                <span class="banner-icon ml-auto" aria-hidden="true">
+                  <!-- <div class="badge badge-primary font-level-7">Postular</div> -->
+                </span>
               </div>
             </a>
           </div>
@@ -355,10 +246,12 @@
               </div>
 
               <div class="d-flex w-100 mt-2">
-                <p class="banner-text flex-column font-level-9">Adjuntos:</p>
                 <p
-                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+                  class="banner-text flex-column font-level-9 font-weight-bolder"
                 >
+                  Adjuntos:
+                </p>
+                <p class="banner-icon ml-auto mb-0 font-level-9">
                   <span
                     class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
                   ></span>
@@ -382,26 +275,103 @@
       </div>
     </section>
 
-    <!-- Funcionalidades Section -->
-    <section id="funcionalidades" class="section-padding">
+    <!-- Cómo Postular Section -->
+    <section id="como-postular" class="section-padding">
       <div class="w-75 mx-auto">
-        <div class="row g-4 mb-5">
-          <div
-            class="col-md-6 col-lg-3"
-            v-for="feature in features"
-            :key="feature.title"
-          >
-            <div class="card h-100 border-0 shadow-sm">
-              <div class="card-body text-center p-4">
-                <div
-                  class="card-icon text-white rounded-circle d-inline-flex align-items-center justify-content-center"
-                  :class="feature.colorClass"
-                  style="width: 70px; height: 70px"
-                >
-                  <i :class="feature.icon"></i>
-                </div>
-                <h4 class="card-title">{{ feature.title }}</h4>
-                <p class="card-text">{{ feature.description }}</p>
+        <div class="section-header mt-3">
+          <h2 class="pb-2 border-bottom border-accent" id="secciones">
+            ¿Cómo Postular?
+          </h2>
+        </div>
+        <div class="section-body">
+          <p>Sigue estos sencillos pasos para completar tu postulación</p>
+        </div>
+
+        <div class="row g-4 mt-5 pt-5">
+          <div class="col-md-4 mt-4" v-for="step in steps" :key="step.number">
+            <div class="text-center">
+              <div
+                class="step-number mx-auto text-white"
+                :class="step.colorClass"
+              >
+                {{ step.number }}
+              </div>
+              <h4 class="my-3">{{ step.title }}</h4>
+              <p>{{ step.description }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-5">
+          <a href="#" class="btn btn-secondary btn-lg">Comenzar ahora</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Centro de Ayuda Section -->
+    <section id="centro-ayuda" class="section-padding bg-light">
+      <div class="container px-4">
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="fw-bold mb-4">Centro de Ayuda</h2>
+            <p class="lead mb-4">
+              ¿Tienes dudas o necesitas asistencia? Contáctanos y te
+              responderemos a la brevedad.
+            </p>
+            <div class="mb-4">
+              <h5>Soporte Institucional</h5>
+              <p>
+                Nuestro equipo de Reclutamiento y Selección está disponible para
+                ayudarte con cualquier consulta relacionada con el proceso de
+                postulación.
+              </p>
+              <p><i class="bi bi-envelope me-2"></i>{{ contactInfo.email }}</p>
+              <p><i class="bi bi-telephone me-2"></i>{{ contactInfo.phone }}</p>
+              <p><i class="bi bi-clock me-2"></i>{{ contactInfo.hours }}</p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card border-0 shadow">
+              <div class="card-body p-4">
+                <h4 class="card-title mb-4">Formulario de Contacto</h4>
+                <form @submit.prevent="submitForm">
+                  <div class="mb-3">
+                    <label for="nombre" class="form-label"
+                      >Nombre completo</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nombre"
+                      v-model="formData.name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="correo" class="form-label"
+                      >Correo electrónico</label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="correo"
+                      v-model="formData.email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mensaje" class="form-label">Mensaje</label>
+                    <textarea
+                      class="form-control"
+                      id="mensaje"
+                      rows="4"
+                      v-model="formData.message"
+                      required
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-secondary float-right">
+                    Enviar mensaje
+                  </button>
+                </form>
               </div>
             </div>
           </div>
@@ -409,11 +379,20 @@
       </div>
     </section>
   </main>
+
+  <footer class="align-content-center">
+    <Footer />
+  </footer>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import Logo from "../assets/img/Logotipo-Chinchorro-web.png";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import NavBar from "../components/NavBar.vue";
+import Footer from "../components/Footer.vue";
+
+const router = useRouter();
+
 // Datos para las funcionalidades
 interface Feature {
   icon: string;
@@ -483,6 +462,41 @@ const steps = ref<Step[]>([
     colorClass: "bg-accent-3",
   },
 ]);
+
+// Datos para el formulario de contacto
+interface ContactInfo {
+  email: string;
+  phone: string;
+  hours: string;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
+const contactInfo = reactive<ContactInfo>({
+  email: " postulaciones@slepchinchorro.cl",
+  phone: " +56 58 234 5678",
+  hours: " Lunes a Viernes: 8:30 - 17:30 hrs",
+});
+
+const formData = reactive<FormData>({
+  name: "",
+  email: "",
+  message: "",
+});
+
+const submitForm = () => {
+  console.log("Formulario enviado:", formData);
+  alert("Mensaje enviado con éxito. Nos pondremos en contacto contigo pronto.");
+
+  // Resetear el formulario
+  formData.name = "";
+  formData.email = "";
+  formData.message = "";
+};
 </script>
 
 <style scoped>
@@ -502,18 +516,6 @@ const steps = ref<Step[]>([
   );
 }
 
-nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
-  color: #fe6565 !important;
-}
-
-.card-data-list .card-data:hover {
-  background-color: #fe6565 !important;
-}
-
-.btn-pill-light:hover {
-  background-color: #fe6565 !important;
-}
-
 .banner-header {
   position: relative;
   display: flex;
@@ -521,7 +523,7 @@ nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
 }
 
 .banner-custom {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+  background: linear-gradient(135deg, var(--footer-bg) 0%, var(--dark) 100%);
   color: white;
   padding: 5rem 0;
   /*margin-bottom: 4rem;*/
@@ -532,18 +534,22 @@ nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
 .banner-custom::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0; /* shorthand para top, right, bottom, left = 0 */
   background-image: url("../assets/img/banner.webp");
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   opacity: 0.5;
+  z-index: 0;
+}
+
+.banner-custom > * {
+  position: relative;
+  z-index: 1;
 }
 
 .comunas-badge {
   display: inline-block;
-  /*background-color: var(--light);*/
   color: var(--primary);
   padding: 0.35rem 0.65rem;
   border-radius: 50rem;
@@ -552,23 +558,20 @@ nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
   font-size: 0.875rem;
 }
 
-.bg-wts {
-  background-color: hsla(219, 42%, 30%, 0.3);
-  border-radius: 10px;
-}
-
 .section-padding {
   padding: 7rem 0;
 }
 
-.borde-difuminado {
-  box-shadow: 0 0 0 5px rgba(53, 76, 115, 0.2); /* color institucional con transparencia */
-}
-
-.ltr-1 {
+.subrayado {
   color: white;
   -webkit-text-stroke: 0.2px #3a9cf8;
   text-shadow: 0px 1px 4px #23430c;
+}
+
+@media (min-width: 768px) {
+  footer {
+    min-height: 200px !important;
+  }
 }
 
 .step-number {
@@ -588,7 +591,49 @@ nav.navbar.navbar-light .navbar-nav .nav-item:not(.dropdown) .nav-link:hover {
   margin-bottom: 1rem;
 }
 
-.fw-900 {
-  font-weight: 900;
+.fw-800 {
+  font-weight: 800;
+}
+
+.top-header {
+  background-color: var(--accent-5); /* Color de fondo similar al original */
+  width: 100%;
+  padding: 8px 0;
+}
+
+.doc-icons {
+  display: flex;
+  justify-content: flex-end; /* Alinea los iconos a la derecha */
+  padding-right: 2rem; /* Espaciado desde el borde derecho */
+}
+
+.doc-icon {
+  margin: 0 8px;
+}
+
+.cl-social {
+  font-size: 1.2rem;
+  transition: color 0.3s;
+}
+
+.cl-social:hover {
+  color: #fff !important;
+}
+
+/* Ajuste para que el contenido no quede oculto tras el navbar fijo */
+body {
+  padding-top: 100px;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 991.98px) {
+  .doc-icons {
+    padding-right: 1rem;
+    justify-content: center; /* Centrar en móviles */
+  }
+
+  body {
+    padding-top: 160px;
+  }
 }
 </style>
