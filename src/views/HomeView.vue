@@ -1,5 +1,6 @@
 <template>
   <header>
+<<<<<<< HEAD
     <div class="top-header fixed-top" :class="visibility">
       <div class="doc-icons">
         <div class="doc-icon">
@@ -137,6 +138,9 @@
       </div>
     </nav>
 
+=======
+    <NavBar />
+>>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
     <!-- Banner Principal -->
     <section class="banner-custom mt-4">
       <div class="w-75 mx-auto px-0 py-5 my-5">
@@ -179,6 +183,7 @@
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           <!--           <div class="col-12">
             <button
               class="btn btn-pill-light text-decoration-none"
@@ -187,40 +192,42 @@
               Revisar Convocatorias Disponibles
             </button>
           </div> -->
+=======
+>>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
         </div>
       </div>
     </section>
   </header>
 
   <main class="container-fluid px-0">
+<<<<<<< HEAD
     <!-- Cómo Postular Section -->
     <section id="como-postular" class="section-padding">
+=======
+    <!-- Funcionalidades Section -->
+    <section id="funcionalidades" class="section-padding">
+>>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
       <div class="w-75 mx-auto">
-        <div class="section-header mt-3">
-          <h2 class="pb-2 border-bottom border-accent" id="secciones">
-            ¿Cómo Postular?
-          </h2>
-        </div>
-        <div class="section-body">
-          <p>Sigue estos sencillos pasos para completar tu postulación</p>
-        </div>
-
-        <div class="row g-4 mt-5 pt-5">
-          <div class="col-md-4 mt-4" v-for="step in steps" :key="step.number">
-            <div class="text-center">
-              <div
-                class="step-number mx-auto text-white"
-                :class="step.colorClass"
-              >
-                {{ step.number }}
+        <div class="row g-4 mb-5">
+          <div
+            class="col-md-6 col-lg-3"
+            v-for="feature in features"
+            :key="feature.title"
+          >
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body text-center p-4">
+                <div
+                  class="card-icon text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+                  :class="feature.colorClass"
+                  style="width: 70px; height: 70px"
+                >
+                  <i :class="feature.icon"></i>
+                </div>
+                <h4 class="card-title">{{ feature.title }}</h4>
+                <p class="card-text">{{ feature.description }}</p>
               </div>
-              <h4 class="my-3">{{ step.title }}</h4>
-              <p>{{ step.description }}</p>
             </div>
           </div>
-        </div>
-        <div class="text-center mt-5">
-          <a href="#" class="btn btn-primary-accent btn-lg">Comenzar ahora</a>
         </div>
       </div>
     </section>
@@ -424,26 +431,103 @@
       </div>
     </section>
 
-    <!-- Funcionalidades Section -->
-    <section id="funcionalidades" class="section-padding">
+    <!-- Cómo Postular Section -->
+    <section id="como-postular" class="section-padding">
       <div class="w-75 mx-auto">
-        <div class="row g-4 mb-5">
-          <div
-            class="col-md-6 col-lg-3"
-            v-for="feature in features"
-            :key="feature.title"
-          >
-            <div class="card h-100 border-0 shadow-sm">
-              <div class="card-body text-center p-4">
-                <div
-                  class="card-icon text-white rounded-circle d-inline-flex align-items-center justify-content-center"
-                  :class="feature.colorClass"
-                  style="width: 70px; height: 70px"
-                >
-                  <i :class="feature.icon"></i>
-                </div>
-                <h4 class="card-title">{{ feature.title }}</h4>
-                <p class="card-text">{{ feature.description }}</p>
+        <div class="section-header mt-3">
+          <h2 class="pb-2 border-bottom border-accent" id="secciones">
+            ¿Cómo Postular?
+          </h2>
+        </div>
+        <div class="section-body">
+          <p>Sigue estos sencillos pasos para completar tu postulación</p>
+        </div>
+
+        <div class="row g-4 mt-5 pt-5">
+          <div class="col-md-4 mt-4" v-for="step in steps" :key="step.number">
+            <div class="text-center">
+              <div
+                class="step-number mx-auto text-white"
+                :class="step.colorClass"
+              >
+                {{ step.number }}
+              </div>
+              <h4 class="my-3">{{ step.title }}</h4>
+              <p>{{ step.description }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-5">
+          <a href="#" class="btn btn-secondary btn-lg">Comenzar ahora</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Centro de Ayuda Section -->
+    <section id="centro-ayuda" class="section-padding bg-light">
+      <div class="container px-4">
+        <div class="row">
+          <div class="col-lg-6">
+            <h2 class="fw-bold mb-4">Centro de Ayuda</h2>
+            <p class="lead mb-4">
+              ¿Tienes dudas o necesitas asistencia? Contáctanos y te
+              responderemos a la brevedad.
+            </p>
+            <div class="mb-4">
+              <h5>Soporte Institucional</h5>
+              <p>
+                Nuestro equipo de Reclutamiento y Selección está disponible para
+                ayudarte con cualquier consulta relacionada con el proceso de
+                postulación.
+              </p>
+              <p><i class="bi bi-envelope me-2"></i>{{ contactInfo.email }}</p>
+              <p><i class="bi bi-telephone me-2"></i>{{ contactInfo.phone }}</p>
+              <p><i class="bi bi-clock me-2"></i>{{ contactInfo.hours }}</p>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card border-0 shadow">
+              <div class="card-body p-4">
+                <h4 class="card-title mb-4">Formulario de Contacto</h4>
+                <form @submit.prevent="submitForm">
+                  <div class="mb-3">
+                    <label for="nombre" class="form-label"
+                      >Nombre completo</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nombre"
+                      v-model="formData.name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="correo" class="form-label"
+                      >Correo electrónico</label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="correo"
+                      v-model="formData.email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="mensaje" class="form-label">Mensaje</label>
+                    <textarea
+                      class="form-control"
+                      id="mensaje"
+                      rows="4"
+                      v-model="formData.message"
+                      required
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-secondary float-right">
+                    Enviar mensaje
+                  </button>
+                </form>
               </div>
             </div>
           </div>
@@ -523,6 +607,7 @@
       </div>
     </section>
   </main>
+<<<<<<< HEAD
   <footer>
     <div class="container">
       <a class="footer-logo" href="#">
@@ -555,11 +640,25 @@
         </div>
       </div>
     </div>
+=======
+
+  <footer class="align-content-center">
+    <Footer />
+>>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
   </footer>
 </template>
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
+<<<<<<< HEAD
+=======
+import { useRouter } from "vue-router";
+import NavBar from "../components/NavBar.vue";
+import Footer from "../components/Footer.vue";
+
+const router = useRouter();
+
+>>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
 // Datos para las funcionalidades
 interface Feature {
   icon: string;
@@ -711,6 +810,7 @@ const submitForm = () => {
   );
 }
 
+<<<<<<< HEAD
 .navbar {
   position: fixed;
   top: 40px;
@@ -723,6 +823,8 @@ const submitForm = () => {
   top: 0px;
 }
 
+=======
+>>>>>>> d696b15717ef58f6ddb71dc7bdfaa5dbb21cf083
 .banner-header {
   position: relative;
   display: flex;
@@ -741,13 +843,18 @@ const submitForm = () => {
 .banner-custom::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0; /* shorthand para top, right, bottom, left = 0 */
   background-image: url("../assets/img/banner.webp");
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   opacity: 0.5;
+  z-index: 0;
+}
+
+.banner-custom > * {
+  position: relative;
+  z-index: 1;
 }
 
 .comunas-badge {
@@ -768,6 +875,12 @@ const submitForm = () => {
   color: white;
   -webkit-text-stroke: 0.2px #3a9cf8;
   text-shadow: 0px 1px 4px #23430c;
+}
+
+@media (min-width: 768px) {
+  footer {
+    min-height: 200px !important;
+  }
 }
 
 .step-number {
