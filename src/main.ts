@@ -5,6 +5,7 @@ import { router } from "./router";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import { Buffer } from "buffer";
+import { VueReCaptcha } from "vue-recaptcha-v3";
 
 declare global {
   interface Window {
@@ -25,6 +26,12 @@ import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+app.use(VueReCaptcha, {
+  siteKey: "6LeLissrAAAAACL8UHvoJ_qIREtU8nZnsLuVyEol", // ← reemplaza con tu clave pública de reCAPTCHA v3
+  loaderOptions: {
+    autoHideBadge: true,
+  },
+});
 
 app.use(pinia);
 app.use(router);

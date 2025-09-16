@@ -74,6 +74,11 @@ export interface EstadoConvocatoria {
   nombre: string;
 }
 
+export interface Cargo {
+  id: number;
+  nombre: string;
+}
+
 export interface Convocatoria {
   id: number;
   codigo: string;
@@ -88,4 +93,5 @@ export interface Convocatoria {
   institucione: Institucion | null;
   ciudade: Ciudad;
   estado_convocatorium: EstadoConvocatoria;
+  cargo: Cargo | null;
 }

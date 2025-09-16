@@ -10,6 +10,15 @@ export const fetchConvocatorias = async () => {
   }
 };
 
+export const fetchCountConvocatorias = async () => {
+  try {
+    const response = await api.get("/convocatorias/indices");
+    return response.data;
+  } catch (error) {
+    console.error("Error al cargar convocatorias:", error);
+  }
+};
+
 export const fetchConvocatoriaById = (id: number) =>
   api.get(`/convocatorias/${id}`);
 

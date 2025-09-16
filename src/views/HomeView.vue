@@ -3,7 +3,7 @@
     <NavBar />
     <!-- Banner Principal -->
     <section class="banner-custom mt-4">
-      <div class="w-75 mx-auto px-0 py-5 my-5">
+      <div class="w-75 mx-auto px-0 my-5 section-padding">
         <div class="row align-items-center">
           <div class="col-12 col-md-6 col-lg-5">
             <h1 class="mb-5 display-4">
@@ -19,25 +19,33 @@
               <span class="comunas-badge bg-accent-3">General Lagos</span>
               <span class="comunas-badge bg-accent-4 text-white">Putre</span>
             </div>
-            <div class="mt-5"></div>
+            <div class="my-5"></div>
           </div>
           <div class="col-lg-6 offset-lg-1">
             <div class="card-data-list">
               <div class="card-data h-100 bg-transparent text-normal">
                 <div class="card-data-title">
-                  <div class="card-data-quantity">3</div>
+                  <div class="card-data-quantity">
+                    {{ indices.disponibles }}
+                  </div>
                   <h5>Convocatorias Abiertas</h5>
                 </div>
               </div>
               <div class="card-data h-100 bg-transparent text-normal">
                 <div class="card-data-title">
-                  <div class="card-data-quantity">23</div>
-                  <h5>Convocatorias Realizadas 2025</h5>
+                  <div class="card-data-quantity">
+                    {{ indices.creadasEsteAnio }}
+                  </div>
+                  <h5>
+                    Convocatorias Realizadas {{ new Date().getFullYear() }}
+                  </h5>
                 </div>
               </div>
               <div class="card-data h-100 bg-transparent text-normal">
                 <div class="card-data-title">
-                  <div class="card-data-quantity">100</div>
+                  <div class="card-data-quantity">
+                    {{ indices.registradas }}
+                  </div>
                   <h5>Vacantes históricas ofrecidas</h5>
                 </div>
               </div>
@@ -50,15 +58,29 @@
 
   <main class="container-fluid px-0">
     <!-- Funcionalidades Section -->
-    <section id="funcionalidades" class="section-padding">
+    <section
+      id="funcionalidades"
+      style="padding-top: 4rem; padding-bottom: 5rem"
+    >
       <div class="w-75 mx-auto">
-        <div class="row g-4 mb-5">
+        <div class="section-header mt-5">
+          <h2 class="pb-2 border-bottom border-accent" id="secciones">
+            Comienza hoy tu camino con nosotros
+          </h2>
+        </div>
+        <div class="section-body">
+          <p>
+            Hemos diseñado un proceso simple, claro y transparente para que
+            postules con confianza y seas parte de esta gran misión educativa.
+          </p>
+        </div>
+        <div class="row g-4 mb-5" style="margin-top: 4rem">
           <div
             class="col-md-6 col-lg-3"
             v-for="feature in features"
             :key="feature.title"
           >
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card h-100 border-0 shadow-sm hover">
               <div class="card-body text-center p-4">
                 <div
                   class="card-icon text-white rounded-circle d-inline-flex align-items-center justify-content-center"
@@ -88,17 +110,24 @@
           <p>Encuentra una oportunidad de empleo en el Slep Chinchorro</p>
         </div>
         <div class="row py-5">
-          <div class="col-md-4">
-            <a class="banner border mb-3 flex-wrap bg-white" href="#banners">
+          <div
+            class="col-md-4"
+            v-for="convocatoria in convocatorias"
+            :key="convocatoria.id"
+          >
+            <a class="banner border mb-3 flex-wrap bg-white">
               <div class="line"></div>
               <div class="py-4 border-bottom border-accent banner-header w-100">
                 <h4 class="banner-text flex-column">
-                  <span class="font-weight-bold font-level-7"
-                    >Profesor de Matemáticas</span
-                  ><span class="font-level-8">SLEP-EDU-001-2025</span>
+                  <span class="font-weight-bold font-level-7">{{
+                    convocatoria.cargo?.nombre
+                  }}</span
+                  ><span class="font-level-8">{{ convocatoria.codigo }}</span>
                 </h4>
                 <span class="banner-icon ml-auto" aria-hidden="true">
-                  <div class="badge badge-danger font-level-7">Abierta</div>
+                  <div class="badge badge-danger font-level-7">
+                    {{ convocatoria.estado_convocatorium.nombre }}
+                  </div>
                 </span>
               </div>
               <div class="d-flex w-100 mt-2">
@@ -116,7 +145,7 @@
                 <p
                   class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
                 >
-                  Arica
+                  {{ convocatoria.ciudade.nombre }}
                 </p>
               </div>
               <div class="d-flex w-100">
@@ -124,7 +153,7 @@
                 <p
                   class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
                 >
-                  Liceo B-4 Antonio Varas de la Barra.
+                  {{ convocatoria.institucione?.nombre }}
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
@@ -134,9 +163,7 @@
               </div>
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
-                  Buscamos un profesional titulado para la enseñanza en
-                  matemáticas en educación básica, con experiencia en
-                  metodologías innovadoras.
+                  {{ convocatoria.descripcion }}
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
@@ -146,9 +173,7 @@
               </div>
               <div class="d-flex w-100 mt-2">
                 <p class="banner-text flex-column font-level-9">
-                  Buscamos un profesional titulado para la enseñanza en
-                  matemáticas en educación básica, con experiencia en
-                  metodologías innovadoras.
+                  {{ convocatoria.requisitos }}
                 </p>
               </div>
               <div class="d-flex w-100 mt-2">
@@ -168,106 +193,12 @@
               <div class="d-flex w-100 my-3">
                 <div class="banner-text flex-column">
                   <div class="badge badge-info font-level-8">
-                    Postulación hasta 05/09/2025 8:00:00
+                    Postulación hasta {{ convocatoria.fecha_cierre }} 8:00:00
                   </div>
                 </div>
                 <span class="banner-icon ml-auto" aria-hidden="true">
                   <!-- <div class="badge badge-primary font-level-7">Postular</div> -->
                 </span>
-              </div>
-            </a>
-          </div>
-
-          <div class="col-md-4">
-            <a class="banner border mb-3 flex-wrap bg-white" href="#banners">
-              <div class="line"></div>
-              <div class="py-4 border-bottom border-accent banner-header w-100">
-                <h4 class="banner-text flex-column">
-                  <span class="font-weight-bold font-level-7"
-                    >Psicólogo/a Educacional</span
-                  ><span class="font-level-8">SLEP-EDU-001-2025</span>
-                </h4>
-                <span class="banner-icon ml-auto" aria-hidden="true">
-                  <div class="badge badge-danger font-level-7">Abierta</div>
-                </span>
-              </div>
-              <div class="d-flex w-100 mt-2">
-                <p class="banner-text flex-column font-level-9">
-                  Tipo de vacante:
-                </p>
-                <p
-                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
-                >
-                  Contrata
-                </p>
-              </div>
-              <div class="d-flex w-100">
-                <p class="banner-text flex-column font-level-9">Ciudad:</p>
-                <p
-                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
-                >
-                  Putre
-                </p>
-              </div>
-              <div class="d-flex w-100">
-                <p class="banner-text flex-column font-level-9">Institución:</p>
-                <p
-                  class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
-                >
-                  Liceo Técnico Profesional Granaderos de Putre.
-                </p>
-              </div>
-              <div class="d-flex w-100 mt-2">
-                <h5
-                  class="banner-text flex-column font-level-9 font-weight-bolder"
-                >
-                  Descripción:
-                </h5>
-              </div>
-              <div class="d-flex w-100 mt-2">
-                <p class="banner-text flex-column font-level-9">
-                  Únete a nuestro equipo de bienestar para apoyar el desarrollo
-                  integral de los estudiantes.
-                </p>
-              </div>
-              <div class="d-flex w-100 mt-2">
-                <h5
-                  class="banner-text flex-column font-level-9 font-weight-bolder"
-                >
-                  Requisitos:
-                </h5>
-              </div>
-              <div class="d-flex w-100 mt-2">
-                <p class="banner-text flex-column font-level-9">
-                  Buscamos un profesional titulado para la enseñanza en
-                  matemáticas en educación básica, con experiencia en
-                  metodologías innovadoras.
-                </p>
-              </div>
-
-              <div class="d-flex w-100 mt-2">
-                <p
-                  class="banner-text flex-column font-level-9 font-weight-bolder"
-                >
-                  Adjuntos:
-                </p>
-                <p class="banner-icon ml-auto mb-0 font-level-9">
-                  <span
-                    class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
-                  ></span>
-                  <span
-                    class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
-                  ></span>
-                </p>
-              </div>
-
-              <div class="py-1 border-bottom d-flex w-100 border-accent"></div>
-              <div class="d-flex w-100 my-3">
-                <div class="banner-text flex-column">
-                  <div class="badge badge-info font-level-8">
-                    Postulación hasta 05/09/2025 8:00:00
-                  </div>
-                </div>
               </div>
             </a>
           </div>
@@ -302,7 +233,7 @@
           </div>
         </div>
         <div class="text-center mt-5">
-          <a href="#" class="btn btn-secondary btn-lg">Comenzar ahora</a>
+          <a href="#" class="btn btn-secondary btn-lg">Iniciar Sesión</a>
         </div>
       </div>
     </section>
@@ -390,6 +321,11 @@ import { onMounted, onUnmounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
+import {
+  fetchConvocatorias,
+  fetchCountConvocatorias,
+} from "../services/convocatoriaServices";
+import type { Convocatoria } from "../types";
 
 const router = useRouter();
 
@@ -406,6 +342,13 @@ const visibility = ref("visible");
 const Logo = ref("../../src/assets/img/Logotipo-Chinchorro-web-02.png");
 const isBgNavbar = ref("bg-transparent");
 
+const convocatorias = ref<Convocatoria[]>([]);
+const indices = ref({
+  disponibles: 0,
+  creadasEsteAnio: 0,
+  registradas: 0,
+});
+
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 40;
   console.log(isScrolled.value);
@@ -421,8 +364,10 @@ const handleScroll = () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener("scroll", handleScroll);
+  convocatorias.value = (await fetchConvocatorias()) ?? [];
+  indices.value = await fetchCountConvocatorias();
 });
 
 onUnmounted(() => {
@@ -553,7 +498,7 @@ const submitForm = () => {
 .banner-custom {
   background: linear-gradient(135deg, var(--footer-bg) 0%, var(--dark) 100%);
   color: white;
-  padding: 5rem 0;
+  padding: 5rem 0 0 0;
   /*margin-bottom: 4rem;*/
   position: relative;
   overflow: hidden;
@@ -621,6 +566,13 @@ const submitForm = () => {
 
 .fw-800 {
   font-weight: 800;
+}
+
+.hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-color: var(--light) !important;
 }
 
 .top-header {

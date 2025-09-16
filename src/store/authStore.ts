@@ -15,24 +15,29 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
-    async login(payload: { usuario: string; password: string }) {
+    async login(payload: {
+      usuario: string;
+      password: string;
+      recaptcha: string;
+    }) {
       const res = await loginUsuario(payload);
       this.user = res.user;
       const candidatoFormateado = await this.formatearCandidato(res.candidato);
       this.candidato = candidatoFormateado;
     },
-
     async registrar(payload: {
       nombre: string;
       rut: string;
       correo: string;
       password: string;
+      recaptcha: string;
     }) {
       const res = await registrarUsuario({
         usuario: payload.rut,
         nombre: payload.nombre,
         email: payload.correo,
         password: payload.password,
+        recaptcha: payload.recaptcha,
       });
 
       this.user = res.user;

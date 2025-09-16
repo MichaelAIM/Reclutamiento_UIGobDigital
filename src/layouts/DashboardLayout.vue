@@ -58,7 +58,7 @@
               @click="Go('/convocatorias')"
             >
               <i class="bi bi-file-earmark-text mr-3"></i>
-              Convocatorias
+              Convocatorias disponibles
             </a>
             <a
               class="nav-link d-flex align-items-center pointer"

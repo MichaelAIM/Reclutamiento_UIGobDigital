@@ -6,6 +6,7 @@ export async function registrarUsuario(datos: {
   nombre: string;
   password: string;
   email: string;
+  recaptcha: string;
 }) {
   const res: any = await api.post("/auth/register", datos);
 
@@ -20,11 +21,12 @@ export async function registrarUsuario(datos: {
 export async function loginUsuario(datos: {
   usuario: string;
   password: string;
+  recaptcha: string;
 }) {
   const res: any = await api.post("/auth/login", datos);
 
   if (!res.data) {
-    const error = res.json();
+    const error = await res.json();
     throw new Error(error.message || "Credenciales inválidas");
   }
 

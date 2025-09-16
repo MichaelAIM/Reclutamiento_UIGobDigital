@@ -380,7 +380,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, watch, nextTick } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/authStore";

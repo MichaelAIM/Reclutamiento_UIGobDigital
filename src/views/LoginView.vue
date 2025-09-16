@@ -10,13 +10,13 @@
         style="max-width: 35%; height: auto"
       />
 
-      <div class="p-4 pt-3 w-100">
+      <div class="px-4 pt-3 pb-1 w-100">
         <!-- <p class="h2">Iniciar Sesión</p> -->
         <img
           src="../assets/img/favicon-fb.ico"
           alt="Logo Contrataciones Slep Chinchorro"
           class="mb-3 mx-auto d-block"
-          style="max-width: 60px; height: auto"
+          style="max-width: 50px; height: auto"
         />
         <div class="fw-semibold text-center text-dark w-100">
           Bienvenido al Sistema de Reclutamiento y Selección
@@ -61,17 +61,25 @@
             class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between w-100 gap-2"
           >
             <div class="form-check"></div>
-            <a href="#" class="text-primary fw-medium text-decoration-none">
+            <a
+              href="#"
+              class="text-primary fw-medium text-decoration-none fs-0875"
+            >
               ¿Olvidó su contraseña?
             </a>
           </div>
 
-          <button type="submit" class="btn btn-primary w-100 mt-5">
+          <button type="submit" class="btn btn-primary w-100 mt-3 mb-2 fs-0875">
             Iniciar Sesión
           </button>
+          <RecaptchaBadge />
         </form>
       </div>
     </a>
+  </div>
+  <div v-if="cargandoRecaptcha" class="text-center mt-3">
+    <i class="bi bi-shield-lock text-primary fs-4"></i>
+    <div class="text-muted small mt-1">Validando seguridad institucional…</div>
   </div>
 </template>
 
@@ -81,12 +89,16 @@ import { useAuthStore } from "../store/authStore";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import { validarRut, formatearRut, limpiarRut } from "../utils/validaciones";
+import { useRecaptchaV3 } from "../composables/useRecaptchaV3";
+import RecaptchaBadge from "../components/RecaptchaBadge.vue";
 
 const checked1 = ref(true);
 const usuario = ref("");
 const password = ref("");
 const authStore = useAuthStore();
 const router = useRouter();
+const { getToken } = useRecaptchaV3();
+const cargandoRecaptcha = ref(false);
 
 function onRutInput(e) {
   const target = e.target;
@@ -99,28 +111,48 @@ function onRutInput(e) {
 
 async function iniciarSesion() {
   if (!validarRut(usuario.value)) {
+    Swal.fire({ icon: "warning", title: "RUT inválido" });
+    return;
+  }
+
+  cargandoRecaptcha.value = true;
+  const recaptchaToken = await getToken();
+  cargandoRecaptcha.value = false;
+
+  if (!recaptchaToken) {
     Swal.fire({
       icon: "warning",
-      title: "RUT inválido",
-      text: "Por favor ingresa un RUT válido (Ej: 12345678-9)",
+      title: "Verificación fallida",
+      text: "No se pudo validar tu sesión. Intenta nuevamente.",
     });
     return;
   }
 
   try {
     const rutLimpio = limpiarRut(usuario.value);
-    await authStore.login({ usuario: rutLimpio, password: password.value });
+    await authStore.login({
+      usuario: rutLimpio,
+      password: password.value,
+      recaptcha: recaptchaToken,
+    });
+
     Swal.fire({
       icon: "success",
       title: "Bienvenido",
       text: `Hola ${authStore.candidato.nombre_completo}, has iniciado sesión correctamente.`,
     });
+
     router.push("/perfil");
   } catch (error) {
+    let mensajeError = error.message;
+    if (error.response.data) {
+      mensajeError = error.response.data.message || mensajeError;
+    }
+
     Swal.fire({
       icon: "error",
-      title: "Error de acceso",
-      text: error.message,
+      title: "Error al registrar",
+      text: mensajeError,
     });
   }
 }
@@ -155,5 +187,20 @@ a.bg-white:hover,
 button.bg-white:focus,
 button.bg-white:hover {
   background-color: #fff !important;
+}
+.form-control {
+  border-radius: 0.375rem;
+  box-shadow: none;
+  border: 1px solid #ced4da;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-size: 0.875rem;
+}
+
+.form-label {
+  font-size: 0.875rem !important;
+}
+
+.fs-0875 {
+  font-size: 0.875rem !important;
 }
 </style>

@@ -10,13 +10,13 @@
         style="max-width: 35%; height: auto"
       />
 
-      <div class="p-4 pt-3 w-100">
-        <p class="h2">Crear cuenta nueva</p>
+      <div class="px-4 pt-3 pb-1 w-100">
+        <!--    <p class="h2">Crear cuenta nueva</p> -->
         <img
           src="../assets/img/favicon-fb.ico"
           alt="Logo Contrataciones Slep Chinchorro"
           class="mb-3 mx-auto d-block"
-          style="max-width: 60px; height: auto"
+          style="max-width: 50px; height: auto"
         />
         <div class="fw-semibold text-center text-dark w-100">
           Bienvenido al Sistema de Reclutamiento y Selección
@@ -91,10 +91,10 @@
               v-model="acceptedTerms"
               id="terms"
             />
-            <label class="form-check-label">
+            <label class="form-check-label fs-0875">
               Acepto los
               <a
-                class="text-primary fw-medium text-decoration-none pointer"
+                class="text-primary fw-medium text-decoration-none pointer fs-0875"
                 @click.prevent="abrirModal"
               >
                 términos y condiciones
@@ -104,14 +104,22 @@
 
           <button
             type="submit"
-            class="btn btn-primary w-100 mt-5"
+            class="btn btn-primary w-100 mt-4 mb-2 fs-0875"
             :disabled="!acceptedTerms"
           >
             Registrarse
           </button>
         </form>
+        <RecaptchaBadge />
+        <div v-if="cargandoRecaptcha" class="text-center mt-3">
+          <i class="bi bi-shield-lock text-primary fs-4"></i>
+          <div class="text-muted small mt-1">
+            Validando seguridad institucional…
+          </div>
+        </div>
       </div>
     </a>
+
     <!-- Modal de Términos -->
     <TerminosModal v-model:visible="mostrarModal" />
   </div>
@@ -123,6 +131,8 @@ import TerminosModal from "../components/modal/TerminosModal.vue";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../store/authStore";
 import { useRouter } from "vue-router";
+import { useRecaptchaV3 } from "../composables/useRecaptchaV3";
+import RecaptchaBadge from "../components/RecaptchaBadge.vue";
 import {
   validarRut,
   formatearRut,
@@ -139,6 +149,8 @@ const auth = useAuthStore();
 const router = useRouter();
 const acceptedTerms = ref(false);
 const mostrarModal = ref(false);
+const { getToken } = useRecaptchaV3();
+const cargandoRecaptcha = ref(false);
 
 const abrirModal = () => {
   mostrarModal.value = true;
@@ -178,12 +190,26 @@ async function registrarUsuario() {
     return;
   }
 
+  cargandoRecaptcha.value = true;
+  const recaptchaToken = await getToken();
+  cargandoRecaptcha.value = false;
+
+  if (!recaptchaToken) {
+    Swal.fire({
+      icon: "warning",
+      title: "Verificación fallida",
+      text: "No se pudo validar tu sesión. Intenta nuevamente.",
+    });
+    return;
+  }
+
   try {
     await auth.registrar({
       nombre: nombre.value,
       rut: limpiarRut(rut.value),
       correo: correo.value,
       password: password.value,
+      recaptcha: recaptchaToken,
     });
 
     Swal.fire({
@@ -194,10 +220,15 @@ async function registrarUsuario() {
 
     router.push("/perfil");
   } catch (error) {
+    let mensajeError = error.message;
+    if (error.response.data) {
+      mensajeError = error.response.data.message || mensajeError;
+    }
+
     Swal.fire({
       icon: "error",
       title: "Error al registrar",
-      text: error.message,
+      text: mensajeError,
     });
   }
 }
@@ -232,5 +263,20 @@ button.bg-white:hover {
     #f8d63c 50%,
     #f0757f 100%
   );
+}
+.form-control {
+  border-radius: 0.375rem;
+  box-shadow: none;
+  border: 1px solid #ced4da;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  font-size: 0.875rem;
+}
+
+.form-label {
+  font-size: 0.875rem !important;
+}
+
+.fs-0875 {
+  font-size: 0.875rem !important;
 }
 </style>

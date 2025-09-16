@@ -140,7 +140,7 @@
 </template>
 
 <script setup>
-import { reactive, defineEmits, ref, onMounted } from "vue";
+import { reactive, ref, onMounted } from "vue";
 import NuevaConvocatoria from "../components/modal/NuevaConvocatoriaModal.vue";
 import { fetchConvocatorias } from "../services/convocatoriaServices";
 
