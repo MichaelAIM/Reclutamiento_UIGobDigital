@@ -2,22 +2,34 @@
   <div class="top-header fixed-top" :class="visibility">
     <div class="doc-icons">
       <div class="doc-icon">
-        <a href="#" class="text-decoration-none">
+        <a
+          href="https://www.facebook.com/epchinchorro/?locale=es_CL"
+          class="text-decoration-none"
+        >
           <span class="cl cl-social text-white cl-facebook"></span>
         </a>
       </div>
       <div class="doc-icon">
-        <a href="#" class="text-decoration-none">
+        <a
+          href="https://www.instagram.com/slepchinchorro/?hl=es"
+          class="text-decoration-none"
+        >
           <span class="cl cl-social text-white cl-instagram"></span>
         </a>
       </div>
       <div class="doc-icon">
-        <a href="#" class="text-decoration-none">
+        <a
+          href="https://x.com/edu__chinchorro?lang=es"
+          class="text-decoration-none"
+        >
           <span class="cl cl-social text-white cl-twitter"></span>
         </a>
       </div>
       <div class="doc-icon">
-        <a href="#" class="text-decoration-none">
+        <a
+          href="https://www.youtube.com/@ServicioLocalChinchorro"
+          class="text-decoration-none"
+        >
           <span class="cl cl-social text-white cl-youtube"></span>
         </a>
       </div>
@@ -155,7 +167,6 @@ const isBgNavbar = ref("bg-transparent");
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 40;
-  console.log(isScrolled.value);
 
   if (isScrolled.value) {
     visibility.value = "invisible";

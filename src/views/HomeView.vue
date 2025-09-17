@@ -109,7 +109,7 @@
         <div class="section-body">
           <p>Encuentra una oportunidad de empleo en el Slep Chinchorro</p>
         </div>
-        <div class="row py-5">
+        <div class="row py-5" v-if="convocatorias.length > 0">
           <div
             class="col-md-4"
             v-for="convocatoria in convocatorias"
@@ -203,6 +203,13 @@
             </a>
           </div>
         </div>
+        <div class="row py-5" v-else>
+          <div class="col-12 text-center">
+            <p class="text-muted">
+              No hay convocatorias vigentes en este momento.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -255,7 +262,7 @@
                 ayudarte con cualquier consulta relacionada con el proceso de
                 postulación.
               </p>
-              <p><i class="bi bi-envelope me-2"></i>{{ contactInfo.email }}</p>
+              <p><i class="bi bi-envelope me-2"></i>{{ contactInfo.correo }}</p>
               <p><i class="bi bi-telephone me-2"></i>{{ contactInfo.phone }}</p>
               <p><i class="bi bi-clock me-2"></i>{{ contactInfo.hours }}</p>
             </div>
@@ -273,7 +280,18 @@
                       type="text"
                       class="form-control"
                       id="nombre"
-                      v-model="formData.name"
+                      v-model="formData.nombre"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="rut" class="form-label">rut</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="rut"
+                      v-model="formData.rut"
+                      @input="onRutInput"
                       required
                     />
                   </div>
@@ -285,7 +303,7 @@
                       type="email"
                       class="form-control"
                       id="correo"
-                      v-model="formData.email"
+                      v-model="formData.correo"
                       required
                     />
                   </div>
@@ -295,7 +313,7 @@
                       class="form-control"
                       id="mensaje"
                       rows="4"
-                      v-model="formData.message"
+                      v-model="formData.mensaje"
                       required
                     ></textarea>
                   </div>
@@ -326,6 +344,8 @@ import {
   fetchCountConvocatorias,
 } from "../services/convocatoriaServices";
 import type { Convocatoria } from "../types";
+import api from "../services/apiService";
+import Swal from "sweetalert2";
 
 const router = useRouter();
 
@@ -351,7 +371,6 @@ const indices = ref({
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 40;
-  console.log(isScrolled.value);
 
   if (isScrolled.value) {
     visibility.value = "invisible";
@@ -438,38 +457,130 @@ const steps = ref<Step[]>([
 
 // Datos para el formulario de contacto
 interface ContactInfo {
-  email: string;
+  correo: string;
   phone: string;
   hours: string;
 }
 
 interface FormData {
-  name: string;
-  email: string;
-  message: string;
+  nombre: string;
+  correo: string;
+  mensaje: string;
+  rut: string;
 }
 
 const contactInfo = reactive<ContactInfo>({
-  email: " postulaciones@slepchinchorro.cl",
+  correo: " postulaciones@slepchinchorro.cl",
   phone: " +56 58 234 5678",
   hours: " Lunes a Viernes: 8:30 - 17:30 hrs",
 });
 
 const formData = reactive<FormData>({
-  name: "",
-  email: "",
-  message: "",
+  nombre: "",
+  correo: "",
+  mensaje: "",
+  rut: "",
 });
 
-const submitForm = () => {
-  console.log("Formulario enviado:", formData);
-  alert("Mensaje enviado con éxito. Nos pondremos en contacto contigo pronto.");
+function onRutInput(e: any) {
+  const target = e.target;
+  if (target.value === "") {
+    formData.rut = "";
+    return;
+  }
+  formData.rut = formatearRut(target.value);
+}
 
-  // Resetear el formulario
-  formData.name = "";
-  formData.email = "";
-  formData.message = "";
+function formatearRut(rut: string): string {
+  const limpio = rut.replace(/[^\dkK]/g, "").toUpperCase();
+  if (limpio.length < 2) return limpio;
+
+  const cuerpo = limpio.slice(0, -1);
+  const dv = limpio.slice(-1);
+
+  const cuerpoFormateado = cuerpo
+    .split("")
+    .reverse()
+    .reduce(
+      (acc, char, i) =>
+        acc + char + ((i + 1) % 3 === 0 && i + 1 !== cuerpo.length ? "." : ""),
+      ""
+    )
+    .split("")
+    .reverse()
+    .join("");
+
+  return `${cuerpoFormateado}-${dv}`;
+}
+
+function limpiarRut(rut: string): string {
+  return rut.replace(/\./g, "").toUpperCase();
+}
+
+function calculateDV(rut: string) {
+  const clean = rut.replace(/\D/g, ""); // Elimina cualquier carácter no numérico
+  const rutWithoutVerifier = clean.slice(0, -1);
+  const verifierDigit = clean.slice(-1);
+  let sum = 0;
+  let multiplier = 2;
+
+  for (let i = rutWithoutVerifier.length - 1; i >= 0; i--) {
+    sum += parseInt(rutWithoutVerifier[i]) * multiplier;
+    multiplier = multiplier === 7 ? 2 : multiplier + 1;
+  }
+
+  const remainder = 11 - (sum % 11);
+  if (remainder === 11) return "0";
+  if (remainder === 10) return "K";
+
+  if (verifierDigit !== remainder.toString()) {
+    return false;
+  }
+  return true;
+}
+
+const submitForm = async () => {
+  try {
+    if (
+      !formData.nombre ||
+      !formData.correo ||
+      !formData.mensaje ||
+      !formData.rut
+    ) {
+      alert("Por favor, completa todos los campos del formulario.");
+      return;
+    }
+    formData.rut = limpiarRut(formData.rut);
+
+    if (!calculateDV(formData.rut)) {
+      Swal.fire({ icon: "warning", title: "RUT inválido" });
+      return;
+    }
+
+    await api.post("mensajes", formData);
+    resetearFormulario();
+    Swal.fire(
+      "¡Mensaje enviado!",
+      "Nos pondremos en contacto contigo pronto.",
+      "success"
+    );
+  } catch (error) {
+    console.error("Error al validar el formulario:", error);
+    Swal.fire(
+      "Error",
+      "Ocurrió un error al validar el formulario. Inténtalo de nuevo.",
+      "error"
+    );
+    return;
+  }
 };
+
+function resetearFormulario() {
+  formData.nombre = "";
+  formData.correo = "";
+  formData.mensaje = "";
+  formData.rut = "";
+}
 </script>
 
 <style scoped>
