@@ -553,7 +553,10 @@ const submitForm = async () => {
     formData.rut = limpiarRut(formData.rut);
 
     if (!calculateDV(formData.rut)) {
-      Swal.fire({ icon: "warning", title: "RUT inválido" });
+      Swal.fire({
+        icon: "warning",
+        title: "RUT inválido, reemplace e intente nuevamente",
+      });
       return;
     }
 
