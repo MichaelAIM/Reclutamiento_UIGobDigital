@@ -22,7 +22,7 @@
                   <label for="rut" class="form-label">Rut</label>
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control w-100"
                     id="rut"
                     v-model="form.rut"
                     disabled
@@ -34,7 +34,7 @@
                   >
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control w-100"
                     id="nombreCompleto"
                     v-model="form.nombre_completo"
                   />
@@ -45,7 +45,7 @@
                   >
                   <input
                     type="email"
-                    class="form-control"
+                    class="form-control w-100"
                     id="correo"
                     v-model="form.correo"
                   />
@@ -54,7 +54,7 @@
                   <label for="telefono" class="form-label">Teléfono</label>
                   <input
                     type="tel"
-                    class="form-control"
+                    class="form-control w-100"
                     id="telefono"
                     v-model="form.telefono"
                   />
@@ -65,7 +65,7 @@
                   >
                   <select
                     id="estado_civil"
-                    class="form-select"
+                    class="form-select w-100"
                     v-model="form.estado_civil_id"
                   >
                     <option value="">Selecciona estado civil</option>
@@ -80,7 +80,7 @@
                   >
                   <input
                     type="date"
-                    class="form-control"
+                    class="form-control w-100"
                     id="fecha_nac"
                     v-model="form.fecha_nacimiento"
                   />
@@ -91,7 +91,7 @@
                   >
                   <select
                     id="nacionalidad"
-                    class="form-select"
+                    class="form-select w-100"
                     v-model="form.nacionalidad_id"
                   >
                     <option value="">Selecciona nacionalidad</option>
@@ -104,25 +104,22 @@
                     </option>
                   </select>
                 </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                   <label for="direccion" class="form-label"
                     >Dirección Particular</label
                   >
                   <input
                     type="text"
                     id="direccion"
-                    class="form-control"
+                    class="form-control w-100"
                     v-model="form.direccion"
                   />
                 </div>
-                <div class="col-auto my-2">
+                <div class="col-md-6 my-2">
                   <label for="region" class="form-label">Región</label>
                   <select
                     id="region"
-                    class="form-select"
+                    class="form-select w-100"
                     v-model="form.region_id"
                     @change="onRegionChange"
                   >
@@ -136,12 +133,11 @@
                     </option>
                   </select>
                 </div>
-
-                <div class="col-auto my-2">
+                <div class="col-md-6 my-2">
                   <label for="comuna" class="form-label">Comuna</label>
                   <select
                     id="comuna"
-                    class="form-select"
+                    class="form-select w-100"
                     v-model="form.comuna_id"
                     :disabled="!form.region_id"
                   >
@@ -156,141 +152,42 @@
                   </select>
                 </div>
               </div>
-
-              <hr class="my-4" />
-              <h3 class="h5 fw-bold mb-5 text-dark">Información Profesional</h3>
-
-              <p class="h7">Disponibilidad para trabajar en las zonas:</p>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="inlineCheckbox1"
-                  value="option1"
-                />
-                <label class="form-check-label" for="inlineCheckbox1"
-                  >Arica</label
-                >
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="inlineCheckbox2"
-                  value="option2"
-                />
-                <label class="form-check-label" for="inlineCheckbox2"
-                  >Putre</label
-                >
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="inlineCheckbox3"
-                  value="option3"
-                />
-                <label class="form-check-label" for="inlineCheckbox3"
-                  >Azapa</label
-                >
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="inlineCheckbox4"
-                  value="option4"
-                />
-                <label class="form-check-label" for="inlineCheckbox4"
-                  >Camarones</label
-                >
-              </div>
-
-              <!-- Nuevos campos multiselect para jornadas -->
-              <div class="my-3">
-                <label class="form-label">Jornadas de trabajo</label>
-                <div class="multiselect-container">
-                  <div
-                    v-for="jornada in store.estados.jornadas"
-                    :key="jornada.id"
-                    class="form-check"
+              <hr />
+              <h2 class="h4 fw-bold mb-4 text-dark">Información Profesional</h2>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="titulo_profesional" class="form-label"
+                    >Título Profesional</label
                   >
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      :id="'jornada_' + jornada.id"
-                      :value="jornada.id"
-                      v-model="form.jornadas_seleccionadas"
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="'jornada_' + jornada.id"
+                  <select
+                    id="titulo_profesional"
+                    class="form-select w-100"
+                    v-model="form.titulo_profesional_id"
+                  >
+                    <option value="">Selecciona título profesional</option>
+                    <option
+                      v-for="t in store.estados.titulos_profesionales"
+                      :key="t.id"
+                      :value="t.id"
                     >
-                      {{ jornada.nombre }}
-                    </label>
-                  </div>
+                      {{ t.nombre }}
+                    </option>
+                  </select>
                 </div>
-              </div>
 
-              <!-- Nuevos campos multiselect para modalidades horarias -->
-              <div class="my-3">
-                <label class="form-label">Modalidades horarias</label>
-                <div class="multiselect-container">
-                  <div
-                    v-for="modalidad in store.estados.modalidades_horarias"
-                    :key="modalidad.id"
-                    class="form-check"
+                <div class="col-md-6">
+                  <label for="especialidad" class="form-label"
+                    >Especialidad</label
                   >
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      :id="'modalidad_' + modalidad.id"
-                      :value="modalidad.id"
-                      v-model="form.modalidades_seleccionadas"
-                    />
-                    <label
-                      class="form-check-label"
-                      :for="'modalidad_' + modalidad.id"
-                    >
-                      {{ modalidad.nombre }}
-                    </label>
-                  </div>
+                  <input
+                    type="text"
+                    id="especialidad"
+                    class="form-control w-100"
+                    v-model="form.especialidad"
+                  />
                 </div>
-              </div>
 
-              <div class="my-3">
-                <label for="especialidad" class="form-label"
-                  >Especialidad</label
-                >
-                <input
-                  type="text"
-                  id="especialidad"
-                  class="form-control"
-                  v-model="form.especialidad"
-                />
-              </div>
-
-              <div class="my-3">
-                <label for="titulo_profesional" class="form-label"
-                  >Título Profesional</label
-                >
-                <select
-                  id="titulo_profesional"
-                  class="form-select"
-                  v-model="form.titulo_profesional_id"
-                >
-                  <option value="">Selecciona título profesional</option>
-                  <option
-                    v-for="t in store.estados.titulos_profesionales"
-                    :key="t.id"
-                    :value="t.id"
-                  >
-                    {{ t.nombre }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="mb-3">
+                <!--               <div class="mb-3">
                 <label for="mensaje" class="form-label"
                   >Presentación Personal</label
                 >
@@ -301,13 +198,39 @@
                   placeholder="Cuéntanos sobre tu experiencia y motivación..."
                   v-model="form.presentacion"
                 ></textarea>
+              </div> -->
               </div>
+              <hr />
+              <h2 class="h4 fw-bold mb-4 text-dark">
+                Preferencias de Contratación
+              </h2>
 
-              <div class="mt-4">
-                <button type="submit" class="btn btn-upload w-100 py-2">
-                  <i class="bi bi-check-circle me-2"></i>
-                  Guardar Información
-                </button>
+              <div class="row">
+                <div class="col-12">
+                  <p class="h7">Disponibilidad para trabajar en las zonas:</p>
+                </div>
+
+                <!-- Nuevos campos multiselect para jornadas -->
+                <div class="col-12">
+                  <label class="form-label">Jornadas de trabajo</label>
+
+                  <multiselect
+                    id="tagging"
+                    v-model="form.jornadas_seleccionadas"
+                    tag-placeholder="Add this as new tag"
+                    placeholder="Search or add a tag"
+                    label="nombre"
+                    track-by="id"
+                    :options="store.estados.jornadas"
+                    :multiple="true"
+                    :taggable="true"
+                  ></multiselect>
+                </div>
+
+                <!-- Nuevos campos multiselect para modalidades horarias -->
+                <div class="col-12">
+                  <label class="form-label">Modalidades horarias</label>
+                </div>
               </div>
             </form>
           </div>
@@ -353,7 +276,10 @@
                   >
                     <i class="bi bi-eye"></i>
                   </button>
-                  <label v-if="!doc.archivo" class="btn btn-upload btn-sm mb-0">
+                  <label
+                    v-if="!doc.archivo"
+                    class="btn btn-upload btn-sm mb-0 px-3 font-level-9"
+                  >
                     Subir
                     <input
                       type="file"
@@ -388,8 +314,7 @@ import { useCandidatoStore } from "../store/candidatoStore";
 import * as service from "../services/candidatoService";
 import type { DocumentoEsperado } from "../types";
 import { encryptId } from "../utils/validaciones";
-import Multiselect from "vue-multiselect"; // <-- 1. Importa el componente
-import "vue-multiselect/dist/vue-multiselect.css"; // <-- 2. Importa los estilos
+import Multiselect from "vue-multiselect";
 
 const store = useCandidatoStore();
 const authStore = useAuthStore();
@@ -419,7 +344,7 @@ const form = reactive({
   cargos: [],
   titulo_profesional_id: null,
   estado_candidato_id: 1,
-  jornadas_seleccionadas: [], // Nuevo array para jornadas
+  jornadas_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para jornadas
   modalidades_seleccionadas: [], // Nuevo array para modalidades
   especialidad: "",
 });
@@ -428,15 +353,22 @@ const documentosEsperados = reactive<DocumentoEsperado[]>([]);
 const loading = computed(() => store.loading ?? true);
 
 onMounted(async () => {
-  await cargaDatosBase();
-  onRegionChange();
-});
-
-async function cargaDatosBase() {
   await store.loadCatalogos(authStore.candidato.id);
   Object.assign(documentosEsperados, store.estados.documentos);
   Object.assign(form, authStore.candidato);
-}
+  onRegionChange();
+  // Si el candidato tiene jornadas como IDs, transformarlas en objetos
+  if (Array.isArray(authStore.candidato.jornadas_seleccionadas)) {
+    form.jornadas_seleccionadas = authStore.candidato.jornadas_seleccionadas
+      .map((id: number) => store.estados.jornadas.find((j) => j.id === id))
+      .filter((j): j is { id: number; nombre: string } => j !== undefined);
+  }
+});
+
+// Computed para extraer solo los IDs al enviar
+const jornadasIds = computed(() =>
+  form.jornadas_seleccionadas.map((j) => j.id)
+);
 
 async function subirArchivo(id: any, archivo: File) {
   const doc: any = documentosEsperados.find((d: any) => d.id === id);
@@ -528,7 +460,11 @@ async function actualizarDatos() {
     Swal.fire("Error", "ID de candidato no válido", "error");
     return;
   }
-  const update = await store.updateCandidato(authStore.candidato.id, form);
+  const payload = {
+    ...form,
+    jornadas_seleccionadas: form.jornadas_seleccionadas.map((j) => j.id),
+  };
+  const update = await store.updateCandidato(authStore.candidato.id, payload);
   if (update) {
     Object.assign(authStore.candidato, update);
   }
@@ -545,7 +481,7 @@ function onRegionChange() {
   }
 }
 </script>
-
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
 

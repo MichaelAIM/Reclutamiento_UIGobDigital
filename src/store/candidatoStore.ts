@@ -15,6 +15,9 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     titulos: [],
     cargos: [],
     documentos: [],
+    jornadas: [],
+    ciudades: [],
+    modalidades: [],
   });
 
   const documentoCandidato = reactive({
@@ -37,12 +40,16 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
       setLoading(true);
       setError(null);
       try {
-        const [reg, nac, est, tit, carg, docs] = await service.fetchCatalogos();
+        const [reg, nac, est, tit, carg, docs, jor, mod, ciu] =
+          await service.fetchCatalogos();
         estados.regiones = reg.data ?? [];
         estados.nacionalidades = nac.data ?? [];
         estados.estadosCiviles = est.data ?? [];
         estados.titulos = tit.data ?? [];
         estados.cargos = carg.data ?? [];
+        estados.jornadas = jor.data ?? [];
+        estados.modalidades = mod.data ?? [];
+        estados.ciudades = ciu.data ?? [];
 
         if (idCandidato) {
           const docsResponse = await loadDocumentosCandidatos(idCandidato);

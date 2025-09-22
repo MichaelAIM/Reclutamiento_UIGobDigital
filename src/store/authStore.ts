@@ -78,6 +78,12 @@ export const useAuthStore = defineStore("auth", {
         presentacion: candidato.presentacion,
         region_id,
         cargos: candidato.cargos ? candidato.cargos.map((c: any) => c.id) : [],
+        jornadas_seleccionadas: candidato.jornadas
+          ? candidato.jornadas.map((c: any) => c.id)
+          : [],
+        ciudades_seleccionadas: candidato.ciudades
+          ? candidato.ciudades.map((c: any) => c.id)
+          : [],
       };
     },
   },

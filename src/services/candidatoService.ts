@@ -9,6 +9,9 @@ export const fetchCatalogos = (): Promise<CatalogosResponse> =>
     api.get("/titulos_profesionales"),
     api.get("/cargos"),
     api.get("/documentos"),
+    api.get("/jornadas"),
+    api.get("/modalidades"),
+    api.get("/ciudades"),
   ]) as Promise<CatalogosResponse>;
 
 export const createCandidato = (payload: CandidatoPayload) =>

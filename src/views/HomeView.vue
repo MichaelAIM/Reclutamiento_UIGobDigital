@@ -470,7 +470,7 @@ interface FormData {
 }
 
 const contactInfo = reactive<ContactInfo>({
-  correo: " postulaciones@slepchinchorro.cl",
+  correo: " postulaciones@epchinchorro.cl",
   phone: " +56 58 234 5678",
   hours: " Lunes a Viernes: 8:30 - 17:30 hrs",
 });

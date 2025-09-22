@@ -39,6 +39,7 @@ export interface CandidatoPayload {
 
 export interface Candidato extends CandidatoPayload {
   cargos: number[];
+  jornadas_seleccionadas: number[];
 }
 
 export interface Usuario {
@@ -51,6 +52,9 @@ export interface Usuario {
 }
 
 export type CatalogosResponse = [
+  { data: Estado[] },
+  { data: Estado[] },
+  { data: Estado[] },
   { data: Estado[] },
   { data: Estado[] },
   { data: Estado[] },
