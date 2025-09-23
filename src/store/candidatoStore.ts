@@ -18,6 +18,7 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     jornadas: [],
     ciudades: [],
     modalidades: [],
+    nivelesEducacion: [],
   });
 
   const documentoCandidato = reactive({
@@ -40,7 +41,7 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
       setLoading(true);
       setError(null);
       try {
-        const [reg, nac, est, tit, carg, docs, jor, mod, ciu] =
+        const [reg, nac, est, tit, carg, docs, jor, mod, ciu, nedu] =
           await service.fetchCatalogos();
         estados.regiones = reg.data ?? [];
         estados.nacionalidades = nac.data ?? [];
@@ -50,6 +51,7 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
         estados.jornadas = jor.data ?? [];
         estados.modalidades = mod.data ?? [];
         estados.ciudades = ciu.data ?? [];
+        estados.nivelesEducacion = nedu.data ?? [];
 
         if (idCandidato) {
           const docsResponse = await loadDocumentosCandidatos(idCandidato);

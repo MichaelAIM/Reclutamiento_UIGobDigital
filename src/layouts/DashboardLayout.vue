@@ -34,7 +34,7 @@
       </div>
     </div>
   </nav>
-
+  <!-- Aside Layout -->
   <div class="container-fluid px-0">
     <div class="row g-0">
       <div class="col-12 col-md-3 col-lg-2 bg-accent-primary">
@@ -86,6 +86,7 @@
           </nav>
         </div>
       </div>
+      <!-- Aside Layout -->
 
       <div class="col-12 col-md-9 col-lg-10">
         <main class="p-4">

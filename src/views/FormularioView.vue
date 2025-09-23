@@ -69,7 +69,11 @@
                     v-model="form.estado_civil_id"
                   >
                     <option value="">Selecciona estado civil</option>
-                    <option v-for="r in estadosCivil" :key="r.id" :value="r.id">
+                    <option
+                      v-for="r in store.estados.estadosCiviles"
+                      :key="r.id"
+                      :value="r.id"
+                    >
                       {{ r.nombre }}
                     </option>
                   </select>
@@ -155,18 +159,17 @@
               <hr />
               <h2 class="h4 fw-bold mb-4 text-dark">Información Profesional</h2>
               <div class="row g-3">
-                <div class="col-md-6">
-                  <label for="titulo_profesional" class="form-label"
-                    >Título Profesional</label
+                <div class="col-md-6 my-2">
+                  <label for="nivel_educativo" class="form-label"
+                    >Último nivel de educación cursado</label
                   >
                   <select
-                    id="titulo_profesional"
+                    id="nivel_educativo"
                     class="form-select w-100"
-                    v-model="form.titulo_profesional_id"
+                    v-model="form.nivelesEducacion_id"
                   >
-                    <option value="">Selecciona título profesional</option>
                     <option
-                      v-for="t in store.estados.titulos_profesionales"
+                      v-for="t in store.estados.nivelesEducacion"
                       :key="t.id"
                       :value="t.id"
                     >
@@ -175,16 +178,57 @@
                   </select>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6 my-2">
+                  <label for="categoria" class="form-label"
+                    >Categoría funcionaria</label
+                  >
+                  <select
+                    id="categoria"
+                    class="form-select w-100"
+                    v-model="categoria_cargo_seleccionada"
+                  >
+                    <option
+                      v-for="t in categoria_cargo"
+                      :key="t.id"
+                      :value="t.id"
+                    >
+                      {{ t.nombre }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 my-2">
                   <label for="especialidad" class="form-label"
-                    >Especialidad</label
+                    >Especialidad
+                    <span class="text-muted">(Solo si tiene)</span></label
                   >
                   <input
                     type="text"
                     id="especialidad"
                     class="form-control w-100"
                     v-model="form.especialidad"
+                    :disabled="form.nivelesEducacion_id || 0 < 6"
                   />
+                </div>
+
+                <div class="col-md-6 my-2">
+                  <label for="titulo_profesional" class="form-label"
+                    >Título Profesional
+                    <span class="text-muted">(Solo si tiene)</span></label
+                  >
+                  <select
+                    id="titulo_profesional"
+                    class="form-select w-100"
+                    v-model="form.titulo_profesional_id"
+                  >
+                    <option
+                      v-for="t in store.estados.titulos"
+                      :key="t.id"
+                      :value="t.id"
+                    >
+                      {{ t.nombre }}
+                    </option>
+                  </select>
                 </div>
 
                 <!--               <div class="mb-3">
@@ -206,19 +250,60 @@
               </h2>
 
               <div class="row">
-                <div class="col-12">
-                  <p class="h7">Disponibilidad para trabajar en las zonas:</p>
+                <div class="col-12 my-2">
+                  <label for="especialidad" class="form-label"
+                    >Disponibilidad para trabajar en vacantes de tipo:</label
+                  >
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="inlineCheckbox1"
+                      value="option1"
+                    />
+                    <label class="form-check-label mb-0" for="inlineCheckbox1"
+                      >Cargo Vacante</label
+                    >
+                  </div>
+                  <div class="form-check form-check-inline ml-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="inlineCheckbox2"
+                      value="option2"
+                    />
+                    <label class="form-check-label mb-0" for="inlineCheckbox2"
+                      >Reemplazo</label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-12 my-2">
+                  <label class="form-label"
+                    >Disponibilidad para trabajar en las zonas de:</label
+                  >
+                  <multiselect
+                    id="tagging"
+                    v-model="form.ciudades_seleccionadas"
+                    placeholder="Por favor selecciona una o varias localidades"
+                    label="nombre"
+                    track-by="id"
+                    :options="store.estados.ciudades"
+                    :multiple="true"
+                    :taggable="true"
+                  ></multiselect>
                 </div>
 
                 <!-- Nuevos campos multiselect para jornadas -->
-                <div class="col-12">
-                  <label class="form-label">Jornadas de trabajo</label>
+                <div class="col-12 my-2">
+                  <label class="form-label"
+                    >Disponibilidad para trabajar en las jornadas de:</label
+                  >
 
                   <multiselect
                     id="tagging"
                     v-model="form.jornadas_seleccionadas"
-                    tag-placeholder="Add this as new tag"
-                    placeholder="Search or add a tag"
+                    placeholder="Por favor selecciona una o varias jornadas"
                     label="nombre"
                     track-by="id"
                     :options="store.estados.jornadas"
@@ -228,8 +313,38 @@
                 </div>
 
                 <!-- Nuevos campos multiselect para modalidades horarias -->
+                <div class="col-12 my-2">
+                  <label class="form-label"
+                    >Disponibilidad para trabajar en los horarios de:</label
+                  >
+                  <multiselect
+                    id="tagging"
+                    v-model="form.modalidades_seleccionadas"
+                    placeholder="Por favor selecciona una o varias modalidades"
+                    label="nombre"
+                    track-by="id"
+                    :options="store.estados.modalidades"
+                    :multiple="true"
+                    :taggable="true"
+                  ></multiselect>
+                </div>
+
                 <div class="col-12">
-                  <label class="form-label">Modalidades horarias</label>
+                  <label for="cargos" class="form-label"
+                    >Cargos de interés</label
+                  >
+                  <multiselect
+                    id="tagging"
+                    v-model="form.cargos"
+                    placeholder="Puede seleccionar hasta un maxiomo de 3 cargos"
+                    label="nombre"
+                    track-by="id"
+                    :options="cargosFiltrados"
+                    :multiple="true"
+                    :taggable="true"
+                    :limit="5"
+                    :max="3"
+                  ></multiselect>
                 </div>
               </div>
             </form>
@@ -306,9 +421,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import Swal from "sweetalert2";
-import { useRouter } from "vue-router";
 import { useAuthStore } from "../store/authStore";
 import { useCandidatoStore } from "../store/candidatoStore";
 import * as service from "../services/candidatoService";
@@ -319,14 +433,21 @@ import Multiselect from "vue-multiselect";
 const store = useCandidatoStore();
 const authStore = useAuthStore();
 
-const router = useRouter();
-
-const estadosCivil = [
-  { id: 1, nombre: "Solter@" },
-  { id: 2, nombre: "Casad@" },
-  { id: 3, nombre: "Divorciad@" },
-  { id: 4, nombre: "Viud@" },
+const categoria_cargo = [
+  { id: 1, nombre: "Administrativo" },
+  { id: 2, nombre: "Docente" },
+  { id: 3, nombre: "Técnico o Asistente" },
 ];
+
+const categoria_cargo_seleccionada = ref(null);
+
+const cargosFiltrados = computed(() => {
+  if (categoria_cargo_seleccionada.value === null) return [];
+
+  return store.estados.cargos.filter(
+    (cargo: any) => cargo.tipo_cargo_id === categoria_cargo_seleccionada.value
+  );
+});
 
 const form = reactive({
   id: null,
@@ -341,11 +462,13 @@ const form = reactive({
   estado_civil_id: null,
   fecha_nacimiento: null,
   presentacion: "",
-  cargos: [],
   titulo_profesional_id: null,
   estado_candidato_id: 1,
+  nivelesEducacion_id: null,
+  cargos: [] as Array<{ id: number; nombre: string }>,
   jornadas_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para jornadas
-  modalidades_seleccionadas: [], // Nuevo array para modalidades
+  ciudades_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para ciudades
+  modalidades_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para modalidades
   especialidad: "",
 });
 
@@ -363,12 +486,23 @@ onMounted(async () => {
       .map((id: number) => store.estados.jornadas.find((j) => j.id === id))
       .filter((j): j is { id: number; nombre: string } => j !== undefined);
   }
+  if (Array.isArray(authStore.candidato.ciudades_seleccionadas)) {
+    form.ciudades_seleccionadas = authStore.candidato.ciudades_seleccionadas
+      .map((id: number) => store.estados.ciudades.find((j) => j.id === id))
+      .filter((j): j is { id: number; nombre: string } => j !== undefined);
+  }
+  if (Array.isArray(authStore.candidato.modalidades_seleccionadas)) {
+    form.modalidades_seleccionadas =
+      authStore.candidato.modalidades_seleccionadas
+        .map((id: number) => store.estados.modalidades.find((j) => j.id === id))
+        .filter((j): j is { id: number; nombre: string } => j !== undefined);
+  }
+  if (Array.isArray(authStore.candidato.cargos)) {
+    form.cargos = authStore.candidato.cargos
+      .map((id: number) => store.estados.cargos.find((j) => j.id === id))
+      .filter((j): j is { id: number; nombre: string } => j !== undefined);
+  }
 });
-
-// Computed para extraer solo los IDs al enviar
-const jornadasIds = computed(() =>
-  form.jornadas_seleccionadas.map((j) => j.id)
-);
 
 async function subirArchivo(id: any, archivo: File) {
   const doc: any = documentosEsperados.find((d: any) => d.id === id);
@@ -463,6 +597,9 @@ async function actualizarDatos() {
   const payload = {
     ...form,
     jornadas_seleccionadas: form.jornadas_seleccionadas.map((j) => j.id),
+    ciudades_seleccionadas: form.ciudades_seleccionadas.map((j) => j.id),
+    modalidades_seleccionadas: form.modalidades_seleccionadas.map((j) => j.id),
+    cargos: form.cargos.map((j) => j.id),
   };
   const update = await store.updateCandidato(authStore.candidato.id, payload);
   if (update) {

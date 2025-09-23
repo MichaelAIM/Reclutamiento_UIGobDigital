@@ -84,6 +84,9 @@ export const useAuthStore = defineStore("auth", {
         ciudades_seleccionadas: candidato.ciudades
           ? candidato.ciudades.map((c: any) => c.id)
           : [],
+        modalidades_seleccionadas: candidato.modalidades_horarias
+          ? candidato.modalidades_horarias.map((c: any) => c.id)
+          : [],
       };
     },
   },

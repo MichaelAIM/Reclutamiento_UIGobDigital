@@ -35,11 +35,14 @@ export interface CandidatoPayload {
   presentacion?: string | null;
   fecha_nacimiento?: Date | null;
   estado_candidato_id: number;
+  especialidad?: string;
 }
 
 export interface Candidato extends CandidatoPayload {
   cargos: number[];
   jornadas_seleccionadas: number[];
+  ciudades_seleccionadas: number[];
+  modalidades_seleccionadas: number[];
 }
 
 export interface Usuario {
@@ -52,6 +55,7 @@ export interface Usuario {
 }
 
 export type CatalogosResponse = [
+  { data: Estado[] },
   { data: Estado[] },
   { data: Estado[] },
   { data: Estado[] },
