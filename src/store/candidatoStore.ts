@@ -21,12 +21,6 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     nivelesEducacion: [],
   });
 
-  const documentoCandidato = reactive({
-    documento_id: null as number | null,
-    candidato_id: null as number | null,
-    archivo: null as File | null,
-  });
-
   // 🔧 Helpers
   function setLoading(val: boolean) {
     loading.value = val;
@@ -53,40 +47,57 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
         estados.ciudades = ciu.data ?? [];
         estados.nivelesEducacion = nedu.data ?? [];
 
-        if (idCandidato) {
-          const docsResponse = await loadDocumentosCandidatos(idCandidato);
-          let docsCandidato: any[] = [];
+        const docsResponse = await loadDocumentosCandidatos(idCandidato);
+        const candidato = await service.fetchCandidato(idCandidato);
 
-          if (Array.isArray(docsResponse)) {
-            docsCandidato = docsResponse;
-          } else if (docsResponse && typeof docsResponse === "object") {
-            docsCandidato = [docsResponse];
-          }
+        console.log("docs", docsResponse);
+        console.log("candidato", candidato);
 
-          estados.documentos = (docs.data ?? []).map((doc: any) => {
-            const doctoBD = docsCandidato.find(
-              (dh: any) => dh.documento_id === doc.id
-            );
+        let docsCandidato: any[] = [];
 
-            return doctoBD
-              ? {
-                  id: doc.id,
-                  nombre: doc.nombre,
-                  archivo: {
-                    id: doctoBD.id,
-                    nombre: doctoBD.nombre,
-                    nombre_para_mostrar: doctoBD.nombre_para_mostrar,
-                    guardado: true,
-                  },
-                }
-              : {
-                  id: doc.id,
-                  nombre: doc.nombre,
-                  nombre_para_mostrar: "",
-                  archivo: null,
-                };
-          });
+        if (Array.isArray(docsResponse)) {
+          docsCandidato = docsResponse;
+        } else if (docsResponse && typeof docsResponse === "object") {
+          docsCandidato = [docsResponse];
         }
+
+        const estado = candidato.data.estado_candidato_id;
+
+        // Filtrar documentos según fase y estado
+        const documentosFiltrados = (docs.data ?? []).filter((doc: any) => {
+          // Siempre incluir fase 1
+          if (doc.fase_candidato === 1) return true;
+
+          // Incluir fase_candidato 2 solo si estado es 3
+          if (doc.fase_candidato === 2 && estado === 3) return true;
+
+          return false;
+        });
+
+        // Mapear documentos con sus archivos si existen
+        estados.documentos = documentosFiltrados.map((doc: any) => {
+          const doctoBD = docsCandidato.find(
+            (dh: any) => dh.documento_id === doc.id
+          );
+
+          return doctoBD
+            ? {
+                id: doc.id,
+                nombre: doc.nombre,
+                archivo: {
+                  id: doctoBD.id,
+                  nombre: doctoBD.nombre,
+                  nombre_para_mostrar: doctoBD.nombre_para_mostrar,
+                  guardado: true,
+                },
+              }
+            : {
+                id: doc.id,
+                nombre: doc.nombre,
+                nombre_para_mostrar: "",
+                archivo: null,
+              };
+        });
       } catch (e: any) {
         setError(e.message || "Error al cargar catálogos");
         console.error("loadCatalogos:", e);
@@ -157,7 +168,6 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     loading,
     error,
     estados,
-    documentoCandidato,
     // Métodos
     setLoading,
     setError,

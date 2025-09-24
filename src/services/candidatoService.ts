@@ -22,7 +22,7 @@ export const assignCargos = (id: number, cargos: number[]) =>
   api.post(`/candidatos/${id}/cargos`, { cargos });
 
 export const updateCandidato = (id: number, datos: any) =>
-  api.put(`/candidatos/${id}`, { datos });
+  api.put(`/candidatos/${id}`, datos);
 
 export const uploadDocumentoCandidato = (formData: FormData) =>
   api.post(`/upload_documentoCandidato`, formData, {
@@ -33,6 +33,9 @@ export const fetchComunas = (regionId: number) =>
 
 export const fetchDocumentosCandidato = (candidatoId: number) =>
   api.get(`/documentos_candidatos/candidato/${candidatoId}`);
+
+export const fetchCandidato = (candidatoId: number) =>
+  api.get(`/candidatos/${candidatoId}`);
 
 export const deleteDocumentoCandidato = (id: string) =>
   api.delete(`/upload_documentoCandidato/${id}`);

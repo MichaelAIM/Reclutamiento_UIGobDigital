@@ -166,7 +166,7 @@
                   <select
                     id="nivel_educativo"
                     class="form-select w-100"
-                    v-model="form.nivelesEducacion_id"
+                    v-model="form.nivel_educacion_id"
                   >
                     <option
                       v-for="t in store.estados.nivelesEducacion"
@@ -207,19 +207,22 @@
                     id="especialidad"
                     class="form-control w-100"
                     v-model="form.especialidad"
-                    :disabled="form.nivelesEducacion_id || 0 < 6"
+                    :disabled="(form.nivel_educacion_id || 0) < 2"
                   />
                 </div>
 
-                <div class="col-md-6 my-2">
+                <div
+                  class="col-md-6 my-2"
+                  v-if="(form.nivel_educacion_id || 0) >= 7"
+                >
                   <label for="titulo_profesional" class="form-label"
-                    >Título Profesional
-                    <span class="text-muted">(Solo si tiene)</span></label
-                  >
+                    >Título Profesional <span class="text-muted"></span
+                  ></label>
                   <select
                     id="titulo_profesional"
                     class="form-select w-100"
                     v-model="form.titulo_profesional_id"
+                    :disabled="(form.nivel_educacion_id || 0) < 7"
                   >
                     <option
                       v-for="t in store.estados.titulos"
@@ -260,6 +263,7 @@
                       type="checkbox"
                       id="inlineCheckbox1"
                       value="option1"
+                      v-model="form.tipo_vacante_nuevo"
                     />
                     <label class="form-check-label mb-0" for="inlineCheckbox1"
                       >Cargo Vacante</label
@@ -270,6 +274,7 @@
                       class="form-check-input"
                       type="checkbox"
                       id="inlineCheckbox2"
+                      v-model="form.tipo_vacante_reemplazo"
                       value="option2"
                     />
                     <label class="form-check-label mb-0" for="inlineCheckbox2"
@@ -329,7 +334,7 @@
                   ></multiselect>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 my-2">
                   <label for="cargos" class="form-label"
                     >Cargos de interés</label
                   >
@@ -344,7 +349,15 @@
                     :taggable="true"
                     :limit="5"
                     :max="3"
+                    :disabled="(categoria_cargo_seleccionada || 0) < 1"
+                    :maxHeight="600"
                   ></multiselect>
+                </div>
+
+                <div class="col-12 my-5 text-center">
+                  <button type="submit" class="mx-0 btn btn-primary px-4 py-2">
+                    Guardar Información
+                  </button>
                 </div>
               </div>
             </form>
@@ -421,7 +434,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, toRaw } from "vue";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../store/authStore";
 import { useCandidatoStore } from "../store/candidatoStore";
@@ -464,12 +477,14 @@ const form = reactive({
   presentacion: "",
   titulo_profesional_id: null,
   estado_candidato_id: 1,
-  nivelesEducacion_id: null,
+  nivel_educacion_id: null,
   cargos: [] as Array<{ id: number; nombre: string }>,
   jornadas_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para jornadas
   ciudades_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para ciudades
   modalidades_seleccionadas: [] as Array<{ id: number; nombre: string }>, // Nuevo array para modalidades
   especialidad: "",
+  tipo_vacante_nuevo: false,
+  tipo_vacante_reemplazo: false,
 });
 
 const documentosEsperados = reactive<DocumentoEsperado[]>([]);
@@ -589,18 +604,28 @@ function descargar(docto: any) {
   }
 }
 
+function onRegionChange() {
+  if (form.region_id && store) {
+    store.loadComunas(form.region_id);
+  }
+}
+
 async function actualizarDatos() {
   if (!authStore.candidato.id) {
     Swal.fire("Error", "ID de candidato no válido", "error");
     return;
   }
   const payload = {
-    ...form,
+    ...toRaw(form),
+    categoria_funcionaria_id: categoria_cargo_seleccionada.value,
     jornadas_seleccionadas: form.jornadas_seleccionadas.map((j) => j.id),
     ciudades_seleccionadas: form.ciudades_seleccionadas.map((j) => j.id),
     modalidades_seleccionadas: form.modalidades_seleccionadas.map((j) => j.id),
     cargos: form.cargos.map((j) => j.id),
   };
+
+  console.log("payload desde el front", payload);
+
   const update = await store.updateCandidato(authStore.candidato.id, payload);
   if (update) {
     Object.assign(authStore.candidato, update);
@@ -610,12 +635,6 @@ async function actualizarDatos() {
     "Tu información ha sido registrada correctamente",
     "success"
   );
-}
-
-function onRegionChange() {
-  if (form.region_id && store) {
-    store.loadComunas(form.region_id);
-  }
 }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
