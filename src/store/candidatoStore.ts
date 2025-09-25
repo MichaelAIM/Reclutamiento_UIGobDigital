@@ -50,9 +50,6 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
         const docsResponse = await loadDocumentosCandidatos(idCandidato);
         const candidato = await service.fetchCandidato(idCandidato);
 
-        console.log("docs", docsResponse);
-        console.log("candidato", candidato);
-
         let docsCandidato: any[] = [];
 
         if (Array.isArray(docsResponse)) {
@@ -151,8 +148,6 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     setError(null);
     try {
       const { data } = await service.updateCandidato(candidato_id, datos);
-      console.log("updateCandidato: datos actualizados", data);
-
       return data;
     } catch (e: any) {
       setError(e.message || "Error al actualizar candidato");

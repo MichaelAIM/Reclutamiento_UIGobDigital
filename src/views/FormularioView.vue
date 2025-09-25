@@ -185,7 +185,7 @@
                   <select
                     id="categoria"
                     class="form-select w-100"
-                    v-model="categoria_cargo_seleccionada"
+                    v-model="form.categoria_funcionaria_id"
                   >
                     <option
                       v-for="t in categoria_cargo"
@@ -349,7 +349,7 @@
                     :taggable="true"
                     :limit="5"
                     :max="3"
-                    :disabled="(categoria_cargo_seleccionada || 0) < 1"
+                    :disabled="(form.categoria_funcionaria_id || 0) < 1"
                     :maxHeight="600"
                   ></multiselect>
                 </div>
@@ -434,7 +434,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, toRaw } from "vue";
+import { computed, onMounted, reactive, toRaw } from "vue";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../store/authStore";
 import { useCandidatoStore } from "../store/candidatoStore";
@@ -452,13 +452,11 @@ const categoria_cargo = [
   { id: 3, nombre: "Técnico o Asistente" },
 ];
 
-const categoria_cargo_seleccionada = ref(null);
-
 const cargosFiltrados = computed(() => {
-  if (categoria_cargo_seleccionada.value === null) return [];
+  if (form.categoria_funcionaria_id === null) return [];
 
   return store.estados.cargos.filter(
-    (cargo: any) => cargo.tipo_cargo_id === categoria_cargo_seleccionada.value
+    (cargo: any) => cargo.tipo_cargo_id === form.categoria_funcionaria_id
   );
 });
 
@@ -485,6 +483,7 @@ const form = reactive({
   especialidad: "",
   tipo_vacante_nuevo: false,
   tipo_vacante_reemplazo: false,
+  categoria_funcionaria_id: null,
 });
 
 const documentosEsperados = reactive<DocumentoEsperado[]>([]);
@@ -617,14 +616,11 @@ async function actualizarDatos() {
   }
   const payload = {
     ...toRaw(form),
-    categoria_funcionaria_id: categoria_cargo_seleccionada.value,
     jornadas_seleccionadas: form.jornadas_seleccionadas.map((j) => j.id),
     ciudades_seleccionadas: form.ciudades_seleccionadas.map((j) => j.id),
     modalidades_seleccionadas: form.modalidades_seleccionadas.map((j) => j.id),
     cargos: form.cargos.map((j) => j.id),
   };
-
-  console.log("payload desde el front", payload);
 
   const update = await store.updateCandidato(authStore.candidato.id, payload);
   if (update) {
