@@ -59,3 +59,26 @@ export const fetchCiudades = async () => {
   const response = await api.get("/ciudades");
   return response.data;
 };
+
+export const fetchJornadas = async () => {
+  const response = await api.get("/jornadas");
+  return response.data;
+};
+
+export const fetchModalidades = async () => {
+  const response = await api.get("/modalidades");
+  return response.data;
+};
+
+export const fetchTipo_vacante = async () => {
+  const response = await api.get("/tipo_vacantes");
+  return response.data;
+};
+
+export const crear_convocatoria = async (datos: any) => {
+  console.log("Entro al service");
+  console.log(datos, "datos en el service");
+
+  const response = await api.post("/convocatorias", datos);
+  return response.data;
+};

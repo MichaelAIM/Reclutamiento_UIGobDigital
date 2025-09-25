@@ -46,7 +46,7 @@
           v-for="convocatoria in convocatorias"
           :key="convocatoria.id"
         >
-          <a class="banner border mb-3 flex-wrap bg-white">
+          <span class="banner border mb-3 flex-wrap bg-light">
             <div class="line"></div>
             <div class="py-4 border-bottom border-accent banner-header w-100">
               <h4 class="banner-text flex-column">
@@ -128,10 +128,12 @@
                 </div>
               </div>
               <span class="banner-icon ml-auto" aria-hidden="true">
-                <!-- <div class="badge badge-primary font-level-7">Postular</div> -->
+                <div class="badge badge-primary font-level-7 px-3 pointer">
+                  Postular
+                </div>
               </span>
             </div>
-          </a>
+          </span>
         </div>
       </div>
     </div>

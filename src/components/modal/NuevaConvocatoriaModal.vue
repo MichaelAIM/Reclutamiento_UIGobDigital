@@ -40,70 +40,142 @@
               </div>
               <div class="card-body">
                 <div class="row gy-4 gx-5">
-                  <div class="col-md-6">
-                    <label class="form-label">Nombre del Cargo</label>
-
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Tipo de Cargo</label>
                     <select
-                      v-model="form.cargo"
+                      v-model="form.categoria_cargo_id"
                       class="form-select-lg form-select"
                       required
                     >
                       <option disabled value="">Seleccione</option>
-                      <option :value="cargo.id" v-for="cargo in cargos">
-                        cargo.nombre
+                      <option
+                        :value="cat.id"
+                        :key="cat.id"
+                        v-for="cat in categoria_cargo"
+                      >
+                        {{ cat.nombre }}
                       </option>
                     </select>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Cargo</label>
+
+                    <select
+                      v-model="form.cargo_id"
+                      class="form-select-lg form-select"
+                      required
+                    >
+                      <option disabled value="">Seleccione</option>
+                      <option
+                        :value="cargo.id"
+                        :key="cargo.id"
+                        v-for="cargo in cargosFiltrados"
+                      >
+                        {{ cargo.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Ciudad</label>
+                    <select
+                      v-model="form.ciudad_id"
+                      class="form-select-lg form-select"
+                      required
+                    >
+                      <option disabled value="">Seleccione</option>
+                      <option
+                        :value="ciudad.id"
+                        :key="ciudad.id"
+                        v-for="ciudad in ciudades"
+                      >
+                        {{ ciudad.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Institución</label>
+                    <select
+                      v-model="form.institucion_id"
+                      class="form-select-lg form-select"
+                      required
+                    >
+                      <option disabled value="">Seleccione</option>
+                      <option
+                        :value="institucion.id"
+                        :key="institucion.id"
+                        v-for="institucion in instituciones"
+                      >
+                        {{ institucion.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Modalidad horaria</label>
+                    <select
+                      v-model="form.modalidad_id"
+                      class="form-select-lg form-select"
+                      required
+                    >
+                      <option disabled value="">Seleccione</option>
+                      <option
+                        :value="modalidad.id"
+                        :key="modalidad.id"
+                        v-for="modalidad in modalidades"
+                      >
+                        {{ modalidad.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Tipo de Jornada</label>
+                    <select
+                      v-model="form.jornada_id"
+                      class="form-select-lg form-select"
+                      required
+                    >
+                      <option disabled value="">Seleccione</option>
+                      <option
+                        :value="jornada.id"
+                        :key="jornada.id"
+                        v-for="jornada in jornadas"
+                      >
+                        {{ jornada.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Tipo de vacante</label>
+                    <select
+                      v-model="form.tipo_vacante_id"
+                      class="form-select-lg form-select"
+                      required
+                    >
+                      <option disabled value="">Seleccione</option>
+                      <option
+                        :value="tipo.id"
+                        :key="tipo.id"
+                        v-for="tipo in tipoVacante"
+                      >
+                        {{ tipo.nombre }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6 my-2">
+                    <label class="form-label">Fecha de Cierre</label>
+                    <input
+                      v-model="form.fecha_cierre"
+                      type="date"
+                      class="form-control form-control-lg"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 my-2">
                     <label class="form-label">Código de Convocatoria</label>
                     <input
                       :value="form.codigo"
                       type="text"
                       class="form-control form-control-lg"
                       readonly
-                    />
-                  </div>
-                  <div class="col-md-6 mt-3">
-                    <label class="form-label">Tipo de Vacante</label>
-                    <select
-                      v-model="form.tipo"
-                      class="form-select-lg form-select"
-                      required
-                    >
-                      <option disabled value="">Seleccione</option>
-                      <option>Docente</option>
-                      <option>Administrativa</option>
-                      <option>Técnica</option>
-                      <option>Auxiliar</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6 mt-3">
-                    <label class="form-label">Ciudad</label>
-                    <input
-                      v-model="form.ciudad"
-                      type="text"
-                      class="form-control form-control-lg"
-                      placeholder="Ej: Arica"
-                      required
-                    />
-                  </div>
-                  <div class="col-md-6 mt-3">
-                    <label class="form-label">Institución</label>
-                    <input
-                      v-model="form.institucion"
-                      type="text"
-                      class="form-control form-control-lg"
-                      placeholder="Ej: Escuela Chinchorro"
-                      required
-                    />
-                  </div>
-                  <div class="col-md-6 mt-3">
-                    <label class="form-label">Fecha de Cierre</label>
-                    <input
-                      v-model="form.fechaCierre"
-                      type="date"
-                      class="form-control form-control-lg"
-                      required
                     />
                   </div>
                 </div>
@@ -145,7 +217,7 @@
                 Adjuntar Archivo
               </div>
               <div class="card-body row g-4">
-                <div class="col-12">
+                <!--                 <div class="col-12">
                   <label class="form-label"
                     >Convocatoria en documento (PDF)</label
                   >
@@ -158,7 +230,7 @@
                   <small class="form-text text-muted">
                     Solo se permite un archivo PDF. Tamaño máximo: 5MB.
                   </small>
-                </div>
+                </div> -->
                 <div class="col-12 text-right mt-5">
                   <button type="submit" class="btn btn-success px-4 shadow-sm">
                     <i class="bi bi-check-circle"></i> Guardar Convocatoria
@@ -185,36 +257,68 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import {
   fetchCargos,
   fetchInstituciones,
   fetchCiudades,
+  fetchTipo_vacante,
+  fetchModalidades,
+  fetchJornadas,
+  crear_convocatoria,
 } from "../../services/convocatoriaServices";
 
 const showForm = ref(true);
 
+const emit = defineEmits(["update:visible"]);
+const cargos = ref();
+const ciudades = ref();
+const instituciones = ref();
+const tipoVacante = ref();
+const jornadas = ref();
+const modalidades = ref();
+
+const categoria_cargo = ref([
+  { id: 1, nombre: "Administrativo" },
+  { id: 2, nombre: "Docente" },
+  { id: 3, nombre: "Técnico o Asistente" },
+]);
+
 const form = ref({
-  cargo: "",
+  cargo_id: "",
   codigo: "",
-  tipo: "",
-  ciudad: "",
-  institucion: "",
+  categoria_cargo_id: "",
+  ciudad_id: "",
+  institucion_id: "",
   descripcion: "",
   requisitos: "",
-  fechaCierre: "",
+  fecha_cierre: "",
   archivo: null,
+  modalidad_id: "",
+  tipo_vacante_id: "",
+  jornada_id: "",
 });
 
 watch(
-  () => form.value.cargo,
-  (nuevoCargo) => {
-    const timestamp = Date.now().toString().slice(-5);
-    form.value.codigo = `CV-${nuevoCargo
-      .slice(0, 3)
-      .toUpperCase()}-${timestamp}`;
+  () => form.value.categoria_cargo_id,
+  (nuevoTipoId) => {
+    const cargoSeleccionado = categoria_cargo.value.find(
+      (c) => c.id === nuevoTipoId
+    );
+    const hash = cargoSeleccionado?.nombre?.slice(0, 3).toUpperCase() || "XXX";
+    const stamp = Date.now().toString().slice(-4); // 4 dígitos finales del timestamp
+    const año = new Date().getFullYear();
+
+    form.value.codigo = `SLEP-${hash}-${stamp}-${año}`;
   }
 );
+
+const cargosFiltrados = computed(() => {
+  const lista = cargos.value || [];
+  const tipo = form.value.categoria_cargo_id;
+  if (!tipo) return [];
+  return lista.filter((cargo) => cargo.tipo_cargo_id === tipo);
+});
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0];
@@ -226,25 +330,17 @@ const handleFileUpload = (event) => {
 };
 
 const submitForm = async () => {
-  try {
-    const payload = {
-      codigo: form.value.codigo,
-      cargo_id: 1, // puedes mapear esto si tienes un selector
-      cuidad_id: 1, // lo mismo aquí
-      institucion_id: 1, // lo mismo aquí
-      fecha_cierre: form.value.fechaCierre,
-      descripcion: form.value.descripcion,
-      requisitos: form.value.requisitos,
-      estado_id: 1, // estado inicial, por ejemplo "Nuevo"
-    };
+  console.log("Entro al submit");
+  console.log(form.value);
 
-    const response = await axios.post("/api/convocatorias", payload);
+  try {
+    const response = await crear_convocatoria(form.value);
     console.log("Convocatoria insertada:", response.data);
-    alert("Convocatoria registrada correctamente");
+    console.log("volvio al submit");
+
     cerrarModal();
   } catch (error) {
     console.error("Error al registrar convocatoria:", error);
-    alert("Hubo un problema al registrar la convocatoria");
   }
 };
 
@@ -252,20 +348,17 @@ const props = defineProps({
   visible: Boolean,
 });
 
-const emit = defineEmits(["update:visible"]);
-const cargos = ref([]);
-const ciudades = ref([]);
-const instituciones = ref([]);
-
 const cerrarModal = () => {
   emit("update:visible", false);
 };
 
 onMounted(async () => {
-  const instituciones = await fetchInstituciones();
-  const ciudades = await fetchCiudades();
-  const cargos = await fetchCargos();
-  console.log("cargos", cargos);
+  instituciones.value = await fetchInstituciones();
+  ciudades.value = await fetchCiudades();
+  cargos.value = await fetchCargos();
+  modalidades.value = await fetchModalidades();
+  tipoVacante.value = await fetchTipo_vacante();
+  jornadas.value = await fetchJornadas();
 });
 </script>
 
