@@ -87,6 +87,11 @@ export const useAuthStore = defineStore("auth", {
         modalidades_seleccionadas: candidato.modalidades_horarias
           ? candidato.modalidades_horarias.map((c: any) => c.id)
           : [],
+        categoria_funcionaria_id: candidato.categoria_funcionaria_id,
+        nivel_educacion_id: candidato.nivel_educacion_id,
+        especialidad: candidato.especialidad,
+        tipo_vacante_nuevo: candidato.tipo_vacante_nuevo,
+        tipo_vacante_reemplazo: candidato.tipo_vacante_reemplazo,
       };
     },
   },

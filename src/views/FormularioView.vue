@@ -1,6 +1,6 @@
 <template>
   <div class="min-vh-100 d-flex align-items-center">
-    <div class="container-fluid px-0">
+    <div class="container-fluid px-0 mx-3">
       <div v-if="loading" class="text-center py-5">
         <div
           class="spinner-border text-light mb-3"
@@ -751,11 +751,6 @@ label {
 .form-check-input {
   cursor: pointer;
   position: relative !important;
-}
-
-.min-vh-100 {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #2c3e50, #1a2530);
 }
 
 .card {

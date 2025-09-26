@@ -208,16 +208,22 @@
                     required
                   ></textarea>
                 </div>
+
+                <div class="col-12 text-right mt-5">
+                  <button type="submit" class="btn btn-success px-4 shadow-sm">
+                    <i class="bi bi-check-circle"></i> Guardar Convocatoria
+                  </button>
+                </div>
               </div>
             </div>
 
             <!-- Sección: Adjuntos y Envío -->
-            <div class="card border-0 shadow-sm mb-4">
+            <!-- <div class="card border-0 shadow-sm mb-4">
               <div class="card-header bg-light fw-semibold">
                 Adjuntar Archivo
               </div>
               <div class="card-body row g-4">
-                <!--                 <div class="col-12">
+                <div class="col-12">
                   <label class="form-label"
                     >Convocatoria en documento (PDF)</label
                   >
@@ -230,14 +236,9 @@
                   <small class="form-text text-muted">
                     Solo se permite un archivo PDF. Tamaño máximo: 5MB.
                   </small>
-                </div> -->
-                <div class="col-12 text-right mt-5">
-                  <button type="submit" class="btn btn-success px-4 shadow-sm">
-                    <i class="bi bi-check-circle"></i> Guardar Convocatoria
-                  </button>
                 </div>
               </div>
-            </div>
+            </div> -->
           </form>
         </div>
 
@@ -284,7 +285,7 @@ const categoria_cargo = ref([
   { id: 3, nombre: "Técnico o Asistente" },
 ]);
 
-const form = ref({
+const initialFormState = {
   cargo_id: "",
   codigo: "",
   categoria_cargo_id: "",
@@ -297,7 +298,14 @@ const form = ref({
   modalidad_id: "",
   tipo_vacante_id: "",
   jornada_id: "",
-});
+};
+
+const form = ref({ ...initialFormState });
+
+// Función para resetear el formulario
+const resetForm = () => {
+  form.value = { ...initialFormState };
+};
 
 watch(
   () => form.value.categoria_cargo_id,
@@ -337,7 +345,8 @@ const submitForm = async () => {
     const response = await crear_convocatoria(form.value);
     console.log("Convocatoria insertada:", response.data);
     console.log("volvio al submit");
-
+    emit("update");
+    resetForm();
     cerrarModal();
   } catch (error) {
     console.error("Error al registrar convocatoria:", error);

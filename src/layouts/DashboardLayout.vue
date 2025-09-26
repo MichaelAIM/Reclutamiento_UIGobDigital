@@ -39,56 +39,82 @@
     <div class="row g-0">
       <div class="col-12 col-md-3 col-lg-2 bg-accent-primary">
         <div class="sidebar p-4">
-          <nav class="nav flex-column">
-            <a class="nav-link d-flex align-items-center">
-              <i class="bi bi-graph-up mr-3"></i>
-              Dashboard
-            </a>
-            <a
-              class="nav-link d-flex align-items-center pointer"
-              :class="{ active: activeTab === 'reportes' }"
-              @click="Go('/perfil')"
-            >
-              <i class="bi bi-person mr-3"></i>
-              Perfil
-            </a>
-            <a
-              class="nav-link d-flex align-items-center pointer"
-              :class="{ active: activeTab === 'convocatorias' }"
-              @click="Go('/convocatorias')"
-            >
-              <i class="bi bi-file-earmark-text mr-3"></i>
-              Convocatorias disponibles
-            </a>
-            <a
-              class="nav-link d-flex align-items-center pointer"
-              :class="{ active: activeTab === 'postulantes' }"
-              @click="Go('/postulaciones')"
-            >
-              <i class="bi bi-people mr-3"></i>
-              Postulantes
-            </a>
-            <a
-              class="nav-link d-flex align-items-center pointer"
-              :class="{ active: activeTab === 'postulantes' }"
-              @click="Go('/candidatos')"
-            >
-              <i class="bi bi-people mr-3"></i>
-              Candidatos
-            </a>
-            <a
-              class="nav-link d-flex align-items-center pointer"
-              @click="cerrarSesion()"
-            >
-              <i class="bi bi-box-arrow-right mr-3"></i>
-              Cerrar Sesión
-            </a>
-          </nav>
+          <div class="accordion" id="menuAccordion">
+            <!-- Sección Navegación -->
+            <div class="accordion-item bg-transparent border-0">
+              <h2 class="accordion-header d-md-none" id="headingNav">
+                <button
+                  class="accordion-button text-white bg-transparent collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseNav"
+                  aria-expanded="false"
+                  aria-controls="collapseNav"
+                >
+                  <i class="bi bi-list me-2"></i> Menu
+                </button>
+              </h2>
+              <div
+                id="collapseNav"
+                class="accordion-collapse collapse"
+                :class="{ show: isMenuVisible }"
+                aria-labelledby="headingNav"
+                data-bs-parent="#menuAccordion"
+              >
+                <div class="accordion-body p-0">
+                  <nav class="nav flex-column">
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'dashboard' }"
+                      @click="Go('/dashboard')"
+                    >
+                      <i class="bi bi-graph-up me-2"></i> Dashboard
+                    </a>
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'perfil' }"
+                      @click="Go('/perfil')"
+                    >
+                      <i class="bi bi-person me-2"></i> Perfil
+                    </a>
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'convocatorias' }"
+                      @click="Go('/convocatorias')"
+                    >
+                      <i class="bi bi-file-earmark-text me-2"></i> Convocatorias
+                      disponibles
+                    </a>
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'postulantes' }"
+                      @click="Go('/postulaciones')"
+                    >
+                      <i class="bi bi-people me-2"></i> Postulantes
+                    </a>
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'candidatos' }"
+                      @click="Go('/candidatos')"
+                    >
+                      <i class="bi bi-person-lines-fill me-2"></i> Candidatos
+                    </a>
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      @click="cerrarSesion()"
+                    >
+                      <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                    </a>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Aside Layout -->
 
-      <div class="col-12 col-md-9 col-lg-10">
+      <div class="col-12 col-md-9 col-lg-10 px-0">
         <main class="p-4">
           <router-view />
         </main>
@@ -116,6 +142,7 @@ const anio = new Date().getFullYear();
 const activeTab = ref("dashboard");
 const selectedPeriod = ref("mes");
 const authStore = useAuthStore();
+const isMenuVisible = ref(false);
 
 const router = useRouter();
 
@@ -229,7 +256,8 @@ function cerrarSesion() {
 }
 
 onMounted(function () {
-  console.log("SLEP Chinchorro Dashboard iniciado correctamente");
+  const screenWidth = window.innerWidth;
+  isMenuVisible.value = screenWidth >= 992; // Bootstrap lg breakpoint
 });
 </script>
 <style scoped>
@@ -372,5 +400,59 @@ body {
   .sidebar {
     min-height: auto;
   }
+}
+
+.sidebar .nav-link.active {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateX(5px);
+}
+
+.sidebar .nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: #ffc107; /* o var(--slep-warning) para trazabilidad */
+  border-radius: 0 4px 4px 0;
+}
+.sidebar .nav-link i {
+  transition: transform 0.3s ease;
+  margin-right: 10px;
+}
+
+.sidebar .nav-link:hover i {
+  transform: scale(1.2);
+}
+
+.accordion-button {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  background-color: transparent;
+  border: none;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.accordion-body .nav-link {
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.75rem 1rem;
+  margin: 0.25rem 0;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.accordion-body .nav-link:hover,
+.accordion-body .nav-link.active {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
 }
 </style>

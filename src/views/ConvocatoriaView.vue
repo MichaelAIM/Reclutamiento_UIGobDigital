@@ -1,6 +1,6 @@
 <template>
-  <div class="min-vh-100 py-4">
-    <div class="container">
+  <div class="w-100 py-4">
+    <div class="container-fluid mx-3">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h4 text-secondary fw-semibold mb-4">
           Convocatorias disponibles
@@ -42,7 +42,7 @@
 
       <div class="row py-5">
         <div
-          class="col-md-6"
+          class="col-md-4"
           v-for="convocatoria in convocatorias"
           :key="convocatoria.id"
         >
@@ -107,7 +107,7 @@
                 {{ convocatoria.requisitos }}
               </p>
             </div>
-            <div class="d-flex w-100 mt-2">
+            <!--             <div class="d-flex w-100 mt-2">
               <p class="banner-text flex-column font-level-9 fw-800">
                 Adjuntos:
               </p>
@@ -119,16 +119,19 @@
                   class="cl cl-document-verified ml-2 mb-2 font-level-2 color-accent-3"
                 ></span>
               </p>
-            </div>
+            </div> -->
             <div class="py-1 border-bottom d-flex w-100 border-accent"></div>
             <div class="d-flex w-100 my-3">
               <div class="banner-text flex-column">
                 <div class="badge badge-info font-level-8">
-                  Postulación hasta {{ convocatoria.fecha_cierre }} 8:00:00
+                  Postulación hasta {{ convocatoria.fecha_cierre }}
                 </div>
               </div>
               <span class="banner-icon ml-auto" aria-hidden="true">
-                <div class="badge badge-primary font-level-7 px-3 pointer">
+                <div
+                  class="badge badge-primary font-level-7 px-3 pointer"
+                  @click="postularConvocatoria(convocatoria.id)"
+                >
                   Postular
                 </div>
               </span>
@@ -138,16 +141,25 @@
       </div>
     </div>
   </div>
-  <NuevaConvocatoria v-model:visible="mostrarModal" />
+  <NuevaConvocatoria
+    v-model:visible="mostrarModal"
+    @update="cargarConvocatorias"
+  />
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from "vue";
 import NuevaConvocatoria from "../components/modal/NuevaConvocatoriaModal.vue";
-import { fetchConvocatorias } from "../services/convocatoriaServices";
+import {
+  fetchConvocatorias,
+  postularCandidato,
+} from "../services/convocatoriaServices";
+import { useAuthStore } from "../store/authStore";
+import Swal from "sweetalert2";
 
 const emit = defineEmits(["filtrar"]);
 const mostrarModal = ref(false);
+const authStore = useAuthStore();
 
 const abrirModal = () => {
   mostrarModal.value = true;
@@ -172,8 +184,59 @@ function resetFiltros() {
 }
 
 onMounted(async () => {
-  convocatorias.value = await fetchConvocatorias();
+  await cargarConvocatorias();
 });
+
+async function postularConvocatoria(convocatoriaId) {
+  // Llamar al servicio para postular al candidato a la convocatoria
+  Swal.fire({
+    title: "¿Está seguro de postular?",
+    text: "Antes de continuar, asegúrese de haber completado todos los datos de su perfil y cargado sus documentos. De no ser así, su postulación será considerada inadmisible.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, postular",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#198754", // verde institucional
+    cancelButtonColor: "#6c757d",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      enviarPostulacion(convocatoriaId);
+    }
+  });
+}
+async function enviarPostulacion(convocatoriaId) {
+  try {
+    const response = await postularCandidato(
+      convocatoriaId,
+      authStore.candidato.id
+    );
+
+    Swal.fire({
+      title: "Postulación exitosa",
+      text: "Su postulación ha sido registrada correctamente.",
+      icon: "success",
+      confirmButtonColor: "#198754",
+    });
+
+    console.log("success", response);
+  } catch (error) {
+    const mensaje = error?.response?.data?.error || "Error al postular";
+
+    Swal.fire({
+      title: "Postulación rechazada",
+      text: mensaje,
+      icon: "error",
+      confirmButtonColor: "#d33",
+    });
+
+    console.error("error capturado", error);
+  }
+}
+
+async function cargarConvocatorias() {
+  convocatorias.value = await fetchConvocatorias();
+}
 </script>
 <style scoped>
 .line::after {

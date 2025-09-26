@@ -23,9 +23,9 @@ export const fetchConvocatoriaById = (id: number) =>
   api.get(`/convocatorias/${id}`);
 
 export const postularCandidato = (
-  convocatoriaId: number,
-  candidatoId: number
-) => api.post(`/convocatorias/${convocatoriaId}/postular`, { candidatoId });
+  convocatoria_id: number,
+  candidato_id: number
+) => api.post(`/postulaciones`, { candidato_id, convocatoria_id });
 
 export const fetchPostulacionesCandidato = (candidatoId: number) =>
   api.get(`/postulaciones?candidato_id=${candidatoId}`);
@@ -76,9 +76,6 @@ export const fetchTipo_vacante = async () => {
 };
 
 export const crear_convocatoria = async (datos: any) => {
-  console.log("Entro al service");
-  console.log(datos, "datos en el service");
-
   const response = await api.post("/convocatorias", datos);
   return response.data;
 };
