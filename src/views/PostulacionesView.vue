@@ -4,11 +4,7 @@
       Postulaciones por Convocatoria
     </h2>
 
-    <div
-      v-for="(convocatoria, index) in convocatorias"
-      :key="index"
-      class="mb-3"
-    >
+    <div v-for="(c, index) in convocatorias" :key="index" class="mb-3">
       <!-- Tarjeta de convocatoria -->
       <div
         class="card border-0 shadow-sm"
@@ -19,11 +15,14 @@
           class="card-body d-flex justify-content-between align-items-center"
         >
           <div>
-            <h5 class="mb-1 text-dark fw-semibold">{{ convocatoria.cargo }}</h5>
+            <h5 class="mb-1 text-dark fw-semibold">
+              {{ c.convocatoria.cargo.nombre }}
+            </h5>
             <div class="small text-muted">
-              <div><strong>Código:</strong> {{ convocatoria.codigo }}</div>
+              <div><strong>Código:</strong> {{ c.convocatoria.codigo }}</div>
               <div>
-                <strong>Dirección:</strong> {{ convocatoria.direccion }}
+                <strong>Dirección:</strong>
+                {{ c.convocatoria.institucione.nombre }}
               </div>
             </div>
           </div>
@@ -45,20 +44,20 @@
               <tr class="text-center">
                 <th>#</th>
                 <th>Nombre</th>
+                <th>Rut</th>
                 <th>Email</th>
                 <th>Especialidad</th>
-                <th>Fecha</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(p, i) in convocatoria.postulaciones" :key="i">
+              <tr v-for="(p, i) in c.candidatos" :key="i">
                 <td class="text-center">{{ i + 1 }}</td>
-                <td>{{ p.nombre }}</td>
-                <td>{{ p.email }}</td>
+                <td>{{ p.nombre_completo }}</td>
+                <td class="text-nowrap">{{ p.rut }}</td>
+                <td>{{ p.correo }}</td>
                 <td>{{ p.especialidad }}</td>
-                <td class="text-nowrap">{{ p.fecha }}</td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <div class="form-check form-switch m-0">
@@ -67,20 +66,18 @@
                         type="checkbox"
                         :id="`estado-${index}-${i}`"
                         v-model="p.estado"
-                        true-value="Revisado"
-                        false-value="Pendiente"
-                        @change="actualizarEstado(convocatoria.codigo, p)"
+                        @change="actualizarEstado(convocatoria.id, p)"
                       />
                     </div>
                     <span
                       :class="[
                         'badge px-3 py-1',
-                        p.estado === 'Revisado'
+                        p.estado
                           ? 'bg-success text-white'
                           : 'bg-warning text-dark',
                       ]"
                     >
-                      {{ p.estado }}
+                      {{ p.estado ? "Revisado" : "Pendiente" }}
                     </span>
                   </div>
                 </td>
@@ -99,7 +96,7 @@
                   </button>
                 </td>
               </tr>
-              <tr v-if="convocatoria.postulaciones.length === 0">
+              <tr v-if="c.candidatos.length === 0">
                 <td colspan="7" class="text-center text-muted py-3">
                   No hay postulaciones registradas.
                 </td>
@@ -113,9 +110,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { fetchPostulacionesVigentes } from "../services/postulacionService";
 
-const convocatorias = ref([
+const convocatorias = ref([]);
+
+/* const convocatorias = ref([
   {
     codigo: "20231178TH001",
     direccion: "Liceo Politécnico Bicentenario de Excelencia",
@@ -165,7 +165,7 @@ const convocatorias = ref([
       },
     ],
   },
-]);
+]); */
 
 const expanded = ref(convocatorias.value.map(() => false));
 
@@ -178,6 +178,10 @@ function actualizarEstado(codigoConvocatoria, postulante) {
     `Estado actualizado para ${postulante.nombre} en ${codigoConvocatoria}: ${postulante.estado}`
   );
 }
+
+onMounted(async () => {
+  convocatorias.value = await fetchPostulacionesVigentes(4);
+});
 </script>
 
 <style scoped>

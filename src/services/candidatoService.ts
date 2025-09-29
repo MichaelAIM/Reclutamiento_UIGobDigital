@@ -39,3 +39,12 @@ export const fetchCandidato = (candidatoId: number) =>
 
 export const deleteDocumentoCandidato = (id: string) =>
   api.delete(`/upload_documentoCandidato/${id}`);
+
+export const fetchCandidatos = async () => {
+  try {
+    const response = await api.get("/candidatos");
+    return response.data;
+  } catch (error) {
+    console.error("Error al cargar candidatos:", error);
+  }
+};

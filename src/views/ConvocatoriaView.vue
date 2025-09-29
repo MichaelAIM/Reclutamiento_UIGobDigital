@@ -150,10 +150,8 @@
 <script setup>
 import { reactive, ref, onMounted } from "vue";
 import NuevaConvocatoria from "../components/modal/NuevaConvocatoriaModal.vue";
-import {
-  fetchConvocatorias,
-  postularCandidato,
-} from "../services/convocatoriaServices";
+import { fetchConvocatorias } from "../services/convocatoriaServices";
+import { postularCandidato } from "../services/postulacionService";
 import { useAuthStore } from "../store/authStore";
 import Swal from "sweetalert2";
 

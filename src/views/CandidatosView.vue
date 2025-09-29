@@ -15,18 +15,20 @@
         <thead class="table-light">
           <tr>
             <th>Nombre</th>
-            <th>Cargo</th>
             <th>Especialidad</th>
+            <!--             <th>Cargo</th>
             <th>Ubicación</th>
             <th>Disponibilidad</th>
-            <th>Acciones</th>
+            <th>Acciones</th> -->
           </tr>
         </thead>
         <tbody>
           <tr v-for="c in candidatos" :key="c.id">
-            <td>{{ c.nombre }}</td>
-            <td>{{ c.cargo }}</td>
+            <td>{{ c.nombre_completo }}</td>
             <td>{{ c.especialidad }}</td>
+            <!--             <td>
+              <span v-for="cargo in c.cargos"> - {{ c.nombre }}</span>
+            </td>
             <td>{{ c.ubicacion }}</td>
             <td>{{ c.disponibilidad }}</td>
             <td>
@@ -34,7 +36,7 @@
                 Ver perfil
               </button>
               <button class="btn btn-sm btn-outline-success">Contactar</button>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
@@ -46,10 +48,13 @@
 import { onMounted, ref } from "vue";
 import DataTable from "datatables.net-bs5";
 import ExcelJS from "exceljs";
+import { fetchCandidatos } from "../services/candidatoService";
 
+const dataTableInstance = ref(null); // Referencia a la instancia de DataTable
+const isMounted = ref(false); // Control de montaje
 const tabla = ref(null);
 
-const candidatos = ref([
+/* const candidatos = ref([
   {
     id: 1,
     nombre: "Carla Rivas",
@@ -170,7 +175,9 @@ const candidatos = ref([
     ubicacion: "La Serena",
     disponibilidad: "Inmediata",
   },
-]);
+]); */
+
+const candidatos = ref([]);
 
 async function exportarExcel() {
   try {
@@ -226,7 +233,7 @@ async function exportarExcel() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (tabla.value) {
     new DataTable(tabla.value, {
       paging: true,
@@ -243,6 +250,27 @@ onMounted(() => {
         },
       },
     });
+  }
+
+  isMounted.value = true;
+
+  try {
+    // Cargar datos primero
+    const data = await fetchCandidatos();
+
+    // Verificar que el componente siga montado
+    if (!isMounted.value) return;
+
+    candidatos.value = data;
+
+    // Esperar a que Vue actualice el DOM
+    await nextTick();
+
+    // Inicializar DataTable después de que los datos estén en el DOM
+    dataTableInstance.value = initializeDataTable();
+  } catch (error) {
+    console.error("Error loading candidates:", error);
+    // Opcional: mostrar mensaje de error al usuario
   }
 });
 </script>

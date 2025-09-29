@@ -22,19 +22,6 @@ export const fetchCountConvocatorias = async () => {
 export const fetchConvocatoriaById = (id: number) =>
   api.get(`/convocatorias/${id}`);
 
-export const postularCandidato = (
-  convocatoria_id: number,
-  candidato_id: number
-) => api.post(`/postulaciones`, { candidato_id, convocatoria_id });
-
-export const fetchPostulacionesCandidato = (candidatoId: number) =>
-  api.get(`/postulaciones?candidato_id=${candidatoId}`);
-
-export const eliminarPostulacion = (postulacionId: number) =>
-  api.delete(`/postulaciones/${postulacionId}`);
-
-export const fetchPostulaciones = () => api.get("/postulaciones");
-
 export const seleccionarCandidato = (postulacionId: number) =>
   api.post(`/postulaciones/${postulacionId}/seleccionar`);
 
