@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-4">
+  <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="h4 mb-0 text-secondary fw-semibold">Banco de Candidatos</h2>
       <button class="btn btn-outline-success" @click="exportarExcel">
@@ -16,168 +16,63 @@
           <tr>
             <th>Nombre</th>
             <th>Especialidad</th>
-            <!--             <th>Cargo</th>
+            <th>Cargo</th>
             <th>Ubicación</th>
-            <th>Disponibilidad</th>
-            <th>Acciones</th> -->
+            <th>Tipo de Cargo</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="c in candidatos" :key="c.id">
             <td>{{ c.nombre_completo }}</td>
             <td>{{ c.especialidad }}</td>
-            <!--             <td>
-              <span v-for="cargo in c.cargos"> - {{ c.nombre }}</span>
-            </td>
-            <td>{{ c.ubicacion }}</td>
-            <td>{{ c.disponibilidad }}</td>
             <td>
-              <button class="btn btn-sm btn-outline-primary me-2">
-                Ver perfil
+              <span v-for="cargo in c.cargos"> - {{ cargo.nombre }}</span>
+            </td>
+            <td>
+              <span v-for="ciu in c.ciudades"> - {{ ciu.nombre }} </span>
+            </td>
+            <td>
+              <p v-if="c.tipo_vacante_nuevo">Vacante Nueva</p>
+              <p v-if="c.tipo_vacante_reemplazo">Vacante de Reemplazo</p>
+            </td>
+            <td>
+              <button
+                class="btn btn-sm btn-outline-info me-1"
+                title="Ver perfil"
+                @click="verCandidato(c)"
+              >
+                <i class="bi bi-eye"></i>
               </button>
-              <button class="btn btn-sm btn-outline-success">Contactar</button>
-            </td> -->
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <ModalCandidato
+    v-model:visible="mostrarModalCandidato"
+    :datos="candidatoActivo"
+  />
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, nextTick } from "vue";
 import DataTable from "datatables.net-bs5";
 import ExcelJS from "exceljs";
 import { fetchCandidatos } from "../services/candidatoService";
+import ModalCandidato from "../components/modal/ModalCandidato.vue";
 
 const dataTableInstance = ref(null); // Referencia a la instancia de DataTable
-const isMounted = ref(false); // Control de montaje
 const tabla = ref(null);
-
-/* const candidatos = ref([
-  {
-    id: 1,
-    nombre: "Carla Rivas",
-    cargo: "Profesora de Matemáticas",
-    especialidad: "Matemáticas",
-    ubicacion: "Arica",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 2,
-    nombre: "Luis Torres",
-    cargo: "Psicólogo Educacional",
-    especialidad: "Psicología",
-    ubicacion: "Putre",
-    disponibilidad: "Próximo mes",
-  },
-  {
-    id: 3,
-    nombre: "Marcela Fuentes",
-    cargo: "Educadora Diferencial",
-    especialidad: "Inclusión escolar",
-    ubicacion: "Iquique",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 4,
-    nombre: "Jorge Medina",
-    cargo: "Profesor de Lenguaje",
-    especialidad: "Lengua Castellana",
-    ubicacion: "Antofagasta",
-    disponibilidad: "Dos semanas",
-  },
-  {
-    id: 5,
-    nombre: "Sofía Contreras",
-    cargo: "Profesora de Inglés",
-    especialidad: "Idiomas",
-    ubicacion: "Arica",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 6,
-    nombre: "Diego Paredes",
-    cargo: "Encargado de Convivencia Escolar",
-    especialidad: "Gestión educativa",
-    ubicacion: "Calama",
-    disponibilidad: "Próximo mes",
-  },
-  {
-    id: 7,
-    nombre: "Valentina Ruiz",
-    cargo: "Profesora de Ciencias",
-    especialidad: "Biología",
-    ubicacion: "La Serena",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 8,
-    nombre: "Tomás Herrera",
-    cargo: "Inspector General",
-    especialidad: "Gestión escolar",
-    ubicacion: "Coquimbo",
-    disponibilidad: "Dos semanas",
-  },
-  {
-    id: 9,
-    nombre: "Camila Vargas",
-    cargo: "Profesora de Historia",
-    especialidad: "Historia y Geografía",
-    ubicacion: "Arica",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 10,
-    nombre: "Felipe Navarro",
-    cargo: "Encargado de Biblioteca",
-    especialidad: "Gestión documental",
-    ubicacion: "Putre",
-    disponibilidad: "Próximo mes",
-  },
-  {
-    id: 11,
-    nombre: "Andrea Salinas",
-    cargo: "Profesora de Educación Física",
-    especialidad: "Actividad física",
-    ubicacion: "Iquique",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 12,
-    nombre: "Ricardo Soto",
-    cargo: "Profesor de Música",
-    especialidad: "Educación artística",
-    ubicacion: "Antofagasta",
-    disponibilidad: "Próximo mes",
-  },
-  {
-    id: 13,
-    nombre: "Natalia Espinoza",
-    cargo: "Psicopedagoga",
-    especialidad: "Apoyo pedagógico",
-    ubicacion: "Arica",
-    disponibilidad: "Inmediata",
-  },
-  {
-    id: 14,
-    nombre: "Esteban Bravo",
-    cargo: "Profesor de Tecnología",
-    especialidad: "Informática educativa",
-    ubicacion: "Calama",
-    disponibilidad: "Dos semanas",
-  },
-  {
-    id: 15,
-    nombre: "Isidora León",
-    cargo: "Profesora de Artes Visuales",
-    especialidad: "Arte y diseño",
-    ubicacion: "La Serena",
-    disponibilidad: "Inmediata",
-  },
-]); */
-
 const candidatos = ref([]);
+const mostrarModalCandidato = ref(false);
+const candidatoActivo = ref(null);
+
+function verCandidato(candidato) {
+  candidatoActivo.value = candidato;
+  mostrarModalCandidato.value = true;
+}
 
 async function exportarExcel() {
   try {
@@ -234,43 +129,35 @@ async function exportarExcel() {
 }
 
 onMounted(async () => {
-  if (tabla.value) {
-    new DataTable(tabla.value, {
-      paging: true,
-      searching: true,
-      info: true,
-      responsive: true,
-      language: {
-        search: "Buscar:",
-        lengthMenu: "Mostrar _MENU_ registros",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ candidatos",
-        paginate: {
-          next: "Siguiente",
-          previous: "Anterior",
-        },
-      },
-    });
-  }
-
-  isMounted.value = true;
-
   try {
-    // Cargar datos primero
     const data = await fetchCandidatos();
-
-    // Verificar que el componente siga montado
-    if (!isMounted.value) return;
-
     candidatos.value = data;
 
-    // Esperar a que Vue actualice el DOM
-    await nextTick();
+    await nextTick(); // Espera a que el DOM se actualice con los datos
+    console.log("Candidatos", candidatos.value);
 
-    // Inicializar DataTable después de que los datos estén en el DOM
-    dataTableInstance.value = initializeDataTable();
+    if (tabla.value) {
+      dataTableInstance.value = new DataTable(tabla.value, {
+        paging: true,
+        searching: true,
+        info: true,
+        responsive: true,
+        pageLength: 50,
+        language: {
+          search: "Buscar:",
+          lengthMenu: "Mostrar _MENU_ registros",
+          info: "Mostrando _START_ a _END_ de _TOTAL_ candidatos",
+          paginate: {
+            next: "Siguiente",
+            previous: "Anterior",
+          },
+        },
+      });
+    } else {
+      console.warn("La tabla no está disponible en el DOM.");
+    }
   } catch (error) {
     console.error("Error loading candidates:", error);
-    // Opcional: mostrar mensaje de error al usuario
   }
 });
 </script>
