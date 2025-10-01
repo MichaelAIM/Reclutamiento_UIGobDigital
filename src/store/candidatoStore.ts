@@ -172,5 +172,6 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     loadComunas,
     updateCandidato,
     loadDocumentosCandidatos,
+    setDocumentosCantidados,
   };
 });

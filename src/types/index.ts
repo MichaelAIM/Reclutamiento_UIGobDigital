@@ -51,6 +51,7 @@ export interface Usuario {
   usuario: string;
   token: string;
   nombre: string;
+  rol: string;
   email: string;
 }
 

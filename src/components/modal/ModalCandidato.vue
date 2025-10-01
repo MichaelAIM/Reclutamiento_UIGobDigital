@@ -148,26 +148,26 @@
                 <div class="card-body">
                   <ul class="list-group list-group-flush">
                     <li
-                      v-for="doc in datos.documentos"
+                      v-for="doc in documentos"
                       :key="doc.id"
                       class="list-group-item d-flex justify-content-between align-items-center"
                     >
-                      <span>
-                        {{ doc.nombre }}
-                        <span
-                          v-if="doc.opcional"
-                          class="badge bg-secondary ms-2"
-                          >Opcional</span
-                        >
-                      </span>
-                      <a
-                        :href="doc.url"
-                        target="_blank"
-                        class="btn btn-sm btn-outline-primary"
-                        title="Ver documento"
+                      <span class="fw-medium">{{ doc.nombre }}</span>
+                      <small
+                        v-if="doc.archivo?.guardado"
+                        class="text-success"
+                        >{{ doc.archivo.nombre_para_mostrar }}</small
                       >
-                        <i class="bi bi-file-earmark-text me-1"></i> Ver
-                        Documento
+                      <small v-else-if="doc.archivo" class="text-warning"
+                        >Procesando...</small
+                      >
+                      <small v-else class="text-muted">No adjuntado</small>
+                      <a
+                        v-if="doc.archivo?.guardado"
+                        @click="descargar(doc)"
+                        class="btn btn-sm btn-outline-primary"
+                      >
+                        <i class="bi bi-file-earmark-text me-1"></i>
                       </a>
                     </li>
                   </ul>
@@ -193,21 +193,58 @@
 </template>
 
 <script setup>
-import { onUpdated } from "vue";
+import { onMounted, onUpdated, ref } from "vue";
+import {
+  fetchDocumentos,
+  fetchDocumentosCandidato,
+} from "../../services/candidatoService";
+import { useCandidatoStore } from "../../store/candidatoStore";
 
 const props = defineProps({
   visible: Boolean,
   datos: Object,
 });
-
+const store = useCandidatoStore();
 const emit = defineEmits(["update:visible"]);
+const docs = ref([]);
+const docsCandidato = ref([]);
+const documentos = ref([]);
 
 function cerrarModal() {
   emit("update:visible", false);
 }
 
-onUpdated(() => {
-  console.log("datos", props.datos);
+function descargar(docto) {
+  const doc = documentos.find((d) => d.id === docto.id);
+
+  if (!doc || !doc.archivo) return;
+
+  if (doc.archivo.guardado && doc.archivo.id !== undefined) {
+    try {
+      const encryptedId = encryptId(doc.archivo.id);
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/upload_documentoCandidato/file/${encryptedId}`;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Error al mostrar archivo en backend:", error);
+      return;
+    }
+  }
+}
+
+onMounted(async () => {
+  docs.value = await fetchDocumentos();
+});
+
+onUpdated(async () => {
+  docsCandidato.value = await store.loadDocumentosCandidatos(props.datos.id);
+  documentos.value = await store.setDocumentosCantidados(
+    props.datos.estado_candidato_id,
+    docsCandidato.value,
+    docs.value
+  );
+  console.log("documentos Candidato", documentos.value);
 });
 </script>
 

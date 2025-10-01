@@ -31,6 +31,15 @@ export const uploadDocumentoCandidato = (formData: FormData) =>
 export const fetchComunas = (regionId: number) =>
   api.get(`/comunas?region_id=${regionId}`);
 
+export const fetchDocumentos = async () => {
+  try {
+    const response = await api.get("/documentos");
+    return response.data;
+  } catch (error) {
+    console.error("Error al cargar candidatos:", error);
+  }
+};
+
 export const fetchDocumentosCandidato = (candidatoId: number) =>
   api.get(`/documentos_candidatos/candidato/${candidatoId}`);
 

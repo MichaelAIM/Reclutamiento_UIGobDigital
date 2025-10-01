@@ -86,6 +86,7 @@
                       disponibles
                     </a>
                     <a
+                      v-if="authStore.user.rol === 'admin'"
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'postulantes' }"
                       @click="Go('/postulaciones')"
@@ -93,6 +94,7 @@
                       <i class="bi bi-people me-2"></i> Postulantes
                     </a>
                     <a
+                      v-if="authStore.user.rol === 'admin'"
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'candidatos' }"
                       @click="Go('/candidatos')"
@@ -258,6 +260,8 @@ function cerrarSesion() {
 onMounted(function () {
   const screenWidth = window.innerWidth;
   isMenuVisible.value = screenWidth >= 992; // Bootstrap lg breakpoint
+
+  console.log("user", authStore.user.rol);
 });
 </script>
 <style scoped>

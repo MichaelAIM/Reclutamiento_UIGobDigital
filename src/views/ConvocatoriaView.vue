@@ -6,7 +6,11 @@
           Convocatorias disponibles
         </h2>
 
-        <button class="btn btn-success" @click="abrirModal">
+        <button
+          class="btn btn-success"
+          @click="abrirModal"
+          v-if="authStore.user.rol === 'admin'"
+        >
           <i class="bi bi-plus-circle mr-2"></i> Añadir convocatoria
         </button>
       </div>
@@ -158,12 +162,12 @@ import Swal from "sweetalert2";
 const emit = defineEmits(["filtrar"]);
 const mostrarModal = ref(false);
 const authStore = useAuthStore();
+const convocatorias = ref([]);
 
 const abrirModal = () => {
   mostrarModal.value = true;
 };
 
-const convocatorias = ref([]);
 const filtros = reactive({
   cargo: "",
   estado: "",
@@ -203,6 +207,7 @@ async function postularConvocatoria(convocatoriaId) {
     }
   });
 }
+
 async function enviarPostulacion(convocatoriaId) {
   try {
     const response = await postularCandidato(
