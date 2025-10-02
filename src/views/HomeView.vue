@@ -336,7 +336,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
-import NavBar from "../components/NavBar.vue";
+import NavBar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 import {
   fetchConvocatorias,
