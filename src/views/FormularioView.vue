@@ -412,7 +412,7 @@
                     <input
                       type="file"
                       class="d-none"
-                      @change="(e) => { const target = e.target as HTMLInputElement; if (target && target.files) { subirArchivo(doc.id, target.files[0]); } }"
+                      @change="(e:any) => { const target = e.target as HTMLInputElement; if (target && target.files) { subirArchivo(doc.id, target.files[0]); } }"
                     />
                   </label>
                   <button

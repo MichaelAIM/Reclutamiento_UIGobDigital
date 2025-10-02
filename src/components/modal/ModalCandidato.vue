@@ -258,7 +258,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref, defineExpose } from "vue";
+import { onMounted, onUpdated, ref } from "vue";
 import {
   fetchDocumentos,
   fetchDocumentosCandidato,
