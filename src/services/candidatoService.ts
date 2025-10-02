@@ -57,3 +57,5 @@ export const fetchCandidatos = async () => {
     console.error("Error al cargar candidatos:", error);
   }
 };
+export const createComentario = (payload: any) =>
+  api.post("/comentarios", payload);

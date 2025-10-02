@@ -52,7 +52,7 @@
   </div>
   <ModalCandidato
     v-model:visible="mostrarModalCandidato"
-    :datos="candidatoActivo"
+    ref="modalCandidato"
   />
 </template>
 
@@ -67,11 +67,15 @@ const dataTableInstance = ref(null); // Referencia a la instancia de DataTable
 const tabla = ref(null);
 const candidatos = ref([]);
 const mostrarModalCandidato = ref(false);
-const candidatoActivo = ref(null);
+const modalCandidato = ref(null);
 
 function verCandidato(candidato) {
-  candidatoActivo.value = candidato;
   mostrarModalCandidato.value = true;
+  if (modalCandidato.value?.CargarDocumentos) {
+    modalCandidato.value.CargarDocumentos(candidato);
+  } else {
+    console.warn("⚠️ Método CargarDocumentos no disponible en el hijo");
+  }
 }
 
 async function exportarExcel() {

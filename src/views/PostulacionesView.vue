@@ -11,9 +11,8 @@
         @click="toggle(index)"
         style="cursor: pointer"
       >
-        <div
-          class="card-body d-flex justify-content-between align-items-center"
-        >
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <!-- Columna izquierda: texto -->
           <div>
             <h5 class="mb-1 text-dark fw-semibold">
               {{ c.convocatoria.cargo.nombre }}
@@ -26,11 +25,37 @@
               </div>
             </div>
           </div>
-          <i
-            class="bi"
-            :class="expanded[index] ? 'bi-chevron-up' : 'bi-chevron-down'"
-            style="font-size: 1.2rem"
-          ></i>
+
+          <div class="d-flex flex-column align-items-end gap-2">
+            <div class="">
+              <span>{{ `estado: Abierta` }}</span>
+            </div>
+          </div>
+
+          <!-- Columna derecha: botones + ícono -->
+          <div class="d-flex flex-column align-items-end gap-3">
+            <div class="mr-md-5">
+              <button
+                class="btn btn-sm"
+                @click.stop="cancelarPostulacion(c)"
+                title="Cerrar Proceso"
+              >
+                <i class="bi bi-x-octagon-fill text-danger"></i>
+              </button>
+              <button
+                class="btn btn-sm"
+                @click.stop="archivarPostulacion(c)"
+                title="Archivar Proceso"
+              >
+                <i class="bi bi-archive-fill text-warning"></i>
+              </button>
+            </div>
+            <i
+              class="bi"
+              :class="expanded[index] ? 'bi-chevron-up' : 'bi-chevron-down'"
+              style="font-size: 1.2rem; cursor: pointer"
+            ></i>
+          </div>
         </div>
       </div>
 
@@ -66,7 +91,7 @@
                         type="checkbox"
                         :id="`estado-${index}-${i}`"
                         v-model="p.estado"
-                        @change="actualizarEstado(convocatoria.id, p)"
+                        @change="actualizarEstado(c.convocatoria.id, p)"
                       />
                     </div>
                     <span
@@ -85,6 +110,7 @@
                   <button
                     class="btn btn-sm btn-outline-info me-1"
                     title="Ver perfil"
+                    @click="verCandidato(p)"
                   >
                     <i class="bi bi-eye"></i>
                   </button>
@@ -107,67 +133,31 @@
       </div>
     </div>
   </div>
+
+  <ModalCandidato
+    v-model:visible="mostrarModalCandidato"
+    ref="modalCandidato"
+  />
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import { fetchPostulacionesVigentes } from "../services/postulacionService";
+import ModalCandidato from "../components/modal/ModalCandidato.vue";
 
 const convocatorias = ref([]);
+const mostrarModalCandidato = ref(false);
+const modalCandidato = ref(null);
+const expanded = ref([]);
 
-/* const convocatorias = ref([
-  {
-    codigo: "20231178TH001",
-    direccion: "Liceo Politécnico Bicentenario de Excelencia",
-    cargo: "Profesor de Historia",
-    postulaciones: [
-      {
-        nombre: "Juan Pérez",
-        email: "juan.perez@email.com",
-        especialidad: "Historia",
-        fecha: "2025-08-30",
-        estado: "Pendiente",
-      },
-      {
-        nombre: "Ana Contreras",
-        email: "ana.contreras@email.com",
-        especialidad: "Historia",
-        fecha: "2025-08-25",
-        estado: "Pendiente",
-      },
-    ],
-  },
-  {
-    codigo: "20231178TH002",
-    direccion: "Liceo B-4 Antonio Varas de la Barra de Arica",
-    cargo: "Encargado de Biblioteca",
-    postulaciones: [
-      {
-        nombre: "María González",
-        email: "maria.gonzalez@email.com",
-        especialidad: "Gestión documental",
-        fecha: "2025-08-28",
-        estado: "Pendiente",
-      },
-      {
-        nombre: "Carlos Ramirez",
-        email: "carlos.ramirez@email.com",
-        especialidad: "Ingeniero en Administración",
-        fecha: "2025-08-28",
-        estado: "Revisado",
-      },
-      {
-        nombre: "María González",
-        email: "maria.gonzalez@email.com",
-        especialidad: "Gestión de RRHH",
-        fecha: "2025-08-27",
-        estado: "Pendiente",
-      },
-    ],
-  },
-]); */
-
-const expanded = ref(convocatorias.value.map(() => false));
+function verCandidato(candidato) {
+  mostrarModalCandidato.value = true;
+  if (modalCandidato.value?.CargarDocumentos) {
+    modalCandidato.value.CargarDocumentos(candidato);
+  } else {
+    console.warn("⚠️ Método CargarDocumentos no disponible en el hijo");
+  }
+}
 
 function toggle(index) {
   expanded.value[index] = !expanded.value[index];
@@ -175,12 +165,26 @@ function toggle(index) {
 
 function actualizarEstado(codigoConvocatoria, postulante) {
   console.log(
-    `Estado actualizado para ${postulante.nombre} en ${codigoConvocatoria}: ${postulante.estado}`
+    `🔄 Estado actualizado para ${postulante.nombre_completo} en ${codigoConvocatoria}: ${postulante.estado}`
   );
+}
+
+// Funcionalidad de botones
+function cancelarPostulacion(convocatoria) {
+  console.info("🗑️ Cancelar postulación:", convocatoria.convocatoria.codigo);
+  // Aquí puedes llamar a tu servicio o store para cancelar
+  // Ej: store.cancelarPostulacion(convocatoria.id)
+}
+
+function archivarPostulacion(convocatoria) {
+  console.info("📁 Archivar postulación:", convocatoria.convocatoria.codigo);
+  // Aquí puedes llamar a tu servicio o store para archivar
+  // Ej: store.archivarPostulacion(convocatoria.id)
 }
 
 onMounted(async () => {
   convocatorias.value = await fetchPostulacionesVigentes(4);
+  //expanded.value = convocatorias.value.map(() => false);
 });
 </script>
 

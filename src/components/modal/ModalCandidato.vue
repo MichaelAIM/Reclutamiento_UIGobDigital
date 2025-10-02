@@ -153,15 +153,23 @@
                       class="list-group-item d-flex justify-content-between align-items-center"
                     >
                       <span class="fw-medium">{{ doc.nombre }}</span>
-                      <small
+                      <span
                         v-if="doc.archivo?.guardado"
-                        class="text-success"
-                        >{{ doc.archivo.nombre_para_mostrar }}</small
+                        class="badge bg-success text-white"
                       >
-                      <small v-else-if="doc.archivo" class="text-warning"
-                        >Procesando...</small
+                        <i class="bi bi-check-circle me-1"></i>
+                        {{ doc.archivo.nombre_para_mostrar }}
+                      </span>
+                      <span
+                        v-else-if="doc.archivo"
+                        class="badge bg-warning text-dark"
                       >
-                      <small v-else class="text-muted">No adjuntado</small>
+                        <i class="bi bi-hourglass-split me-1"></i> Procesando
+                      </span>
+                      <span v-else class="badge bg-secondary text-white">
+                        <i class="bi bi-x-circle me-1"></i> No adjuntado
+                      </span>
+
                       <a
                         v-if="doc.archivo?.guardado"
                         @click="descargar(doc)"
@@ -171,6 +179,63 @@
                       </a>
                     </li>
                   </ul>
+                </div>
+              </div>
+
+              <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-white border-bottom">
+                  <h6 class="mb-0 text-primary fw-semibold">
+                    <i class="bi bi-chat-dots me-2"></i> Comentarios
+                  </h6>
+                </div>
+                <div
+                  class="card-body bg-light"
+                  style="max-height: 300px; overflow-y: auto"
+                >
+                  <div v-if="datos.comentarios.length">
+                    <div
+                      v-for="(comentario, index) in datos.comentarios"
+                      :key="index"
+                      class="mb-3"
+                    >
+                      <div class="fw-semibold text-dark">
+                        <i class="bi bi-person-circle me-1"></i>
+                        {{ comentario.Candidato.nombre_completo }}
+                        <small class="text-muted ms-2">
+                          {{
+                            new Date(comentario.created_at).toLocaleDateString(
+                              "es-CL"
+                            ) +
+                            " " +
+                            new Date(comentario.created_at).toLocaleTimeString(
+                              "es-CL"
+                            )
+                          }}
+                        </small>
+                      </div>
+                      <div class="text-secondary">
+                        {{ comentario.descripcion }}
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else class="text-muted">Sin comentarios aún.</div>
+                </div>
+                <div class="card-footer bg-white">
+                  <div class="input-group">
+                    <input
+                      v-model="nuevoComentario"
+                      type="text"
+                      class="form-control"
+                      placeholder="Escribe un comentario..."
+                      @keyup.enter="enviarComentario"
+                    />
+                    <button
+                      class="btn btn-primary py-0 px-3"
+                      @click="enviarComentario"
+                    >
+                      <i class="bi bi-send" style="font-size: 1rem"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -193,29 +258,56 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from "vue";
+import { onMounted, onUpdated, ref, defineExpose } from "vue";
 import {
   fetchDocumentos,
   fetchDocumentosCandidato,
+  createComentario,
 } from "../../services/candidatoService";
 import { useCandidatoStore } from "../../store/candidatoStore";
+import { useAuthStore } from "../../store/authStore";
+import { encryptId } from "../../utils/validaciones";
 
 const props = defineProps({
   visible: Boolean,
-  datos: Object,
+  candidatoId: Number,
 });
+defineExpose({ CargarDocumentos });
 const store = useCandidatoStore();
+const authStore = useAuthStore();
 const emit = defineEmits(["update:visible"]);
 const docs = ref([]);
 const docsCandidato = ref([]);
 const documentos = ref([]);
+const datos = ref(null);
+const comentarios = ref([]);
+const nuevoComentario = ref("");
+
+async function enviarComentario() {
+  if (!nuevoComentario.value.trim()) return;
+
+  const nuevo = {
+    candidato_id: datos.value.id,
+    creador_id: authStore.candidato.id,
+    Candidato: {
+      nombre_completo: authStore.candidato.nombre_completo,
+    },
+    created_at: new Date().toISOString(),
+    descripcion: nuevoComentario.value,
+  };
+  const response = await createComentario(nuevo);
+  if (response.data) {
+    nuevoComentario.value = "";
+    datos.value.comentarios.push(nuevo);
+  }
+}
 
 function cerrarModal() {
   emit("update:visible", false);
 }
 
 function descargar(docto) {
-  const doc = documentos.find((d) => d.id === docto.id);
+  const doc = documentos.value.find((d) => d.id === docto.id);
 
   if (!doc || !doc.archivo) return;
 
@@ -237,15 +329,15 @@ onMounted(async () => {
   docs.value = await fetchDocumentos();
 });
 
-onUpdated(async () => {
-  docsCandidato.value = await store.loadDocumentosCandidatos(props.datos.id);
+async function CargarDocumentos(data) {
+  datos.value = data;
+  docsCandidato.value = await store.loadDocumentosCandidatos(data.id);
   documentos.value = await store.setDocumentosCantidados(
-    props.datos.estado_candidato_id,
+    data.estado_candidato_id,
     docsCandidato.value,
     docs.value
   );
-  console.log("documentos Candidato", documentos.value);
-});
+}
 </script>
 
 <style scoped>
@@ -254,5 +346,8 @@ onUpdated(async () => {
 }
 .modal.show {
   display: block;
+}
+.btn.btn-primary:not(.btn-sm):not(.btn-lg) {
+  min-height: auto;
 }
 </style>
