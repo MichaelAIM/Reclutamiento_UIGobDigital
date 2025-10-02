@@ -2,7 +2,7 @@
 
 #Creación
 
-npm create vite@latest Reclutamiento_SlepCH -- --template vue-ts
+npm create vite@latest Sys_Reclutamiento_UIGobDigital -- --template vue-ts
 
 > > cd Reclutamiento_SlepCH
 > > npm install
