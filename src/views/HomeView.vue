@@ -336,7 +336,6 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
 import NavBar from "../components/NavBar.vue";
 import Footer from "../components/Footer.vue";
 import {
@@ -346,8 +345,6 @@ import {
 import type { Convocatoria } from "../types";
 import api from "../services/apiService";
 import Swal from "sweetalert2";
-
-const router = useRouter();
 
 // Datos para las funcionalidades
 interface Feature {

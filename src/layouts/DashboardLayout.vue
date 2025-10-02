@@ -142,7 +142,6 @@ import { useAuthStore } from "../store/authStore";
 
 const anio = new Date().getFullYear();
 const activeTab = ref("dashboard");
-const selectedPeriod = ref("mes");
 const authStore = useAuthStore();
 const isMenuVisible = ref(false);
 
@@ -150,92 +149,6 @@ const router = useRouter();
 
 function Go(URL: string) {
   router.push(URL);
-}
-
-const stats = ref([
-  {
-    title: "Convocatorias Activas",
-    value: "24",
-    change: "+12%",
-    icon: "bi-file-earmark-text",
-    colorClass: "bg-primary",
-  },
-  {
-    title: "Postulaciones Totales",
-    value: "1,247",
-    change: "+8%",
-    icon: "bi-people",
-    colorClass: "bg-success",
-  },
-  {
-    title: "En Proceso",
-    value: "156",
-    change: "+15%",
-    icon: "bi-clock",
-    colorClass: "bg-warning",
-  },
-  {
-    title: "Contratados",
-    value: "89",
-    change: "+22%",
-    icon: "bi-award",
-    colorClass: "bg-info",
-  },
-]);
-
-const recentConvocatorias = ref([
-  {
-    id: 1,
-    titulo: "Profesor de Matemáticas - Enseñanza Media",
-    establecimiento: "Liceo Técnico Profesional Chinchorro",
-    fechaPublicacion: "2024-09-08",
-    fechaCierre: "2024-09-22",
-    postulaciones: 45,
-    estado: "Activa",
-  },
-  {
-    id: 2,
-    titulo: "Educadora de Párvulos",
-    establecimiento: "Jardín Infantil Los Aromos",
-    fechaPublicacion: "2024-09-05",
-    fechaCierre: "2024-09-19",
-    postulaciones: 32,
-    estado: "Activa",
-  },
-  {
-    id: 3,
-    titulo: "Asistente de la Educación",
-    establecimiento: "Escuela Básica República de Chile",
-    fechaPublicacion: "2024-09-03",
-    fechaCierre: "2024-09-17",
-    postulaciones: 78,
-    estado: "En Revisión",
-  },
-  {
-    id: 4,
-    titulo: "Inspector General",
-    establecimiento: "Colegio San José",
-    fechaPublicacion: "2024-08-30",
-    fechaCierre: "2024-09-15",
-    postulaciones: 23,
-    estado: "Próxima a Cerrar",
-  },
-]);
-
-function formatDate(dateString: any) {
-  return new Date(dateString).toLocaleDateString("es-CL");
-}
-
-function getStatusClass(estado: any) {
-  if (estado === "Activa") {
-    return "bg-success-subtle text-success border border-success-subtle";
-  } else if (estado === "En Revisión") {
-    return "bg-primary-subtle text-primary border border-primary-subtle";
-  } else if (estado === "Próxima a Cerrar") {
-    return "bg-warning-subtle text-warning border border-warning-subtle";
-  } else {
-    return "bg-secondary-subtle text-secondary border border-secondary-subtle";
-  }
 }
 
 function cerrarSesion() {
