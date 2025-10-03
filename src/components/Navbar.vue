@@ -153,7 +153,8 @@
 <script setup>
 import { onMounted, onUnmounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-
+import LogoFN from "../assets/img/Logotipo-Chinchorro-web-02.png";
+import LogoFB from "../assets/img/Logotipo-Chinchorro-web.png";
 const router = useRouter();
 
 function irAlPerfil(URL) {
@@ -162,7 +163,7 @@ function irAlPerfil(URL) {
 
 const isScrolled = ref(false);
 const visibility = ref("visible");
-const Logo = ref("../../src/assets/img/Logotipo-Chinchorro-web-02.png");
+const Logo = ref(LogoFN);
 const isBgNavbar = ref("bg-transparent");
 
 const handleScroll = () => {
@@ -170,11 +171,11 @@ const handleScroll = () => {
 
   if (isScrolled.value) {
     visibility.value = "invisible";
-    Logo.value = "../../src/assets/img/Logotipo-Chinchorro-web.png";
+    Logo.value = LogoFB;
     isBgNavbar.value = "bg-light";
   } else {
     visibility.value = "visible";
-    Logo.value = "../../src/assets/img/Logotipo-Chinchorro-web-02.png";
+    Logo.value = LogoFN;
     isBgNavbar.value = "bg-transparent";
   }
 };
