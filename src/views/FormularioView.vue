@@ -534,18 +534,34 @@ async function subirArchivo(id: any, archivo: File) {
   formData.append("nombre_para_mostrar", archivo.name);
   formData.append("file", archivo);
 
-  const response = await service.uploadDocumentoCandidato(formData);
+  try {
+    const response = await service.uploadDocumentoCandidato(formData);
 
-  if (response) {
-    const doc: any = documentosEsperados.find((d: any) => d.id === id);
-    if (doc) {
-      doc.archivo = {
-        id: response.data.documento.id,
-        nombre: response.data.documento.nombre,
-        nombre_para_mostrar: archivo.name,
-        guardado: true,
-      };
+    if (response) {
+      const doc: any = documentosEsperados.find((d: any) => d.id === id);
+      if (doc) {
+        doc.archivo = {
+          id: response.data.documento.id,
+          nombre: response.data.documento.nombre,
+          nombre_para_mostrar: archivo.name,
+          guardado: true,
+        };
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Documento subido",
+        text: "El archivo fue guardado correctamente.",
+      });
     }
+  } catch (error: any) {
+    const mensaje = error?.response?.data?.error || "Error al subir el archivo";
+
+    Swal.fire({
+      icon: "error",
+      title: "Error de validación",
+      text: mensaje,
+    });
   }
 }
 
