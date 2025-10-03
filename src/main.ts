@@ -27,7 +27,7 @@ const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 app.use(VueReCaptcha, {
-  siteKey: "6Lfdn9wrAAAAAG9F7QYl75owa-r340-SJu8JGRUK", // ← reemplaza con tu clave pública de reCAPTCHA v3
+  siteKey: "6LersNwrAAAAABkKQLuTxYTQ7TF4M1Xs-KuhqVm9", // ← reemplaza con tu clave pública de reCAPTCHA v3
   loaderOptions: {
     autoHideBadge: true,
   },
