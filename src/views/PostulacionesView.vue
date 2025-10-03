@@ -27,8 +27,15 @@
           </div>
 
           <div class="d-flex flex-column align-items-end gap-2">
-            <div class="">
-              <span>{{ `estado: Abierta` }}</span>
+            <div
+              :class="[
+                'px-3 py-1 rounded',
+                getEstadoClass(c.convocatoria.estado_id),
+              ]"
+            >
+              <span class="fw-semibold">
+                {{ c.convocatoria.estado_convocatorium.nombre }}
+              </span>
             </div>
           </div>
 
@@ -37,14 +44,14 @@
             <div class="mr-md-5">
               <button
                 class="btn btn-sm"
-                @click.stop="cancelarPostulacion(c)"
+                @click.stop="cancelarPostulacion(c.convocatoria.id)"
                 title="Cerrar Proceso"
               >
                 <i class="bi bi-x-octagon-fill text-danger"></i>
               </button>
               <button
                 class="btn btn-sm"
-                @click.stop="archivarPostulacion(c)"
+                @click.stop="archivarPostulacion(c.convocatoria.id)"
                 title="Archivar Proceso"
               >
                 <i class="bi bi-archive-fill text-warning"></i>
@@ -143,6 +150,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { fetchPostulacionesVigentes } from "../services/postulacionService";
+import { update_convocatoria } from "../services/convocatoriaServices";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
 
 const convocatorias = ref([]);
@@ -159,6 +167,17 @@ function verCandidato(candidato) {
   }
 }
 
+function getEstadoClass(estadoId) {
+  const clases = {
+    1: "bg-warning text-dark", // Pendiente
+    2: "bg-info text-white", // En revisión
+    3: "bg-success text-white", // Aprobado
+    4: "bg-danger text-white", // Rechazado
+    5: "bg-secondary text-white", // Archivado
+  };
+  return clases[estadoId] || "bg-light text-muted"; // fallback defensivo
+}
+
 function toggle(index) {
   expanded.value[index] = !expanded.value[index];
 }
@@ -170,22 +189,28 @@ function actualizarEstado(codigoConvocatoria, postulante) {
 }
 
 // Funcionalidad de botones
-function cancelarPostulacion(convocatoria) {
-  console.info("🗑️ Cancelar postulación:", convocatoria.convocatoria.codigo);
-  // Aquí puedes llamar a tu servicio o store para cancelar
-  // Ej: store.cancelarPostulacion(convocatoria.id)
+async function cancelarPostulacion(convocatoria) {
+  console.log("🗑️ Cancelar postulación:", convocatoria);
+  const response = await update_convocatoria(convocatoria, { estado_id: 4 });
+  await cargarPostulaciones();
 }
 
-function archivarPostulacion(convocatoria) {
-  console.info("📁 Archivar postulación:", convocatoria.convocatoria.codigo);
-  // Aquí puedes llamar a tu servicio o store para archivar
-  // Ej: store.archivarPostulacion(convocatoria.id)
+async function archivarPostulacion(convocatoria) {
+  console.log("📁 Archivar postulación:", convocatoria);
+  const response = await update_convocatoria(convocatoria, { estado_id: 5 });
+  await cargarPostulaciones();
 }
 
 onMounted(async () => {
-  convocatorias.value = await fetchPostulacionesVigentes(4);
+  await cargarPostulaciones();
+  console.log("convocatorias", convocatorias.value);
+
   //expanded.value = convocatorias.value.map(() => false);
 });
+
+async function cargarPostulaciones() {
+  convocatorias.value = await fetchPostulacionesVigentes(4);
+}
 </script>
 
 <style scoped>

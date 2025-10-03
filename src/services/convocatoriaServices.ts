@@ -66,3 +66,8 @@ export const crear_convocatoria = async (datos: any) => {
   const response = await api.post("/convocatorias", datos);
   return response.data;
 };
+
+export const update_convocatoria = async (id: number, datos: any) => {
+  const response = await api.put("/convocatorias/" + id, datos);
+  return response.data;
+};
