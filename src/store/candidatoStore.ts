@@ -72,7 +72,13 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     });
   }
 
+  async function setCantidado(candidato_id: number) {
+    const response = await service.fetchCandidato(candidato_id);
+    return response.data;
+  }
+
   async function loadCatalogos(idCandidato?: number | null) {
+    console.log("entro a loadCatalogos = " + idCandidato);
     if (idCandidato) {
       setLoading(true);
       setError(null);
@@ -173,5 +179,6 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     updateCandidato,
     loadDocumentosCandidatos,
     setDocumentosCantidados,
+    setCantidado,
   };
 });

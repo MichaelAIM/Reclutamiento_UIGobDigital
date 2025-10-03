@@ -79,7 +79,7 @@
                     <strong>Nivel de Estudios:</strong>
                     {{ datos.nivel_educacion?.nombre ?? "Sin datos" }}
                   </p>
-                  <p><strong>Institución:</strong> {{ datos.institucion }}</p>
+
                   <p>
                     <strong>Título Profesional:</strong>
                     {{ datos.titulos_profesionale?.nombre ?? "Sin datos" }}
@@ -117,9 +117,7 @@
                       {{ jor.nombre ?? "Sin datos" }},
                     </span>
                   </p>
-                  <p>
-                    <strong>Tipo de contrato:</strong> {{ datos.tipo_contrato }}
-                  </p>
+
                   <p>
                     <strong>Tipos de vacantes de interés:</strong>
                     <span v-if="datos.tipo_vacante_nuevo">

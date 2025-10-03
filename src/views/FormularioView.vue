@@ -491,6 +491,12 @@ const loading = computed(() => store.loading ?? true);
 
 onMounted(async () => {
   await store.loadCatalogos(authStore.candidato.id);
+  if (authStore.candidato.id !== null) {
+    const response = await store.setCantidado(authStore.candidato.id);
+    authStore.candidato = await formatearCandidato(response);
+    console.log("response", response);
+  }
+
   Object.assign(documentosEsperados, store.estados.documentos);
   Object.assign(form, authStore.candidato);
   onRegionChange();
@@ -517,6 +523,46 @@ onMounted(async () => {
       .filter((j): j is { id: number; nombre: string } => j !== undefined);
   }
 });
+
+async function formatearCandidato(candidato: any) {
+  let region_id = null;
+  if (candidato.comuna) {
+    region_id = candidato.comuna.regione.id;
+  }
+
+  return {
+    id: candidato.id,
+    rut: candidato.rut,
+    nombre_completo: candidato.nombre_completo,
+    titulo_profesional_id: candidato.titulo_profesional_id,
+    telefono: candidato.telefono,
+    correo: candidato.correo,
+    estado_candidato_id: candidato.estado_candidato_id,
+    nacionalidad_id: candidato.nacionalidad_id,
+    estado_civil_id: candidato.estado_civil_id,
+    direccion: candidato.direccion,
+    comuna_id: candidato.comuna_id,
+    usuario_id: candidato.usuario_id,
+    fecha_nacimiento: candidato.fecha_nacimiento,
+    presentacion: candidato.presentacion,
+    region_id,
+    cargos: candidato.cargos ? candidato.cargos.map((c: any) => c.id) : [],
+    jornadas_seleccionadas: candidato.jornadas
+      ? candidato.jornadas.map((c: any) => c.id)
+      : [],
+    ciudades_seleccionadas: candidato.ciudades
+      ? candidato.ciudades.map((c: any) => c.id)
+      : [],
+    modalidades_seleccionadas: candidato.modalidades_horarias
+      ? candidato.modalidades_horarias.map((c: any) => c.id)
+      : [],
+    categoria_funcionaria_id: candidato.categoria_funcionaria_id,
+    nivel_educacion_id: candidato.nivel_educacion_id,
+    especialidad: candidato.especialidad,
+    tipo_vacante_nuevo: candidato.tipo_vacante_nuevo,
+    tipo_vacante_reemplazo: candidato.tipo_vacante_reemplazo,
+  };
+}
 
 async function subirArchivo(id: any, archivo: File) {
   const doc: any = documentosEsperados.find((d: any) => d.id === id);
