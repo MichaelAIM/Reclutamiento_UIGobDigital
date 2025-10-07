@@ -32,3 +32,30 @@ export async function loginUsuario(datos: {
 
   return res.data;
 }
+
+export async function recuperarPassword(rut: string) {
+  const res: any = await api.post("/auth/register/recuperar-clave", {
+    rut,
+  });
+
+  if (!res.data) {
+    const error = await res.json();
+    throw new Error(error.message || "Error al enviar rut de recuperación");
+  }
+
+  return res.data;
+}
+
+export async function cambiarPassword(datos: {
+  token: string;
+  newPassword: string;
+}) {
+  const res: any = await api.post("/auth/change-password", datos);
+
+  if (!res.data) {
+    const error = await res.json();
+    throw new Error(error.message || "Error al cambiar la contraseña");
+  }
+
+  return res.data;
+}

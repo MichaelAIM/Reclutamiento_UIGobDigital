@@ -124,6 +124,7 @@
                   <button
                     class="btn btn-sm btn-outline-primary"
                     title="Seleccionar"
+                    @click="cambiarEstadoCandidato(p.id)"
                   >
                     <i class="bi bi-check-all"></i>
                   </button>
@@ -151,6 +152,7 @@
 import { onMounted, ref } from "vue";
 import { fetchPostulacionesVigentes } from "../services/postulacionService";
 import { update_convocatoria } from "../services/convocatoriaServices";
+import { updateCandidato } from "../services/candidatoService";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
 
 const convocatorias = ref([]);
@@ -188,6 +190,11 @@ function actualizarEstado(codigoConvocatoria, postulante) {
   );
 }
 
+async function cambiarEstadoCandidato(candidatoId) {
+  console.log("🗑️ id candidato:", convocatoria);
+  /*   const response = await updateCandidato(candidatoId, { estado_id: 3 });
+  await cargarPostulaciones(); */
+}
 // Funcionalidad de botones
 async function cancelarPostulacion(convocatoria) {
   console.log("🗑️ Cancelar postulación:", convocatoria);

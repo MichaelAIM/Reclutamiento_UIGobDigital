@@ -238,7 +238,7 @@ async function enviarPostulacion(convocatoriaId) {
 }
 
 async function cargarConvocatorias() {
-  convocatorias.value = await fetchConvocatorias();
+  convocatorias.value = await fetchConvocatorias(4);
 }
 </script>
 <style scoped>

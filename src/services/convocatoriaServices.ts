@@ -1,9 +1,13 @@
 import api from "../services/apiService";
 import type { Convocatoria } from "../types";
 
-export const fetchConvocatorias = async () => {
+export const fetchConvocatorias = async (est: any) => {
+  let url = "/convocatorias";
+  if (est) {
+    url = "/convocatorias?estado_id=" + est;
+  }
   try {
-    const response = await api.get<Convocatoria[]>("/convocatorias");
+    const response = await api.get<Convocatoria[]>(url);
     return response.data;
   } catch (error) {
     console.error("Error al cargar convocatorias:", error);

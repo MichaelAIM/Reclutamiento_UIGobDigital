@@ -382,7 +382,7 @@ const handleScroll = () => {
 
 onMounted(async () => {
   window.addEventListener("scroll", handleScroll);
-  convocatorias.value = (await fetchConvocatorias()) ?? [];
+  convocatorias.value = (await fetchConvocatorias(4)) ?? [];
   indices.value = await fetchCountConvocatorias();
 });
 

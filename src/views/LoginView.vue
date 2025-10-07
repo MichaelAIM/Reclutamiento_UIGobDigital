@@ -46,14 +46,27 @@
           </div>
           <div class="mb-3 text-start">
             <label for="password" class="form-label fw-bold">Contraseña</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              v-model="password"
-              placeholder="Ingresa tu contraseña"
-              required
-            />
+            <div class="input-group">
+              <input
+                :type="mostrarPassword ? 'text' : 'password'"
+                class="form-control"
+                id="password"
+                v-model="password"
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+              <button
+                type="button"
+                class="btn btn-outline-primary py-0"
+                style="min-height: auto"
+                @click="mostrarPassword = !mostrarPassword"
+                title="Mostrar/Ocultar contraseña"
+              >
+                <i
+                  :class="mostrarPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"
+                ></i>
+              </button>
+            </div>
           </div>
 
           <!-- Recordarme + Link -->
@@ -64,6 +77,7 @@
             <a
               href="#"
               class="text-primary fw-medium text-decoration-none fs-0875"
+              @click.prevent="mostrarRecuperar = true"
             >
               ¿Olvidó su contraseña?
             </a>
@@ -81,6 +95,37 @@
     <i class="bi bi-shield-lock text-primary fs-4"></i>
     <div class="text-muted small mt-1">Validando seguridad institucional…</div>
   </div>
+
+  <Modal v-if="mostrarRecuperar" @close="mostrarRecuperar = false">
+    <template #header>
+      <h5 class="modal-title">Recuperar Contraseña</h5>
+    </template>
+
+    <template #body>
+      <div class="mb-3">
+        <label for="rutRecuperacion" class="form-label fw-bold"
+          >RUT registrado</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="rutRecuperacion"
+          v-model="rutRecuperacion"
+          placeholder="Ej: 12345678-9"
+          required
+        />
+      </div>
+    </template>
+
+    <template #footer>
+      <!--       <button class="btn btn-secondary" @click="mostrarRecuperar = false">
+        Cerrar
+      </button> -->
+      <button class="btn btn-primary" @click="enviarRecuperacion">
+        Enviar
+      </button>
+    </template>
+  </Modal>
 </template>
 
 <script setup>
@@ -91,6 +136,8 @@ import Swal from "sweetalert2";
 import { validarRut, formatearRut, limpiarRut } from "../utils/validaciones";
 import { useRecaptchaV3 } from "../composables/useRecaptchaV3";
 import RecaptchaBadge from "../components/RecaptchaBadge.vue";
+import Modal from "../components/modal/ModalComponent.vue";
+import { recuperarPassword } from "../services/authservice";
 
 const checked1 = ref(true);
 const usuario = ref("");
@@ -99,6 +146,40 @@ const authStore = useAuthStore();
 const router = useRouter();
 const { getToken } = useRecaptchaV3();
 const cargandoRecaptcha = ref(false);
+const mostrarPassword = ref(false);
+
+const mostrarRecuperar = ref(false);
+const rutRecuperacion = ref("");
+
+async function enviarRecuperacion() {
+  if (!validarRut(rutRecuperacion.value)) {
+    Swal.fire({ icon: "warning", title: "RUT inválido" });
+    return;
+  }
+
+  try {
+    await recuperarPassword({
+      rut: limpiarRut(rutRecuperacion.value),
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Solicitud enviada",
+      text: "Si tu RUT está registrado, recibirás un correo con instrucciones para recuperar tu contraseña.",
+    });
+
+    mostrarRecuperar.value = false;
+  } catch (error) {
+    console.log(error);
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text:
+        error.response?.data?.message || "No se pudo procesar la solicitud.",
+    });
+  }
+}
 
 function onRutInput(e) {
   const target = e.target;
