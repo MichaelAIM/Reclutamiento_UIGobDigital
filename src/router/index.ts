@@ -5,6 +5,7 @@ import StarterView from "../views/HomeView.vue";
 
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegistrarView.vue";
+import RestablecerClaveView from "../views/RecuperarPassword.vue";
 
 import FormularioView from "../views/FormularioView.vue";
 import DashboardView from "../views/DashboardView.vue";
@@ -26,7 +27,7 @@ const routes = [
     component: SimpleLayout,
     children: [
       {
-        path: "/login", // ruta por defecto
+        path: "/login",
         name: "simple.login",
         component: LoginView,
       },
@@ -35,8 +36,14 @@ const routes = [
         name: "simple.registrar",
         component: RegisterView,
       },
+      {
+        path: "/restablecer-clave",
+        name: "simple.restablecerClave",
+        component: RestablecerClaveView,
+      },
     ],
   },
+
   {
     path: "/dashboard",
     component: DashboardLayout,

@@ -20,8 +20,11 @@ export function isTokenExpired(token: string): boolean {
 }
 
 export function validarRut(rut: string): boolean {
+  console.log("Validando RUT:", rut);
+
   const limpio = rut.replace(/\./g, "").replace(/-/g, "").toUpperCase();
   if (!/^\d{7,8}[0-9K]$/.test(limpio)) return false;
+  console.log("RUT limpio:", limpio);
 
   const cuerpo = limpio.slice(0, -1);
   const dv = limpio.slice(-1);
@@ -35,6 +38,8 @@ export function validarRut(rut: string): boolean {
 
   const resto = suma % 11;
   const dvEsperado = resto === 0 ? "0" : resto === 1 ? "K" : String(11 - resto);
+  console.log("Dígito verificador esperado:", dvEsperado);
+
   return dv === dvEsperado;
 }
 
