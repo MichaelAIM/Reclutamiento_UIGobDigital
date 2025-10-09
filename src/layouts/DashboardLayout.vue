@@ -63,13 +63,13 @@
               >
                 <div class="accordion-body p-0">
                   <nav class="nav flex-column">
-                    <a
+                    <!--                     <a
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'dashboard' }"
                       @click="Go('/dashboard')"
                     >
                       <i class="bi bi-graph-up me-2"></i> Dashboard
-                    </a>
+                    </a> -->
                     <a
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'perfil' }"

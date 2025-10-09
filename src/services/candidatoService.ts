@@ -59,3 +59,17 @@ export const fetchCandidatos = async () => {
 };
 export const createComentario = (payload: any) =>
   api.post("/comentarios", payload);
+
+export const putCandidato = async (
+  candidatoId: number,
+  nuevoEstadoId: number
+) => {
+  try {
+    const response = await api.put("/candidatos/" + candidatoId + "/estado", {
+      nuevoEstadoId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar candidatos:", error);
+  }
+};

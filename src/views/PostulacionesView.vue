@@ -4,140 +4,184 @@
       Postulaciones por Convocatoria
     </h2>
 
-    <div v-for="(c, index) in convocatorias" :key="index" class="mb-3">
-      <!-- Tarjeta de convocatoria -->
-      <div
-        class="card border-0 shadow-sm"
-        @click="toggle(index)"
-        style="cursor: pointer"
-      >
-        <div class="card-body d-flex justify-content-between align-items-start">
-          <!-- Columna izquierda: texto -->
-          <div>
-            <h5 class="mb-1 text-dark fw-semibold">
-              {{ c.convocatoria.cargo.nombre }}
-            </h5>
-            <div class="small text-muted">
-              <div><strong>Código:</strong> {{ c.convocatoria.codigo }}</div>
-              <div>
-                <strong>Dirección:</strong>
-                {{ c.convocatoria.institucione.nombre }}
+    <h5 class="text-muted mb-3">
+      Total convocatorias: {{ Object.keys(convocatorias).length }}
+    </h5>
+    <div v-if="Object.keys(convocatorias).length > 0">
+      <div v-for="(c, index) in convocatorias" :key="index" class="mb-3">
+        <div
+          class="card border-0 shadow-sm"
+          @click="toggle(index)"
+          style="cursor: pointer"
+        >
+          <div
+            class="card-body d-flex justify-content-between align-items-start"
+          >
+            <div>
+              <h5 class="mb-1 text-dark fw-semibold">
+                {{ c.convocatoria.cargo.nombre }}
+              </h5>
+              <div class="small text-muted">
+                <div><strong>Código:</strong> {{ c.convocatoria.codigo }}</div>
+                <div>
+                  <strong>Dirección:</strong>
+                  {{ c.convocatoria.institucione.nombre }}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="d-flex flex-column align-items-end gap-2">
-            <div
-              :class="[
-                'px-3 py-1 rounded',
-                getEstadoClass(c.convocatoria.estado_id),
-              ]"
+            <div class="d-flex flex-column align-items-end gap-2">
+              <div
+                :class="[
+                  'px-3 py-1 rounded',
+                  getEstadoClass(c.convocatoria.estado_id),
+                ]"
+              >
+                <span class="fw-semibold">
+                  {{ c.convocatoria.estado_convocatorium.nombre }}
+                </span>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column align-items-end gap-3">
+              <div class="mr-md-5">
+                <button
+                  class="btn btn-sm"
+                  @click.stop="cambiarEstadoConvocatoria(c.convocatoria.id, 4)"
+                  title="Cerrar Proceso"
+                  v-if="c.convocatoria.estado_id < 4"
+                >
+                  <i class="bi bi-x-octagon-fill text-danger"></i>
+                </button>
+
+                <button
+                  class="btn btn-sm"
+                  @click.stop="cambiarEstadoConvocatoria(c.convocatoria.id, 2)"
+                  title="Habiltar Proceso"
+                  v-else
+                >
+                  <i class="bi bi-skip-backward-circle-fill text-success"></i>
+                </button>
+                <button
+                  class="btn btn-sm"
+                  @click.stop="cambiarEstadoConvocatoria(c.convocatoria.id, 5)"
+                  title="Archivar Proceso"
+                >
+                  <i class="bi bi-archive-fill text-warning"></i>
+                </button>
+              </div>
+              <i
+                class="bi"
+                :class="expanded[index] ? 'bi-chevron-up' : 'bi-chevron-down'"
+                style="font-size: 1.2rem; cursor: pointer"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contenido colapsable -->
+        <div v-if="expanded[index]" class="mt-2">
+          <div class="table-responsive">
+            <table
+              class="table table-bordered table-striped table-hover align-middle shadow-sm"
             >
-              <span class="fw-semibold">
-                {{ c.convocatoria.estado_convocatorium.nombre }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Columna derecha: botones + ícono -->
-          <div class="d-flex flex-column align-items-end gap-3">
-            <div class="mr-md-5">
-              <button
-                class="btn btn-sm"
-                @click.stop="cancelarPostulacion(c.convocatoria.id)"
-                title="Cerrar Proceso"
-              >
-                <i class="bi bi-x-octagon-fill text-danger"></i>
-              </button>
-              <button
-                class="btn btn-sm"
-                @click.stop="archivarPostulacion(c.convocatoria.id)"
-                title="Archivar Proceso"
-              >
-                <i class="bi bi-archive-fill text-warning"></i>
-              </button>
-            </div>
-            <i
-              class="bi"
-              :class="expanded[index] ? 'bi-chevron-up' : 'bi-chevron-down'"
-              style="font-size: 1.2rem; cursor: pointer"
-            ></i>
+              <thead class="table-light">
+                <tr class="text-center">
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Rut</th>
+                  <th>Email</th>
+                  <th>Especialidad</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(p, i) in c.candidatos"
+                  :key="i"
+                  :class="{
+                    'bg-accent-325': p.estado_candidato_id === 3,
+                    'table-striped': true,
+                  }"
+                >
+                  <td class="text-center">{{ i + 1 }}</td>
+                  <td>{{ p.nombre_completo }}</td>
+                  <td class="text-nowrap">{{ p.rut }}</td>
+                  <td>{{ p.correo }}</td>
+                  <td>{{ p.especialidad }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="form-check form-switch m-0">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          :id="`estado-${index}-${i}`"
+                          :disabled="p.estado_candidato_id === 3"
+                          :checked="p.estado_candidato_id > 1"
+                          @change="
+                            cambiarEstadoCandidato(
+                              p.id,
+                              $event.target.checked ? 2 : 1
+                            )
+                          "
+                        />
+                      </div>
+                      <span
+                        :class="[
+                          'badge px-3 py-1',
+                          p.estado_candidato_id < 2
+                            ? 'bg-warning text-dark'
+                            : 'bg-success text-white',
+                        ]"
+                      >
+                        {{
+                          p.estado_candidato_id < 2 ? "Pendiente" : "Revisado"
+                        }}
+                      </span>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <button
+                      class="btn btn-sm btn-outline-info me-1"
+                      title="Ver perfil"
+                      @click="verCandidato(p)"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-outline-primary"
+                      title="Seleccionar"
+                      @click="cambiarEstadoCandidato(p.id, 3)"
+                      v-if="p.estado_candidato_id < 3"
+                    >
+                      <i class="bi bi-check-all"></i>
+                    </button>
+                    <button
+                      v-else
+                      class="btn btn-sm btn-outline-secondary"
+                      title="Quitar selección"
+                      @click="cambiarEstadoCandidato(p.id, 1)"
+                    >
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr v-if="c.candidatos.length === 0">
+                  <td colspan="7" class="text-center text-muted py-3">
+                    No hay postulaciones registradas.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Contenido colapsable -->
-      <div v-if="expanded[index]" class="mt-2">
-        <div class="table-responsive">
-          <table
-            class="table table-bordered table-striped table-hover align-middle shadow-sm"
-          >
-            <thead class="table-light">
-              <tr class="text-center">
-                <th>#</th>
-                <th>Nombre</th>
-                <th>Rut</th>
-                <th>Email</th>
-                <th>Especialidad</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(p, i) in c.candidatos" :key="i">
-                <td class="text-center">{{ i + 1 }}</td>
-                <td>{{ p.nombre_completo }}</td>
-                <td class="text-nowrap">{{ p.rut }}</td>
-                <td>{{ p.correo }}</td>
-                <td>{{ p.especialidad }}</td>
-                <td>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="form-check form-switch m-0">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        :id="`estado-${index}-${i}`"
-                        v-model="p.estado"
-                        @change="actualizarEstado(c.convocatoria.id, p)"
-                      />
-                    </div>
-                    <span
-                      :class="[
-                        'badge px-3 py-1',
-                        p.estado
-                          ? 'bg-success text-white'
-                          : 'bg-warning text-dark',
-                      ]"
-                    >
-                      {{ p.estado ? "Revisado" : "Pendiente" }}
-                    </span>
-                  </div>
-                </td>
-                <td class="text-center">
-                  <button
-                    class="btn btn-sm btn-outline-info me-1"
-                    title="Ver perfil"
-                    @click="verCandidato(p)"
-                  >
-                    <i class="bi bi-eye"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-outline-primary"
-                    title="Seleccionar"
-                    @click="cambiarEstadoCandidato(p.id)"
-                  >
-                    <i class="bi bi-check-all"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr v-if="c.candidatos.length === 0">
-                <td colspan="7" class="text-center text-muted py-3">
-                  No hay postulaciones registradas.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="row py-5" v-else>
+      <div class="col-12 text-center">
+        <p class="text-muted">No hay postulaciones vigentes en este momento.</p>
       </div>
     </div>
   </div>
@@ -149,10 +193,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { fetchPostulacionesVigentes } from "../services/postulacionService";
 import { update_convocatoria } from "../services/convocatoriaServices";
-import { updateCandidato } from "../services/candidatoService";
+import { putCandidato } from "../services/candidatoService";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
 
 const convocatorias = ref([]);
@@ -180,39 +224,28 @@ function getEstadoClass(estadoId) {
   return clases[estadoId] || "bg-light text-muted"; // fallback defensivo
 }
 
+const convocatoriasConCandidatos = computed(() =>
+  convocatorias.value.filter((c) => c.candidatos?.length > 0)
+);
+
 function toggle(index) {
   expanded.value[index] = !expanded.value[index];
 }
 
-function actualizarEstado(codigoConvocatoria, postulante) {
-  console.log(
-    `🔄 Estado actualizado para ${postulante.nombre_completo} en ${codigoConvocatoria}: ${postulante.estado}`
-  );
-}
-
-async function cambiarEstadoCandidato(candidatoId) {
-  console.log("🗑️ id candidato:", convocatoria);
-  /*   const response = await updateCandidato(candidatoId, { estado_id: 3 });
-  await cargarPostulaciones(); */
-}
-// Funcionalidad de botones
-async function cancelarPostulacion(convocatoria) {
-  console.log("🗑️ Cancelar postulación:", convocatoria);
-  const response = await update_convocatoria(convocatoria, { estado_id: 4 });
+async function cambiarEstadoCandidato(candidatoId, estado) {
+  const response = await putCandidato(candidatoId, estado);
   await cargarPostulaciones();
 }
-
-async function archivarPostulacion(convocatoria) {
-  console.log("📁 Archivar postulación:", convocatoria);
-  const response = await update_convocatoria(convocatoria, { estado_id: 5 });
+// Funcionalidad de botones
+async function cambiarEstadoConvocatoria(convocatoria, estado) {
+  const response = await update_convocatoria(convocatoria, {
+    estado_id: estado,
+  });
   await cargarPostulaciones();
 }
 
 onMounted(async () => {
   await cargarPostulaciones();
-  console.log("convocatorias", convocatorias.value);
-
-  //expanded.value = convocatorias.value.map(() => false);
 });
 
 async function cargarPostulaciones() {

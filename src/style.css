@@ -22,11 +22,15 @@
 }
 
 .bg-accent-2 {
-  background-color: var(--accent-2);
+  background-color: var(--accent-2) !important;
 }
 
 .bg-accent-3 {
-  background-color: var(--accent-3);
+  background-color: var(--accent-3) !important;
+}
+
+.bg-accent-325 {
+  background-color: rgba(144, 208, 57, 0.3) !important;
 }
 
 .bg-accent-4 {

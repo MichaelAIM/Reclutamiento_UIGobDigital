@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div class="row py-5">
+      <div class="row py-5" v-if="convocatorias.length > 0">
         <div
           class="col-md-4"
           v-for="convocatoria in convocatorias"
@@ -141,6 +141,14 @@
               </span>
             </div>
           </span>
+        </div>
+      </div>
+
+      <div class="row py-5" v-else>
+        <div class="col-12 text-center">
+          <p class="text-muted">
+            No hay convocatorias vigentes en este momento.
+          </p>
         </div>
       </div>
     </div>
