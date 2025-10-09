@@ -332,6 +332,12 @@
   <footer class="align-content-center">
     <Footer />
   </footer>
+  <div v-if="cargando" class="loader-overlay">
+    <div class="text-center">
+      <div class="spinner-border text-secondary mb-3" role="status"></div>
+      <p class="fw-semibold text-white">Enviando mensaje...</p>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -358,6 +364,7 @@ const isScrolled = ref(false);
 const visibility = ref("visible");
 const Logo = ref("../../src/assets/img/Logotipo-Chinchorro-web-02.png");
 const isBgNavbar = ref("bg-transparent");
+const cargando = ref(false);
 
 const convocatorias = ref<Convocatoria[]>([]);
 const indices = ref({
@@ -537,26 +544,31 @@ function calculateDV(rut: string) {
 }
 
 const submitForm = async () => {
+  cargando.value = true;
+
+  if (
+    !formData.nombre ||
+    !formData.correo ||
+    !formData.mensaje ||
+    !formData.rut
+  ) {
+    alert("Por favor, completa todos los campos del formulario.");
+    cargando.value = false;
+    return;
+  }
+
+  formData.rut = limpiarRut(formData.rut);
+
+  if (!calculateDV(formData.rut)) {
+    Swal.fire({
+      icon: "warning",
+      title: "RUT inválido, reemplace e intente nuevamente",
+    });
+    cargando.value = false;
+    return;
+  }
+
   try {
-    if (
-      !formData.nombre ||
-      !formData.correo ||
-      !formData.mensaje ||
-      !formData.rut
-    ) {
-      alert("Por favor, completa todos los campos del formulario.");
-      return;
-    }
-    formData.rut = limpiarRut(formData.rut);
-
-    if (!calculateDV(formData.rut)) {
-      Swal.fire({
-        icon: "warning",
-        title: "RUT inválido, reemplace e intente nuevamente",
-      });
-      return;
-    }
-
     await api.post("mensajes", formData);
     resetearFormulario();
     Swal.fire(
@@ -571,7 +583,8 @@ const submitForm = async () => {
       "Ocurrió un error al validar el formulario. Inténtalo de nuevo.",
       "error"
     );
-    return;
+  } finally {
+    cargando.value = false;
   }
 };
 
@@ -584,6 +597,20 @@ function resetearFormulario() {
 </script>
 
 <style scoped>
+/* en App.vue o main.css (no scoped) */
+.loader-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999999 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .line::after {
   position: absolute;
   right: 0;

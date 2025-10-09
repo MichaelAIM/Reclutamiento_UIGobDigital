@@ -126,6 +126,13 @@
       </button>
     </template>
   </Modal>
+
+  <div v-if="cargandoRecuperacion" class="loader-overlay">
+    <div class="text-center">
+      <div class="spinner-border text-secondary mb-3" role="status"></div>
+      <p class="fw-semibold text-white">Procesando recuperación…</p>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -147,7 +154,7 @@ const router = useRouter();
 const { getToken } = useRecaptchaV3();
 const cargandoRecaptcha = ref(false);
 const mostrarPassword = ref(false);
-
+const cargandoRecuperacion = ref(false);
 const mostrarRecuperar = ref(false);
 const rutRecuperacion = ref("");
 
@@ -156,6 +163,8 @@ async function enviarRecuperacion() {
     Swal.fire({ icon: "warning", title: "RUT inválido" });
     return;
   }
+
+  cargandoRecuperacion.value = true;
 
   try {
     await recuperarPassword({
@@ -178,6 +187,8 @@ async function enviarRecuperacion() {
       text:
         error.response?.data?.message || "No se pudo procesar la solicitud.",
     });
+  } finally {
+    cargandoRecuperacion.value = false;
   }
 }
 
@@ -239,6 +250,20 @@ async function iniciarSesion() {
 }
 </script>
 <style lang="css" scoped>
+/* en App.vue o main.css (no scoped) */
+.loader-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999999 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (min-width: 992px) {
   .btn-default-size.collapsible-links-heading,
   .btn-default-size.collapsible-links-list-link,
