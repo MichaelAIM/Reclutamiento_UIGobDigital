@@ -56,6 +56,11 @@ export const fetchJornadas = async () => {
   return response.data;
 };
 
+export const fetchCategoriaCargos = async () => {
+  const response = await api.get("/categoria_cargos");
+  return response.data;
+};
+
 export const fetchModalidades = async () => {
   const response = await api.get("/modalidades");
   return response.data;

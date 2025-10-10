@@ -40,6 +40,7 @@
                 <span class="fw-semibold">
                   {{ c.convocatoria.estado_convocatorium.nombre }}
                 </span>
+                <button @click="mostrarmodalCartaOferta = true">modal</button>
               </div>
             </div>
 
@@ -190,6 +191,7 @@
     v-model:visible="mostrarModalCandidato"
     ref="modalCandidato"
   />
+  <ModalCartaOferta v-model:visible="mostrarmodalCartaOferta" />
 </template>
 
 <script setup>
@@ -198,9 +200,11 @@ import { fetchPostulacionesVigentes } from "../services/postulacionService";
 import { update_convocatoria } from "../services/convocatoriaServices";
 import { putCandidato } from "../services/candidatoService";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
+import ModalCartaOferta from "../components/modal/ModalCartaOferta.vue";
 
 const convocatorias = ref([]);
 const mostrarModalCandidato = ref(false);
+const mostrarmodalCartaOferta = ref(false);
 const modalCandidato = ref(null);
 const expanded = ref([]);
 

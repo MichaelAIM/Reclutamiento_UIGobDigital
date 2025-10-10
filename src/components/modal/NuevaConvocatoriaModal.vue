@@ -51,7 +51,7 @@
                       <option
                         :value="cat.id"
                         :key="cat.id"
-                        v-for="cat in store.estados.categoriaCargos"
+                        v-for="cat in categoria_cargo"
                       >
                         {{ cat.nombre }}
                       </option>
@@ -259,8 +259,6 @@
 
 <script setup>
 import { onMounted, ref, watch, computed } from "vue";
-import { useCandidatoStore } from "../../store/candidatoStore";
-const store = useCandidatoStore();
 import {
   fetchCargos,
   fetchInstituciones,
@@ -268,6 +266,7 @@ import {
   fetchTipo_vacante,
   fetchModalidades,
   fetchJornadas,
+  fetchCategoriaCargos,
   crear_convocatoria,
 } from "../../services/convocatoriaServices";
 
@@ -280,6 +279,7 @@ const instituciones = ref();
 const tipoVacante = ref();
 const jornadas = ref();
 const modalidades = ref();
+const categoria_cargo = ref();
 
 const initialFormState = {
   cargo_id: "",
@@ -364,6 +364,7 @@ onMounted(async () => {
   modalidades.value = await fetchModalidades();
   tipoVacante.value = await fetchTipo_vacante();
   jornadas.value = await fetchJornadas();
+  categoria_cargo.value = await fetchCategoriaCargos();
 });
 </script>
 
