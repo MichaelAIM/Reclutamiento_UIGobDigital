@@ -13,6 +13,7 @@ export const fetchCatalogos = (): Promise<CatalogosResponse> =>
     api.get("/modalidades"),
     api.get("/ciudades"),
     api.get("/nivel_educacion"),
+    api.get("/categoria_cargos"),
   ]) as Promise<CatalogosResponse>;
 
 export const createCandidato = (payload: CandidatoPayload) =>

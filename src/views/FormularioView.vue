@@ -188,7 +188,7 @@
                     v-model="form.categoria_funcionaria_id"
                   >
                     <option
-                      v-for="t in categoria_cargo"
+                      v-for="t in store.estados.categoriaCargos"
                       :key="t.id"
                       :value="t.id"
                     >
@@ -445,12 +445,6 @@ import Multiselect from "vue-multiselect";
 
 const store = useCandidatoStore();
 const authStore = useAuthStore();
-
-const categoria_cargo = [
-  { id: 1, nombre: "Administrativo" },
-  { id: 2, nombre: "Docente" },
-  { id: 3, nombre: "Técnico o Asistente" },
-];
 
 const cargosFiltrados = computed(() => {
   if (form.categoria_funcionaria_id === null) return [];

@@ -19,6 +19,7 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
     ciudades: [],
     modalidades: [],
     nivelesEducacion: [],
+    categoriaCargos: [],
   });
 
   // 🔧 Helpers
@@ -83,7 +84,7 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
       setLoading(true);
       setError(null);
       try {
-        const [reg, nac, est, tit, carg, docs, jor, mod, ciu, nedu] =
+        const [reg, nac, est, tit, carg, docs, jor, mod, ciu, nedu, catcargo] =
           await service.fetchCatalogos();
         estados.regiones = reg.data ?? [];
         estados.nacionalidades = nac.data ?? [];
@@ -94,6 +95,7 @@ export const useCandidatoStore = defineStore("formCandidato", () => {
         estados.modalidades = mod.data ?? [];
         estados.ciudades = ciu.data ?? [];
         estados.nivelesEducacion = nedu.data ?? [];
+        estados.categoriaCargos = catcargo.data ?? [];
 
         const docsResponse = await loadDocumentosCandidatos(idCandidato);
         const candidato = await service.fetchCandidato(idCandidato);

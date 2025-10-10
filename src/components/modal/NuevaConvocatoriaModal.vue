@@ -51,7 +51,7 @@
                       <option
                         :value="cat.id"
                         :key="cat.id"
-                        v-for="cat in categoria_cargo"
+                        v-for="cat in store.estados.categoriaCargos"
                       >
                         {{ cat.nombre }}
                       </option>
@@ -259,6 +259,8 @@
 
 <script setup>
 import { onMounted, ref, watch, computed } from "vue";
+import { useCandidatoStore } from "../../store/candidatoStore";
+const store = useCandidatoStore();
 import {
   fetchCargos,
   fetchInstituciones,
@@ -278,12 +280,6 @@ const instituciones = ref();
 const tipoVacante = ref();
 const jornadas = ref();
 const modalidades = ref();
-
-const categoria_cargo = ref([
-  { id: 1, nombre: "Administrativo" },
-  { id: 2, nombre: "Docente" },
-  { id: 3, nombre: "Técnico o Asistente" },
-]);
 
 const initialFormState = {
   cargo_id: "",

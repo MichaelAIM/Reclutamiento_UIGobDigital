@@ -65,6 +65,7 @@ export type CatalogosResponse = [
   { data: Estado[] },
   { data: Estado[] },
   { data: Estado[] },
+  { data: Estado[] },
   { data: Estado[] }
 ];
 
