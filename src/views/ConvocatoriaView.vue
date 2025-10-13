@@ -72,7 +72,7 @@
               <p
                 class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
               >
-                Contrata
+                {{ convocatoria.tipo_vacante.nombre }}
               </p>
             </div>
             <div class="d-flex w-100">
@@ -89,6 +89,24 @@
                 class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
               >
                 {{ convocatoria.institucione.nombre }}
+              </p>
+            </div>
+            <div class="d-flex w-100">
+              <p class="banner-text flex-column font-level-9">
+                Modalidad Horaria:
+              </p>
+              <p
+                class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+              >
+                {{ convocatoria.modalidades_horaria?.nombre }}
+              </p>
+            </div>
+            <div class="d-flex w-100">
+              <p class="banner-text flex-column font-level-9">Jornada:</p>
+              <p
+                class="banner-icon ml-auto mb-0 font-level-9 font-weight-bolder"
+              >
+                {{ convocatoria.jornada?.nombre }}
               </p>
             </div>
             <div class="d-flex w-100 mt-2">

@@ -7,10 +7,10 @@
         class="mb-2"
         style="max-width: 180px"
       />
-      <h4 class="fw-bold text-dark">CARTA OFERTA</h4>
-      <p class="text-muted">
+      <h4 class="fw-bold text-dark mt-3">CARTA OFERTA</h4>
+      <!--       <p class="text-muted">
         Servicio Local de Educación Pública de Chinchorro
-      </p>
+      </p> -->
     </div>
 
     <div class="mb-3">
@@ -45,12 +45,15 @@
       <button class="btn btn-outline-primary" @click="$emit('descargar')">
         <i class="bi bi-download me-2"></i>Descargar oferta
       </button>
+      <button class="btn btn-primary ml-4" @click="$emit('descargar')">
+        <i class="bi bi-send me-2"></i>Enviar Al Director
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import LogoFN from "../assets/img/Logotipo-Chinchorro-web-02.png";
+import LogoFN from "../assets/img/Logotipo-Chinchorro-web.png";
 defineProps<{
   oferta: {
     cargo: string;

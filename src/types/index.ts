@@ -104,4 +104,8 @@ export interface Convocatoria {
   ciudade: Ciudad;
   estado_convocatorium: EstadoConvocatoria;
   cargo: Cargo | null;
+  tipo_vacante: { id: number; nombre: string };
+  jornada: { id: number; nombre: string };
+  categoria_cargo: { id: number; nombre: string };
+  modalidades_horaria: { id: number; nombre: string };
 }

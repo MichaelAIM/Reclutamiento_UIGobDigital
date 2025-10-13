@@ -40,7 +40,6 @@
                 <span class="fw-semibold">
                   {{ c.convocatoria.estado_convocatorium.nombre }}
                 </span>
-                <button @click="mostrarmodalCartaOferta = true">modal</button>
               </div>
             </div>
 
@@ -69,6 +68,14 @@
                   title="Archivar Proceso"
                 >
                   <i class="bi bi-archive-fill text-warning"></i>
+                </button>
+                <button
+                  v-if="c.convocatoria.estado_id > 3"
+                  @click="mostrarmodalCartaOferta = true"
+                  class="btn btn-sm"
+                  title="Enviar Carta de Oferta"
+                >
+                  <i class="bi bi-envelope-check-fill text-info"></i>
                 </button>
               </div>
               <i
@@ -153,7 +160,9 @@
                     <button
                       class="btn btn-sm btn-outline-primary"
                       title="Seleccionar"
-                      @click="cambiarEstadoCandidato(p.id, 3)"
+                      @click="
+                        cambiarEstadoCandidato(p.id, 3, c.convocatoria.id)
+                      "
                       v-if="p.estado_candidato_id < 3"
                     >
                       <i class="bi bi-check-all"></i>
@@ -162,7 +171,9 @@
                       v-else
                       class="btn btn-sm btn-outline-secondary"
                       title="Quitar selección"
-                      @click="cambiarEstadoCandidato(p.id, 1)"
+                      @click="
+                        cambiarEstadoCandidato(p.id, 1, c.convocatoria.id)
+                      "
                     >
                       <i class="bi bi-x-circle"></i>
                     </button>
@@ -201,6 +212,7 @@ import { update_convocatoria } from "../services/convocatoriaServices";
 import { putCandidato } from "../services/candidatoService";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
 import ModalCartaOferta from "../components/modal/ModalCartaOferta.vue";
+import Swal from "sweetalert2";
 
 const convocatorias = ref([]);
 const mostrarModalCandidato = ref(false);
@@ -236,13 +248,72 @@ function toggle(index) {
   expanded.value[index] = !expanded.value[index];
 }
 
-async function cambiarEstadoCandidato(candidatoId, estado) {
+async function cambiarEstadoCandidato(
+  candidatoId,
+  estado,
+  convocatoriaId = null
+) {
   const response = await putCandidato(candidatoId, estado);
   await cargarPostulaciones();
+  if (estado === 3 && convocatoriaId) {
+    await cambiarEstadoConvocatoria(convocatoriaId, 4);
+    /*  const convocatoria = convocatorias.value.find(c => c.convocatoria.id === convocatoriaId);
+    if(convocatoria) {
+      const candidato = convocatoria.candidatos.find(p => p.id === candidatoId);
+      if(candidato && modalCandidato.value?.EnviarCorreoSeleccion) {
+        modalCandidato.value.EnviarCorreoSeleccion(candidato, convocatoria.convocatoria);
+      }
+    } */
+  }
+  if (estado === 1 && convocatoriaId) {
+    await cambiarEstadoConvocatoria(convocatoriaId, 2);
+  }
 }
 // Funcionalidad de botones
-async function cambiarEstadoConvocatoria(convocatoria, estado) {
-  const response = await update_convocatoria(convocatoria, {
+async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
+  console.log(
+    `Cambiando estado de convocatoria ${convocatoriaId} a estado ${estado}`
+  );
+  // Si se intenta reabrir una convocatoria (estado 2), verificar si ya hay un candidato seleccionado (estado_id = 5)
+  console.log("convocatoria cambio estado", convocatorias.value);
+
+  if (estado === 2) {
+    // Convertir el objeto en arreglo de valores
+    const listaConvocatorias = Object.values(convocatorias.value);
+
+    const convocatoriaObj = listaConvocatorias.find(
+      (c) => c.convocatoria?.id === convocatoriaId
+    );
+
+    if (!convocatoriaObj) {
+      console.error(`No se encontró la convocatoria con ID ${convocatoriaId}`);
+      return;
+    }
+    const candidatos = Array.isArray(convocatoriaObj.candidatos)
+      ? convocatoriaObj.candidatos
+      : [];
+
+    console.log("Candidatos", candidatos);
+
+    const tieneCandidatoSeleccionado = candidatos.some(
+      (c) => c?.estado_candidato_id === 3
+    );
+
+    if (tieneCandidatoSeleccionado) {
+      console.log("📌 Convocatoria con candidato seleccionado (estado_id = 3)");
+      await Swal.fire({
+        title: "Atención",
+        text: "Esta convocatoria tiene un candidato seleccionado. Debe revisar los candidatos antes de reabrir la convocatoria.",
+        icon: "warning",
+        showCancelButton: true,
+      });
+      return;
+    } else {
+      console.log("🔍 No hay candidatos seleccionados aún");
+    }
+  }
+
+  const response = await update_convocatoria(convocatoriaId, {
     estado_id: estado,
   });
   await cargarPostulaciones();
@@ -250,6 +321,7 @@ async function cambiarEstadoConvocatoria(convocatoria, estado) {
 
 onMounted(async () => {
   await cargarPostulaciones();
+  console.log("convocatorias", convocatorias.value);
 });
 
 async function cargarPostulaciones() {
