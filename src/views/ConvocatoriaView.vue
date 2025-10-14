@@ -268,8 +268,10 @@ async function enviarPostulacion(convocatoriaId) {
   }
 }
 
-function cargarConvocatorias() {
-  convocatorias.value = fetchConvocatorias(4);
+async function cargarConvocatorias() {
+  const resultado = await fetchConvocatorias(4);
+  convocatorias.value = resultado;
+
   console.log("convocatorias", convocatorias.value);
   console.log("convocatorias length", convocatorias.value.length);
 }

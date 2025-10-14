@@ -300,7 +300,7 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
     );
 
     if (tieneCandidatoSeleccionado) {
-      console.log("📌 Convocatoria con candidato seleccionado (estado_id = 3)");
+      console.log("Convocatoria con candidato seleccionado (estado_id = 3)");
       await Swal.fire({
         title: "Atención",
         text: "Esta convocatoria tiene un candidato seleccionado. Debe revisar los candidatos antes de reabrir la convocatoria.",
@@ -321,11 +321,12 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
 
 onMounted(async () => {
   await cargarPostulaciones();
-  console.log("convocatorias", convocatorias.value);
 });
 
 async function cargarPostulaciones() {
-  convocatorias.value = await fetchPostulacionesVigentes(4);
+  const resultado = await fetchPostulacionesVigentes(4);
+  console.log("Resultado = ", resultado);
+  convocatorias.value = resultado;
 }
 </script>
 

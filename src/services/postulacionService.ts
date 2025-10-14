@@ -10,8 +10,9 @@ export const fetchPostulaciones = async () => {
 };
 
 export const fetchPostulacionesVigentes = async (estado: number) => {
+  console.log("entro al fetch de postulaciones");
   try {
-    const response = await api.get("/postulaciones/agrupadas/estado/" + estado);
+    const response = await api.get("/postulaciones/agrupadas/" + estado);
     return response.data;
   } catch (error) {
     console.error("Error al cargar convocatorias:", error);
