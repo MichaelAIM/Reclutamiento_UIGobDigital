@@ -43,7 +43,10 @@
           </select>
         </div>
       </div>
-
+      <pre>
+  {{ convocatorias.length }}
+</pre
+      >
       <div class="row py-5" v-if="convocatorias.length > 0">
         <div
           class="col-md-4"
@@ -178,7 +181,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, onBeforeMount } from "vue";
 import NuevaConvocatoria from "../components/modal/NuevaConvocatoriaModal.vue";
 import { fetchConvocatorias } from "../services/convocatoriaServices";
 import { postularCandidato } from "../services/postulacionService";
@@ -214,6 +217,8 @@ function resetFiltros() {
 onMounted(async () => {
   await cargarConvocatorias();
 });
+
+onBeforeMount(async () => {});
 
 async function postularConvocatoria(convocatoriaId) {
   // Llamar al servicio para postular al candidato a la convocatoria
@@ -263,8 +268,10 @@ async function enviarPostulacion(convocatoriaId) {
   }
 }
 
-async function cargarConvocatorias() {
-  convocatorias.value = await fetchConvocatorias(4);
+function cargarConvocatorias() {
+  convocatorias.value = fetchConvocatorias(4);
+  console.log("convocatorias", convocatorias.value);
+  console.log("convocatorias length", convocatorias.value.length);
 }
 </script>
 <style scoped>

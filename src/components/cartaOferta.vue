@@ -28,7 +28,8 @@
         disponga, dependiendo de las características del postulante y del
         establecimiento en donde se desempeñará:
       </p>
-      <ul class="text-muted">
+      <textarea name="" id="">
+ <ul class="text-muted">
         <li>Remuneración básica mínima nacional</li>
         <li>Tramo de desempeño</li>
         <li>Asignación de experiencia</li>
@@ -39,6 +40,7 @@
         </li>
         <li>Otros beneficios institucionales</li>
       </ul>
+      </textarea>
     </div>
 
     <div class="text-end mt-4">

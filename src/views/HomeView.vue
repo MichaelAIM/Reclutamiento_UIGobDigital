@@ -439,9 +439,10 @@ const features = ref<Feature[]>([
     colorClass: "bg-accent-3",
   },
   {
-    icon: "bi bi-clock-history",
-    title: "Seguimiento de Proceso",
-    description: "Monitorea el estado de tus postulaciones en tiempo real.",
+    icon: "bi bi-database-lock",
+    title: "Banco de Datos de Talentos",
+    description:
+      "Una vez que exista una vacante que se ajuste a tu perfil, el equipose pondrá en contacto contigo.",
     colorClass: "bg-accent-4",
   },
 ]);
