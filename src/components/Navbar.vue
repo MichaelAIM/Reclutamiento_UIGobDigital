@@ -84,7 +84,7 @@
               class="nav-link"
               :style="{ color: isScrolled ? '#000' : '#fff' }"
               href="#procesos-vigentes"
-              >Procesos Vigentes</a
+              >Convocatorias Vigentes</a
             >
           </li>
           <li class="nav-item">

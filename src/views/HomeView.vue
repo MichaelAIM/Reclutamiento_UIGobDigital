@@ -103,7 +103,7 @@
       <div class="w-75 mx-auto">
         <div class="section-header mt-3">
           <h2 class="pb-2 border-bottom border-accent" id="secciones">
-            Procesos Vigentes
+            Convocatorias Vigentes
           </h2>
         </div>
         <div class="section-body">
@@ -115,7 +115,10 @@
             v-for="convocatoria in convocatorias"
             :key="convocatoria.id"
           >
-            <a class="banner border mb-3 flex-wrap bg-white">
+            <a
+              class="banner border mb-3 flex-wrap bg-white pointer"
+              @click="router.push('/perfil')"
+            >
               <div class="line"></div>
               <div class="py-4 border-bottom border-accent banner-header w-100">
                 <h4 class="banner-text flex-column">
@@ -369,6 +372,7 @@ import {
 import type { Convocatoria } from "../types";
 import api from "../services/apiService";
 import Swal from "sweetalert2";
+import { useRouter } from "vue-router";
 
 // Datos para las funcionalidades
 interface Feature {
@@ -377,7 +381,7 @@ interface Feature {
   description: string;
   colorClass: string;
 }
-
+const router = useRouter();
 const isScrolled = ref(false);
 const visibility = ref("visible");
 const Logo = ref("../../src/assets/img/Logotipo-Chinchorro-web-02.png");
