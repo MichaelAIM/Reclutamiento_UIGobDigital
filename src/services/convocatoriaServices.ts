@@ -2,13 +2,10 @@ import api from "../services/apiService";
 import type { Convocatoria } from "../types";
 
 export const fetchConvocatorias = async (est: any) => {
-  console.log("entro al fetch");
-
   let url = "/convocatorias";
   if (est) {
     url = "/convocatorias?estado_id=" + est;
   }
-  console.log("url", url);
 
   try {
     const response = await api.get<Convocatoria[]>(url);
