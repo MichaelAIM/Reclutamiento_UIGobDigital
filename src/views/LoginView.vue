@@ -86,6 +86,13 @@
           <button type="submit" class="btn btn-primary w-100 mt-3 mb-2 fs-0875">
             Iniciar Sesión
           </button>
+          <a
+            href="#"
+            class="text-secondary fw-medium text-decoration-none fs-0875"
+            @click="router.push('/register')"
+          >
+            ¿No tienes una cuenta? Regístrate aquí.
+          </a>
           <RecaptchaBadge />
         </form>
       </div>

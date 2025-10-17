@@ -31,6 +31,9 @@
         >
           <i class="bi bi-person-fill"></i>
         </div>
+        <div class="text-white">
+          <span>{{ authStore.candidato.nombre_completo }}</span>
+        </div>
       </div>
     </div>
   </nav>
@@ -70,6 +73,14 @@
                     >
                       <i class="bi bi-graph-up me-2"></i> Dashboard
                     </a> -->
+                    <a
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'dashboard' }"
+                      @click="Go('/')"
+                    >
+                      <i class="bi bi-arrow-left-circle me-2"></i> Volver al
+                      Inicio
+                    </a>
                     <a
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'perfil' }"

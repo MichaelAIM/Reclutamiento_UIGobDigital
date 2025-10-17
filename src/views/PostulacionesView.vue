@@ -63,6 +63,7 @@
                   <i class="bi bi-skip-backward-circle-fill text-success"></i>
                 </button>
                 <button
+                  v-if="c.convocatoria.estado_id > 3"
                   class="btn btn-sm"
                   @click.stop="cambiarEstadoConvocatoria(c.convocatoria.id, 5)"
                   title="Archivar Proceso"
@@ -323,10 +324,92 @@ onMounted(async () => {
   await cargarPostulaciones();
 });
 
-async function cargarPostulaciones() {
+/* async function cargarPostulaciones() {
   const resultado = await fetchPostulacionesVigentes(4);
   console.log("Resultado = ", resultado);
-  convocatorias.value = resultado;
+  convocatorias.value = respuesta.map((item) => {
+    return {
+      convocatoria: {
+        id: item.id,
+        codigo: item.codigo,
+        cargo_id: item.cargo_id,
+        ciudad_id: item.ciudad_id,
+        institucion_id: item.institucion_id,
+        fecha_cierre: item.fecha_cierre,
+        descripcion: item.descripcion,
+        requisitos: item.requisitos,
+        created_at: item.created_at,
+        estado_id: item.estado_id,
+        modalidad_id: item.modalidad_id,
+        tipo_vacante_id: item.tipo_vacante_id,
+        jornada_id: item.jornada_id,
+        categoria_cargo_id: item.categoria_cargo_id,
+        cargo: item.cargo,
+        institucione: item.institucione,
+        estado_convocatorium: item.estado_convocatorium,
+      },
+      candidatos: item.Postulacions.map((p) => {
+        const c = p.Candidato;
+        return {
+          id: c.id,
+          nombre_completo: c.nombre_completo,
+          rut: c.rut,
+          correo: c.correo,
+          especialidad: c.especialidad,
+          estado_candidato_id: c.estado_candidato_id,
+          postulacion_id: p.id,
+          created_at_postulacion: p.created_at,
+        };
+      }),
+    };
+  });
+} */
+
+async function cargarPostulaciones() {
+  try {
+    const { data } = await fetchPostulacionesVigentes(4); // Ajusta el endpoint según corresponda
+
+    // Transformar la respuesta para que calce con tu template
+    const transformada = data.map((item) => ({
+      convocatoria: {
+        id: item.id,
+        codigo: item.codigo,
+        cargo_id: item.cargo_id,
+        ciudad_id: item.ciudad_id,
+        institucion_id: item.institucion_id,
+        fecha_cierre: item.fecha_cierre,
+        descripcion: item.descripcion,
+        requisitos: item.requisitos,
+        created_at: item.created_at,
+        estado_id: item.estado_id,
+        modalidad_id: item.modalidad_id,
+        tipo_vacante_id: item.tipo_vacante_id,
+        jornada_id: item.jornada_id,
+        categoria_cargo_id: item.categoria_cargo_id,
+        cargo: item.cargo,
+        institucione: item.institucione,
+        estado_convocatorium: item.estado_convocatorium,
+      },
+      candidatos:
+        item.Postulacions?.map((p) => {
+          const c = p.Candidato || {};
+          return {
+            id: c.id,
+            nombre_completo: c.nombre_completo,
+            rut: c.rut,
+            correo: c.correo,
+            especialidad: c.especialidad,
+            estado_candidato_id: c.estado_candidato_id,
+            postulacion_id: p.id,
+            created_at_postulacion: p.created_at,
+          };
+        }) || [],
+    }));
+
+    convocatorias.value = transformada; // O this.convocatorias si estás en un componente Vue clásico
+  } catch (error) {
+    console.error("❌ Error al cargar postulaciones:", error);
+  }
 }
 </script>
 

@@ -43,10 +43,7 @@
           </select>
         </div>
       </div>
-      <pre>
-  {{ convocatorias.length }}
-</pre
-      >
+
       <div class="row py-5" v-if="convocatorias.length > 0">
         <div
           class="col-md-4"

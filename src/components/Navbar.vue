@@ -130,21 +130,25 @@
               </div>
             </form>
           </ul>
-          <li class="nav-item ml-md-3">
-            <a
-              class="btn btn-block"
-              :class="
-                isScrolled ? 'btn-outline-secondary' : 'btn-outline-light'
-              "
-              @click="irAlPerfil('/register')"
-              >Registrar</a
-            >
-          </li>
-          <li class="nav-item mr-md-5">
-            <a class="btn btn-block btn-secondary" @click="irAlPerfil('/login')"
-              >Iniciar sesión</a
-            >
-          </li>
+          <div class="d-flex">
+            <li class="nav-item ml-md-3">
+              <a
+                class="btn btn-block"
+                :class="
+                  isScrolled ? 'btn-outline-secondary' : 'btn-outline-light'
+                "
+                @click="irAlPerfil('/register')"
+                >Registrar</a
+              >
+            </li>
+            <li class="nav-item mr-md-5">
+              <a
+                class="btn btn-block btn-secondary"
+                @click="irAlPerfil('/login')"
+                >Iniciar sesión</a
+              >
+            </li>
+          </div>
         </ul>
       </div>
     </div>
@@ -165,6 +169,7 @@ const isScrolled = ref(false);
 const visibility = ref("visible");
 const Logo = ref(LogoFN);
 const isBgNavbar = ref("bg-transparent");
+const nombre = ref("");
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 40;
@@ -182,6 +187,10 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
+  const datos = JSON.parse(localStorage.getItem("auth"));
+  console.log(sesionStorage.getItem("auth"));
+
+  nombre.value = datos?.candidato?.nombre_completo;
 });
 
 onUnmounted(() => {
