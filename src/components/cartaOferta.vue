@@ -7,7 +7,7 @@
         class="mb-2"
         style="max-width: 180px"
       />
-      <h4 class="fw-bold text-dark mt-3">CARTA OFERTA</h4>
+      <!--       <h4 class="fw-bold text-dark mt-3">CARTA OFERTA</h4> -->
       <!--       <p class="text-muted">
         Servicio Local de Educación Pública de Chinchorro
       </p> -->
@@ -17,8 +17,14 @@
       <p><strong>Nombre del cargo:</strong> {{ oferta.cargo }}</p>
       <p><strong>Establecimiento:</strong> {{ oferta.establecimiento }}</p>
       <p><strong>Persona seleccionada:</strong> {{ oferta.nombre }}</p>
-      <p><strong>Jornada laboral:</strong> {{ oferta.jornada }}</p>
-      <p><strong>Fecha de ingreso:</strong> {{ oferta.fechaIngreso }}</p>
+      <p>
+        <strong>Jornada laboral:</strong>
+        <input type="text" :value="oferta.jornada" />
+      </p>
+      <p>
+        <strong>Fecha de ingreso:</strong>
+        <input type="date" :value="oferta.fechaIngreso" />
+      </p>
     </div>
 
     <div class="mb-3">
@@ -28,7 +34,7 @@
         disponga, dependiendo de las características del postulante y del
         establecimiento en donde se desempeñará:
       </p>
-      <textarea name="" id="" rows="8" cols="50">
+      <textarea name="" id="" rows="8" cols="70">
 1. Remuneración básica mínima nacional
 2. Tramo de desempeño
 3. Asignación de experiencia
@@ -40,7 +46,7 @@
     </div>
 
     <div class="text-end mt-4">
-      <button class="btn btn-outline-primary" @click="$emit('descargar')">
+      <button class="btn btn-outline-success" @click="$emit('descargar')">
         <i class="bi bi-download me-2"></i>Descargar oferta
       </button>
       <button class="btn btn-primary ml-4" @click="$emit('descargar')">

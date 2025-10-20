@@ -190,7 +190,7 @@
                   class="card-body bg-light"
                   style="max-height: 300px; overflow-y: auto"
                 >
-                  <div v-if="datos.comentarios.length">
+                  <div v-if="datos?.comentarios?.length > 0">
                     <div
                       v-for="(comentario, index) in datos.comentarios"
                       :key="index"

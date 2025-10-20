@@ -164,12 +164,18 @@
                       @click="
                         cambiarEstadoCandidato(p.id, 3, c.convocatoria.id)
                       "
-                      v-if="p.estado_candidato_id < 3"
+                      v-if="
+                        p.estado_candidato_id < 3 &&
+                        c.convocatoria.estado_id < 4
+                      "
                     >
                       <i class="bi bi-check-all"></i>
                     </button>
                     <button
-                      v-else
+                      v-show="
+                        p.estado_candidato_id >= 3 &&
+                        c.convocatoria.estado_id > 3
+                      "
                       class="btn btn-sm btn-outline-secondary"
                       title="Quitar selección"
                       @click="

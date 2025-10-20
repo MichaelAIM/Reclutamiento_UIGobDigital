@@ -48,7 +48,7 @@
   border-radius: 0.5rem;
   padding: 1.5rem;
   min-width: 320px;
-  max-width: 500px;
+  max-width: 900px;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 .modal-header {

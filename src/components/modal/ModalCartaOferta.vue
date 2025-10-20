@@ -11,7 +11,7 @@
           establecimiento: 'Liceo Comercial Arica',
           nombre: 'Paulette Plaza Olivares',
           jornada: '44 hrs.',
-          fechaIngreso: '1 de octubre de 2023',
+          fechaIngreso: '2025-11-04',
         }"
         @descargar="descargarPDF"
       />
@@ -21,7 +21,7 @@
       <!--       <button class="btn btn-secondary" @click="mostrarRecuperar = false">
         Cerrar
       </button> -->
-      <button class="btn btn-primary">Enviar</button>
+      <!--   <button class="btn btn-primary">Enviar</button> -->
     </template>
   </Modal>
 </template>
