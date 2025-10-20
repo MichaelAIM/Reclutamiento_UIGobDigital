@@ -485,6 +485,8 @@ const loading = computed(() => store.loading ?? true);
 
 onMounted(async () => {
   await store.loadCatalogos(authStore.candidato.id);
+  console.log("docuemntos", store.estados.documentos);
+
   if (authStore.candidato.id !== null) {
     const response = await store.setCantidado(authStore.candidato.id);
     authStore.candidato = await formatearCandidato(response);

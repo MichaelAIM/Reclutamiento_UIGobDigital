@@ -35,21 +35,20 @@
         establecimiento en donde se desempeñará:
       </p>
       <textarea name="" id="" rows="8" cols="70">
-1. Remuneración básica mínima nacional
-2. Tramo de desempeño
-3. Asignación de experiencia
-4. Reconocimiento por años de servicio
-5. Reconocimiento por desempeño en establecimientos con concentración de alumnos prioritarios
-6. Otros beneficios institucionales
-</textarea
-      >
+            1. Remuneración básica mínima nacional
+            2. Tramo de desempeño
+            3. Asignación de experiencia
+            4. Reconocimiento por años de servicio
+            5. Reconocimiento por desempeño en establecimientos con concentración de alumnos prioritarios
+            6. Otros beneficios institucionales
+      </textarea>
     </div>
 
     <div class="text-end mt-4">
       <button class="btn btn-outline-success" @click="$emit('descargar')">
         <i class="bi bi-download me-2"></i>Descargar oferta
       </button>
-      <button class="btn btn-primary ml-4" @click="$emit('descargar')">
+      <button class="btn btn-primary ml-4" @click="$emit('enviarCarta')">
         <i class="bi bi-send me-2"></i>Enviar Al Director
       </button>
     </div>

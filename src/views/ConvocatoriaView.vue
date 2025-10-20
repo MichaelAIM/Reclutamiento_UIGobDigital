@@ -1,6 +1,6 @@
 <template>
-  <div class="w-100 py-4">
-    <div class="container-fluid mx-3">
+  <div class="w-100 py-4 mx-3">
+    <div class="container-fluid">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h4 text-secondary fw-semibold mb-4">
           Convocatorias disponibles
@@ -15,9 +15,10 @@
         </button>
       </div>
 
-      <div class="row">
-        <div class="col-6">
-          <div class="input-group rounded-pill flex-grow-1">
+      <div class="row g-3 align-items-center mb-4">
+        <!-- Filtro por cargo -->
+        <div class="col-12 col-md-6">
+          <div class="input-group">
             <span class="input-group-text bg-white border-end-0">
               <i class="bi bi-person"></i>
             </span>
@@ -25,18 +26,23 @@
               type="text"
               class="form-control border-start-0"
               placeholder="Cargo (Ej. Profesor)"
+              v-model="filtros.cargo"
             />
           </div>
         </div>
-        <div class="col-3">
-          <select class="form-select flex-grow-1 w-100">
+
+        <!-- Filtro por estado -->
+        <div class="col-6 col-md-3">
+          <select class="form-select w-100" v-model="filtros.estado">
             <option selected disabled hidden value="">Estado</option>
             <option>Abierta</option>
             <option>Cerrada</option>
           </select>
         </div>
-        <div class="col-3">
-          <select class="form-select flex-grow-1 w-100">
+
+        <!-- Filtro por tipo de contrato -->
+        <div class="col-6 col-md-3">
+          <select class="form-select w-100" v-model="filtros.contrato">
             <option selected disabled hidden value="">Tipo de contrato</option>
             <option>Contrato</option>
             <option>Honorarios</option>
@@ -181,6 +187,7 @@
 import { reactive, ref, onMounted, onBeforeMount } from "vue";
 import NuevaConvocatoria from "../components/modal/NuevaConvocatoriaModal.vue";
 import { fetchConvocatorias } from "../services/convocatoriaServices";
+import { fetchCandidatosDocumentos } from "../services/candidatoService";
 import { postularCandidato } from "../services/postulacionService";
 import { useAuthStore } from "../store/authStore";
 import Swal from "sweetalert2";
@@ -189,6 +196,7 @@ const emit = defineEmits(["filtrar"]);
 const mostrarModal = ref(false);
 const authStore = useAuthStore();
 const convocatorias = ref([]);
+const candidatosDocumentos = ref();
 
 const abrirModal = () => {
   mostrarModal.value = true;
@@ -213,27 +221,47 @@ function resetFiltros() {
 
 onMounted(async () => {
   await cargarConvocatorias();
+  candidatosDocumentos.value = await fetchCandidatosDocumentos(
+    authStore.candidato.id
+  );
 });
 
 onBeforeMount(async () => {});
 
 async function postularConvocatoria(convocatoriaId) {
   // Llamar al servicio para postular al candidato a la convocatoria
-  Swal.fire({
-    title: "¿Está seguro de postular?",
-    text: "Antes de continuar, asegúrese de haber completado todos los datos de su perfil y cargado sus documentos. De no ser así, su postulación será considerada inadmisible.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Sí, postular",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#198754", // verde institucional
-    cancelButtonColor: "#6c757d",
-    reverseButtons: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      enviarPostulacion(convocatoriaId);
-    }
-  });
+
+  if (candidatosDocumentos.value.total_faltantes > 0) {
+    let mensajeFaltantes =
+      "No puede completar su postulación, porque falta cargar los siguientes documentos:\n\n";
+    candidatosDocumentos.value.faltantes.forEach((doc) => {
+      //AQUI ME DA ERROR
+      mensajeFaltantes += `- ${doc.nombre}\n`;
+    });
+    Swal.fire({
+      title: "Documentos faltantes",
+      html: mensajeFaltantes.replace(/\n/g, "<br>"),
+      icon: "error",
+      confirmButtonColor: "#d33",
+    });
+    return;
+  } else {
+    Swal.fire({
+      title: "¿Está seguro de postular?",
+      text: "Antes de continuar, asegúrese de haber completado todos los datos de su perfil y cargado sus documentos. De no ser así, su postulación será considerada inadmisible.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, postular",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#198754", // verde institucional
+      cancelButtonColor: "#6c757d",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        enviarPostulacion(convocatoriaId);
+      }
+    });
+  }
 }
 
 async function enviarPostulacion(convocatoriaId) {
@@ -268,9 +296,6 @@ async function enviarPostulacion(convocatoriaId) {
 async function cargarConvocatorias() {
   const resultado = await fetchConvocatorias(4);
   convocatorias.value = resultado;
-
-  console.log("convocatorias", convocatorias.value);
-  console.log("convocatorias length", convocatorias.value.length);
 }
 </script>
 <style scoped>
@@ -295,19 +320,23 @@ async function cargarConvocatorias() {
 .card-header {
   border-bottom: 1px solid #dee2e6;
 }
+.input-group-text {
+  height: 40px;
+  border-right: none;
+}
+
 .form-control,
 .form-select {
   height: 40px;
+  border: 1px solid #dee2e6;
   min-width: 180px;
-  border: #dee2e6 solid 1px;
 }
-.filter-item {
-  min-width: 180px;
-  margin-right: 1rem;
-  margin-bottom: 0.5rem;
-}
-.form-control,
-.form-select {
-  height: 40px;
+
+@media (max-width: 768px) {
+  .form-control,
+  .form-select,
+  .input-group {
+    width: 100%;
+  }
 }
 </style>

@@ -74,3 +74,17 @@ export const putCandidato = async (
     console.error("Error al actualizar candidatos:", error);
   }
 };
+
+export const fetchCandidatosDocumentos = async (
+  candidatoId: number,
+  fase = 1
+) => {
+  try {
+    const response = await api.get(
+      `/documentos_candidatos/candidato/${candidatoId}/faltantes/fase/${fase}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al cargar candidatos:", error);
+  }
+};
