@@ -130,7 +130,7 @@
               </div>
             </form>
           </ul>
-          <div class="d-flex">
+          <div class="d-flex" v-if="!props.nombreUsuario">
             <li class="nav-item ml-md-3">
               <a
                 class="btn btn-block"
@@ -149,27 +149,34 @@
               >
             </li>
           </div>
+          <div class="d-flex" v-else>
+            <li class="nav-item ml-md-3">
+              <a
+                class="btn btn-block btn-light"
+                @click="irAlPerfil('/perfil')"
+                >{{ props.nombreUsuario }}</a
+              >
+            </li>
+          </div>
         </ul>
       </div>
     </div>
   </nav>
 </template>
-<script setup>
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import LogoFN from "../assets/img/Logotipo-Chinchorro-web-02.png";
 import LogoFB from "../assets/img/Logotipo-Chinchorro-web.png";
 const router = useRouter();
 
-function irAlPerfil(URL) {
+function irAlPerfil(URL: string) {
   router.push(URL);
 }
-
 const isScrolled = ref(false);
 const visibility = ref("visible");
 const Logo = ref(LogoFN);
 const isBgNavbar = ref("bg-transparent");
-const nombre = ref("");
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 40;
@@ -185,12 +192,13 @@ const handleScroll = () => {
   }
 };
 
+const props = withDefaults(defineProps<{ nombreUsuario?: string }>(), {
+  nombreUsuario: "",
+});
+
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
-  const datos = JSON.parse(localStorage.getItem("auth"));
-  console.log(sesionStorage.getItem("auth"));
-
-  nombre.value = datos?.candidato?.nombre_completo;
+  console.log("props", props.nombreUsuario);
 });
 
 onUnmounted(() => {

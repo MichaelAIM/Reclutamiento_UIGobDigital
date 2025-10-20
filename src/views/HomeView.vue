@@ -1,6 +1,6 @@
 <template>
   <header>
-    <NavBar />
+    <NavBar :nombreUsuario="nombreUsuario" />
     <!-- Banner Principal -->
     <section class="banner-custom mt-4">
       <div class="w-75 mx-auto px-0 my-5 section-padding">
@@ -284,7 +284,7 @@
                 postulación.
               </p>
               <p><i class="bi bi-envelope me-2"></i>{{ contactInfo.correo }}</p>
-              <p><i class="bi bi-telephone me-2"></i>{{ contactInfo.phone }}</p>
+              <!-- <p><i class="bi bi-telephone me-2"></i>{{ contactInfo.phone }}</p> -->
               <p><i class="bi bi-clock me-2"></i>{{ contactInfo.hours }}</p>
             </div>
           </div>
@@ -362,17 +362,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref, computed } from "vue";
 import NavBar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 import {
   fetchConvocatorias,
   fetchCountConvocatorias,
+  enviarMensaje,
 } from "../services/convocatoriaServices";
 import type { Convocatoria } from "../types";
-import api from "../services/apiService";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
+import { useAuthStore } from "../store/authStore";
 
 // Datos para las funcionalidades
 interface Feature {
@@ -381,6 +382,8 @@ interface Feature {
   description: string;
   colorClass: string;
 }
+const authStore = useAuthStore();
+const nombreUsuario = computed(() => authStore.getNombreUsuario);
 const router = useRouter();
 const isScrolled = ref(false);
 const visibility = ref("visible");
@@ -413,8 +416,9 @@ onMounted(async () => {
   window.addEventListener("scroll", handleScroll);
   convocatorias.value = (await fetchConvocatorias(4)) ?? [];
   indices.value = await fetchCountConvocatorias();
-});
 
+  console.log();
+});
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
 });
@@ -592,7 +596,7 @@ const submitForm = async () => {
   }
 
   try {
-    await api.post("mensajes", formData);
+    await enviarMensaje(formData);
     resetearFormulario();
     Swal.fire(
       "¡Mensaje enviado!",

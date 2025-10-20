@@ -9,8 +9,8 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   getters: {
-    getNombreUsuario(state): string {
-      return state.user.nombre || state.user.usuario;
+    getNombreUsuario(): any {
+      return this.candidato.nombre_completo || null;
     },
   },
 

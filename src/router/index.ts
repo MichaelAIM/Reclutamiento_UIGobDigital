@@ -78,7 +78,7 @@ const routes = [
     path: "/formulario",
     name: "formulario",
     component: FormularioView,
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/dashboard2",
