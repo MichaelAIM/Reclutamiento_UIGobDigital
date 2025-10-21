@@ -53,8 +53,8 @@
       <!-- Loading institucional -->
       <div class="row py-5" v-if="cargandoConvocatorias">
         <div class="col-12 text-center">
-          <div class="spinner-border text-success" role="status">
-            <span class="visually-hidden">Cargando convocatorias...</span>
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden"></span>
           </div>
           <p class="text-muted mt-3">Cargando convocatorias disponibles...</p>
         </div>
