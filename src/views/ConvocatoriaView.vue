@@ -50,7 +50,20 @@
         </div>
       </div>
 
-      <div class="row py-5" v-if="convocatorias.length > 0">
+      <!-- Loading institucional -->
+      <div class="row py-5" v-if="cargandoConvocatorias">
+        <div class="col-12 text-center">
+          <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Cargando convocatorias...</span>
+          </div>
+          <p class="text-muted mt-3">Cargando convocatorias disponibles...</p>
+        </div>
+      </div>
+
+      <div
+        class="row py-5"
+        v-if="!cargandoConvocatorias && convocatorias.length > 0"
+      >
         <div
           class="col-md-4"
           v-for="convocatoria in convocatorias"
@@ -168,6 +181,18 @@
         </div>
       </div>
 
+      <!-- Sin convocatorias -->
+      <div
+        class="row py-5"
+        v-else-if="!cargandoConvocatorias && convocatorias.length === 0"
+      >
+        <div class="col-12 text-center">
+          <p class="text-muted">
+            No hay convocatorias vigentes en este momento.
+          </p>
+        </div>
+      </div>
+
       <div class="row py-5" v-else>
         <div class="col-12 text-center">
           <p class="text-muted">
@@ -197,6 +222,7 @@ const mostrarModal = ref(false);
 const authStore = useAuthStore();
 const convocatorias = ref([]);
 const candidatosDocumentos = ref();
+const cargandoConvocatorias = ref(false); // ✅ loading
 
 const abrirModal = () => {
   mostrarModal.value = true;
@@ -229,13 +255,10 @@ onMounted(async () => {
 onBeforeMount(async () => {});
 
 async function postularConvocatoria(convocatoriaId) {
-  // Llamar al servicio para postular al candidato a la convocatoria
-
   if (candidatosDocumentos.value.total_faltantes > 0) {
     let mensajeFaltantes =
       "No puede completar su postulación, porque falta cargar los siguientes documentos:\n\n";
     candidatosDocumentos.value.faltantes.forEach((doc) => {
-      //AQUI ME DA ERROR
       mensajeFaltantes += `- ${doc.nombre}\n`;
     });
     Swal.fire({
@@ -253,7 +276,7 @@ async function postularConvocatoria(convocatoriaId) {
       showCancelButton: true,
       confirmButtonText: "Sí, postular",
       cancelButtonText: "Cancelar",
-      confirmButtonColor: "#198754", // verde institucional
+      confirmButtonColor: "#198754",
       cancelButtonColor: "#6c757d",
       reverseButtons: true,
     }).then((result) => {
@@ -294,10 +317,18 @@ async function enviarPostulacion(convocatoriaId) {
 }
 
 async function cargarConvocatorias() {
-  const resultado = await fetchConvocatorias(4);
-  convocatorias.value = resultado;
+  cargandoConvocatorias.value = true;
+  try {
+    const resultado = await fetchConvocatorias(4);
+    convocatorias.value = resultado;
+  } catch (error) {
+    console.error("Error al cargar convocatorias", error);
+  } finally {
+    cargandoConvocatorias.value = false;
+  }
 }
 </script>
+
 <style scoped>
 .line::after {
   position: absolute;

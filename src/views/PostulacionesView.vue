@@ -7,7 +7,20 @@
     <h5 class="text-muted mb-3">
       Total convocatorias: {{ Object.keys(convocatorias).length }}
     </h5>
-    <div v-if="Object.keys(convocatorias).length > 0">
+
+    <!-- Loading institucional -->
+    <div class="row py-5" v-if="cargandoPostulaciones">
+      <div class="col-12 text-center">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Cargando postulaciones...</span>
+        </div>
+        <p class="text-muted mt-3">
+          Cargando postulaciones por convocatoria...
+        </p>
+      </div>
+    </div>
+
+    <div v-if="!cargandoPostulaciones && Object.keys(convocatorias).length > 0">
       <div v-for="(c, index) in convocatorias" :key="index" class="mb-3">
         <div
           class="card border-0 shadow-sm"
@@ -198,6 +211,17 @@
       </div>
     </div>
 
+    <div
+      class="row py-5"
+      v-else-if="
+        !cargandoPostulaciones && Object.keys(convocatorias).length === 0
+      "
+    >
+      <div class="col-12 text-center">
+        <p class="text-muted">No hay postulaciones vigentes en este momento.</p>
+      </div>
+    </div>
+
     <div class="row py-5" v-else>
       <div class="col-12 text-center">
         <p class="text-muted">No hay postulaciones vigentes en este momento.</p>
@@ -226,6 +250,7 @@ const mostrarModalCandidato = ref(false);
 const mostrarmodalCartaOferta = ref(false);
 const modalCandidato = ref(null);
 const expanded = ref([]);
+const cargandoPostulaciones = ref(false);
 
 function verCandidato(candidato) {
   mostrarModalCandidato.value = true;
@@ -372,10 +397,10 @@ onMounted(async () => {
 } */
 
 async function cargarPostulaciones() {
+  cargandoPostulaciones.value = true;
   try {
-    const { data } = await fetchPostulacionesVigentes(4); // Ajusta el endpoint según corresponda
+    const { data } = await fetchPostulacionesVigentes(4);
 
-    // Transformar la respuesta para que calce con tu template
     const transformada = data.map((item) => ({
       convocatoria: {
         id: item.id,
@@ -412,9 +437,11 @@ async function cargarPostulaciones() {
         }) || [],
     }));
 
-    convocatorias.value = transformada; // O this.convocatorias si estás en un componente Vue clásico
+    convocatorias.value = transformada;
   } catch (error) {
-    console.error("❌ Error al cargar postulaciones:", error);
+    console.error("Error al cargar postulaciones:", error);
+  } finally {
+    cargandoPostulaciones.value = false;
   }
 }
 </script>
