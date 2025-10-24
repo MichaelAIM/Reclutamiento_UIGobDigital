@@ -16,10 +16,7 @@
       <section class="modal-body">
         <slot name="body" />
       </section>
-      <footer
-        class="modal-footer bg-white d-flex justify-content-end gap-2"
-        style="min-height: auto"
-      >
+      <footer class="modal-footer bg-white d-flex justify-content-end gap-2">
         <slot name="footer" />
       </footer>
     </div>
@@ -48,13 +45,19 @@
   border-radius: 0.5rem;
   padding: 1.5rem;
   min-width: 320px;
-  max-width: 900px;
+  max-width: 80%;
+  max-height: 99%;
+  overflow-y: auto;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 .modal-header {
   font-weight: 600;
   font-size: 1.1rem;
   margin-bottom: 1rem;
+}
+.modal-footer {
+  margin-top: 1rem;
+  min-height: 100px !important;
 }
 .modal-body {
   margin-bottom: 1rem;

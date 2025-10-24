@@ -97,7 +97,10 @@
                       disponibles
                     </a>
                     <a
-                      v-if="authStore.user.rol === 'admin'"
+                      v-if="
+                        authStore.user.rol === 'admin' ||
+                        authStore.user.rol === 'reclutador'
+                      "
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'postulantes' }"
                       @click="Go('/postulaciones')"
@@ -105,7 +108,10 @@
                       <i class="bi bi-people me-2"></i> Postulantes
                     </a>
                     <a
-                      v-if="authStore.user.rol === 'admin'"
+                      v-if="
+                        authStore.user.rol === 'admin' ||
+                        authStore.user.rol === 'reclutador'
+                      "
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'candidatos' }"
                       @click="Go('/candidatos')"

@@ -85,7 +85,7 @@
                 </button>
                 <button
                   v-if="c.convocatoria.estado_id > 3"
-                  @click="mostrarmodalCartaOferta = true"
+                  @click="verCartaoferta(c.convocatoria.cartaOferta)"
                   class="btn btn-sm"
                   title="Enviar Carta de Oferta"
                 >
@@ -173,9 +173,13 @@
                     </button>
                     <button
                       class="btn btn-sm btn-outline-primary"
-                      title="Seleccionar"
+                      title="Seleccionar Candidato"
                       @click="
-                        cambiarEstadoCandidato(p.id, 3, c.convocatoria.id)
+                        cambiarEstadoCandidato(p.id, 3, c.convocatoria.id, {
+                          institucion: c.convocatoria.institucion_id,
+                          cargo: c.convocatoria.cargo_id,
+                          jornada: c.convocatoria.jornada_id,
+                        })
                       "
                       v-if="
                         p.estado_candidato_id < 3 &&
@@ -233,7 +237,11 @@
     v-model:visible="mostrarModalCandidato"
     ref="modalCandidato"
   />
-  <ModalCartaOferta v-model:visible="mostrarmodalCartaOferta" />
+  <ModalCartaOferta
+    v-model:visible="mostrarmodalCartaOferta"
+    :oferta_id="cartaOfertaId"
+    :authStore="useAuthStore()"
+  />
 </template>
 
 <script setup>
@@ -244,6 +252,8 @@ import { putCandidato } from "../services/candidatoService";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
 import ModalCartaOferta from "../components/modal/ModalCartaOferta.vue";
 import Swal from "sweetalert2";
+import { useAuthStore } from "../store/authStore";
+import { crearCartaOferta } from "../services/cartaOfertaService";
 
 const convocatorias = ref([]);
 const mostrarModalCandidato = ref(false);
@@ -251,6 +261,7 @@ const mostrarmodalCartaOferta = ref(false);
 const modalCandidato = ref(null);
 const expanded = ref([]);
 const cargandoPostulaciones = ref(false);
+const cartaOfertaId = ref(null);
 
 function verCandidato(candidato) {
   mostrarModalCandidato.value = true;
@@ -259,6 +270,11 @@ function verCandidato(candidato) {
   } else {
     console.warn("⚠️ Método CargarDocumentos no disponible en el hijo");
   }
+}
+
+function verCartaoferta(oferta) {
+  cartaOfertaId.value = oferta.id;
+  mostrarmodalCartaOferta.value = true;
 }
 
 function getEstadoClass(estadoId) {
@@ -283,12 +299,19 @@ function toggle(index) {
 async function cambiarEstadoCandidato(
   candidatoId,
   estado,
-  convocatoriaId = null
+  convocatoriaId = null,
+  institucionId = null
 ) {
   const response = await putCandidato(candidatoId, estado);
-  await cargarPostulaciones();
   if (estado === 3 && convocatoriaId) {
     await cambiarEstadoConvocatoria(convocatoriaId, 4);
+    const data = {
+      convocatoria_id: convocatoriaId,
+      candidato_id: candidatoId,
+      institucion_id: institucionId,
+      estado: 1,
+    };
+    await crearCartaOferta(data);
     /*  const convocatoria = convocatorias.value.find(c => c.convocatoria.id === convocatoriaId);
     if(convocatoria) {
       const candidato = convocatoria.candidatos.find(p => p.id === candidatoId);
@@ -298,17 +321,22 @@ async function cambiarEstadoCandidato(
     } */
   }
   if (estado === 1 && convocatoriaId) {
+    const listaConvocatorias = Object.values(convocatorias.value);
+    const convocatoriaObj = listaConvocatorias.find(
+      (c) => c.convocatoria?.id === convocatoriaId
+    );
+    convocatoriaObj.estado_candidato_id = 1;
     await cambiarEstadoConvocatoria(convocatoriaId, 2);
+    // Aqui cambiar esrado de la carta oferta a "Anulada"
+  }
+  if (response) {
+    await cargarPostulaciones();
+  } else {
+    console.error("Error al actualizar el estado del candidato");
   }
 }
 // Funcionalidad de botones
 async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
-  console.log(
-    `Cambiando estado de convocatoria ${convocatoriaId} a estado ${estado}`
-  );
-  // Si se intenta reabrir una convocatoria (estado 2), verificar si ya hay un candidato seleccionado (estado_id = 5)
-  console.log("convocatoria cambio estado", convocatorias.value);
-
   if (estado === 2) {
     // Convertir el objeto en arreglo de valores
     const listaConvocatorias = Object.values(convocatorias.value);
@@ -325,8 +353,6 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
       ? convocatoriaObj.candidatos
       : [];
 
-    console.log("Candidatos", candidatos);
-
     const tieneCandidatoSeleccionado = candidatos.some(
       (c) => c?.estado_candidato_id === 3
     );
@@ -334,9 +360,9 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
     if (tieneCandidatoSeleccionado) {
       console.log("Convocatoria con candidato seleccionado (estado_id = 3)");
       await Swal.fire({
-        title: "Atención",
-        text: "Esta convocatoria tiene un candidato seleccionado. Debe revisar los candidatos antes de reabrir la convocatoria.",
-        icon: "warning",
+        title: "error!",
+        text: "Esta convocatoria tiene un candidato seleccionado. Debe eliminar al candidato para reabrir la convocatoria.",
+        icon: "error",
         showCancelButton: true,
       });
       return;
@@ -355,87 +381,53 @@ onMounted(async () => {
   await cargarPostulaciones();
 });
 
-/* async function cargarPostulaciones() {
-  const resultado = await fetchPostulacionesVigentes(4);
-  console.log("Resultado = ", resultado);
-  convocatorias.value = respuesta.map((item) => {
-    return {
-      convocatoria: {
-        id: item.id,
-        codigo: item.codigo,
-        cargo_id: item.cargo_id,
-        ciudad_id: item.ciudad_id,
-        institucion_id: item.institucion_id,
-        fecha_cierre: item.fecha_cierre,
-        descripcion: item.descripcion,
-        requisitos: item.requisitos,
-        created_at: item.created_at,
-        estado_id: item.estado_id,
-        modalidad_id: item.modalidad_id,
-        tipo_vacante_id: item.tipo_vacante_id,
-        jornada_id: item.jornada_id,
-        categoria_cargo_id: item.categoria_cargo_id,
-        cargo: item.cargo,
-        institucione: item.institucione,
-        estado_convocatorium: item.estado_convocatorium,
-      },
-      candidatos: item.Postulacions.map((p) => {
-        const c = p.Candidato;
-        return {
-          id: c.id,
-          nombre_completo: c.nombre_completo,
-          rut: c.rut,
-          correo: c.correo,
-          especialidad: c.especialidad,
-          estado_candidato_id: c.estado_candidato_id,
-          postulacion_id: p.id,
-          created_at_postulacion: p.created_at,
-        };
-      }),
-    };
-  });
-} */
-
 async function cargarPostulaciones() {
   cargandoPostulaciones.value = true;
   try {
     const { data } = await fetchPostulacionesVigentes(4);
+    console.log("data", data);
 
-    const transformada = data.map((item) => ({
-      convocatoria: {
-        id: item.id,
-        codigo: item.codigo,
-        cargo_id: item.cargo_id,
-        ciudad_id: item.ciudad_id,
-        institucion_id: item.institucion_id,
-        fecha_cierre: item.fecha_cierre,
-        descripcion: item.descripcion,
-        requisitos: item.requisitos,
-        created_at: item.created_at,
-        estado_id: item.estado_id,
-        modalidad_id: item.modalidad_id,
-        tipo_vacante_id: item.tipo_vacante_id,
-        jornada_id: item.jornada_id,
-        categoria_cargo_id: item.categoria_cargo_id,
-        cargo: item.cargo,
-        institucione: item.institucione,
-        estado_convocatorium: item.estado_convocatorium,
-      },
-      candidatos:
-        item.Postulacions?.map((p) => {
-          const c = p.Candidato || {};
-          return {
-            id: c.id,
-            nombre_completo: c.nombre_completo,
-            rut: c.rut,
-            correo: c.correo,
-            especialidad: c.especialidad,
-            estado_candidato_id: c.estado_candidato_id,
-            postulacion_id: p.id,
-            created_at_postulacion: p.created_at,
-          };
-        }) || [],
-    }));
+    const transformada = data.map((item) => {
+      const cartaOfertaValida =
+        item.cartas_ofertas?.find((carta) => carta.estado !== 4) || null;
+
+      return {
+        convocatoria: {
+          id: item.id,
+          codigo: item.codigo,
+          cargo_id: item.cargo_id,
+          ciudad_id: item.ciudad_id,
+          institucion_id: item.institucion_id,
+          fecha_cierre: item.fecha_cierre,
+          descripcion: item.descripcion,
+          requisitos: item.requisitos,
+          created_at: item.created_at,
+          estado_id: item.estado_id,
+          modalidad_id: item.modalidad_id,
+          tipo_vacante_id: item.tipo_vacante_id,
+          jornada_id: item.jornada_id,
+          categoria_cargo_id: item.categoria_cargo_id,
+          cargo: item.cargo,
+          institucione: item.institucione,
+          estado_convocatorium: item.estado_convocatorium,
+          cartaOferta: cartaOfertaValida,
+        },
+        candidatos:
+          item.Postulacions?.map((p) => {
+            const c = p.Candidato || {};
+            return {
+              id: c.id,
+              nombre_completo: c.nombre_completo,
+              rut: c.rut,
+              correo: c.correo,
+              especialidad: c.especialidad,
+              estado_candidato_id: c.estado_candidato_id,
+              postulacion_id: p.id,
+              created_at_postulacion: p.created_at,
+            };
+          }) || [],
+      };
+    });
 
     convocatorias.value = transformada;
   } catch (error) {
