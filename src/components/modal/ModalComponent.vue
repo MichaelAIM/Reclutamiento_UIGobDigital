@@ -16,7 +16,7 @@
       <section class="modal-body">
         <slot name="body" />
       </section>
-      <footer class="modal-footer bg-white d-flex justify-content-end gap-2">
+      <footer class="modal-footer bg-white d-flex justify-content-center gap-2">
         <slot name="footer" />
       </footer>
     </div>

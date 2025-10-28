@@ -6,6 +6,7 @@ import StarterView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegistrarView.vue";
 import RestablecerClaveView from "../views/RecuperarPassword.vue";
+import AprobarCartaView from "../views/AprobarCartaView.vue";
 
 import FormularioView from "../views/FormularioView.vue";
 import DashboardView from "../views/DashboardView.vue";
@@ -40,6 +41,11 @@ const routes = [
         path: "/restablecer-clave",
         name: "simple.restablecerClave",
         component: RestablecerClaveView,
+      },
+      {
+        path: "/aprobar-carta",
+        name: "simple.aprobarCarta",
+        component: AprobarCartaView,
       },
     ],
   },

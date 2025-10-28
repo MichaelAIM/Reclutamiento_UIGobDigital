@@ -40,10 +40,27 @@ export const actualizarCartaOferta = (
     fecha_apr_director: string;
     fecha_envio_dir: string;
     glosa_remuneracion: string;
+    horas_pactadas: number;
   }>
 ) => {
   return api.put(`${baseURL}/${id}`, data);
 };
+
+export async function obtenerCartaPorToken(token: string) {
+  const res = await api.get(`${baseURL}/aprobacion/${token}`);
+  return res.data;
+}
+
+export async function aprobarCartaOferta(
+  token: string,
+  payload?: {
+    fecha_ingreso?: string;
+    horas_pactadas?: number;
+  }
+) {
+  const res = await api.post(`${baseURL}/aprobacion/${token}`, payload);
+  return res.data;
+}
 
 export const eliminarCartaOferta = (id: number) => {
   return api.delete(`${baseURL}/${id}`);

@@ -14,9 +14,7 @@
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden"></span>
         </div>
-        <p class="text-muted mt-3">
-          Cargando postulaciones por convocatoria...
-        </p>
+        <p class="text-muted mt-3">Cargando postulaciones...</p>
       </div>
     </div>
 
@@ -385,7 +383,6 @@ async function cargarPostulaciones() {
   cargandoPostulaciones.value = true;
   try {
     const { data } = await fetchPostulacionesVigentes(4);
-    console.log("data", data);
 
     const transformada = data.map((item) => {
       const cartaOfertaValida =
