@@ -14,6 +14,8 @@ import ConvocatoriasView from "../views/ConvocatoriaView.vue";
 import PostulacionesView from "../views/PostulacionesView.vue";
 import CandidatosView from "../views/CandidatosView.vue";
 
+import BorradorRexView from "../views/BorradorRexView.vue";
+
 import { useAuthStore } from "../store/authStore";
 import { isTokenExpired } from "../utils/validaciones";
 
@@ -76,6 +78,12 @@ const routes = [
         path: "/candidatos",
         name: "bancoCandidatos",
         component: CandidatosView,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/borrador-rex",
+        name: "borradorRex",
+        component: BorradorRexView,
         meta: { requiresAuth: true },
       },
     ],
