@@ -38,16 +38,35 @@
       <!-- Body -->
       <section>
         <div class="font-weight-bold">VISTO:</div>
-        <div class="highlight-green mb-3 p-2">
-          <p>
-            {{ vistoText }}
-          </p>
-          <!--           <textarea
-            class="form-control"
-            rows="6"
-            v-model="vistoText"
-            aria-label="Visto"
-          ></textarea> -->
+        <div class="highlight-green mb-3 p-2 position-relative">
+          <template v-if="!isEditingVisto">
+            <p>{{ vistoText }}</p>
+            <button
+              class="btn btn-sm btn-outline-secondary position-absolute"
+              style="bottom: 0px; right: 0px; border: none"
+              @click="isEditingVisto = true"
+              aria-label="Editar Visto"
+            >
+              <i class="bi bi-pencil" style="font-size: 18px"></i>
+            </button>
+          </template>
+          <template v-else>
+            <textarea
+              class="form-control"
+              rows="6"
+              v-model="vistoText"
+              aria-label="Visto editable"
+            ></textarea>
+            <div class="d-flex justify-content-end mt-2">
+              <button
+                class="btn btn-sm btn-success"
+                @click="isEditingVisto = false"
+                aria-label="Guardar Visto"
+              >
+                Guardar
+              </button>
+            </div>
+          </template>
         </div>
 
         <div class="font-weight-bold">CONSIDERANDO:</div>
@@ -62,12 +81,14 @@
                 <p>{{ c.text }}</p>
               </template>
               <template v-else>
-                <input
+                <textarea
                   class="form-control highlight-celeste"
                   v-model="c.text"
+                  rows="5"
                   :placeholder="`Considerando ${i + 1}`"
                   @blur="onBlurConsiderando(i)"
-                />
+                >
+                </textarea>
               </template>
             </div>
             <i
@@ -98,66 +119,48 @@
         <!-- Tabla (Bootstrap table) -->
         <div class="table-responsive mb-3">
           <table class="table table-bordered mb-0">
-            <thead class="thead-light">
+            <thead class="">
               <tr>
-                <th scope="col">ESTABLECIMIENTO</th>
+                <td scope="col" class="bg-light">ESTABLECIMIENTO</td>
                 <th scope="col" colspan="2">
-                  <div class="highlight-burdeo p-1">
-                    <select
-                      class="form-control form-control-sm"
-                      v-model="fields.establecimiento"
-                      aria-label="Establecimiento"
-                    >
-                      <option v-if="!fields.establecimiento" value="">
-                        -- Seleccione --
-                      </option>
-                      <option value="LICEO JOVINA NARANJO FERNÁNDEZ">
-                        LICEO JOVINA NARANJO FERNÁNDEZ
-                      </option>
-                      <option value="OTRO">OTRO</option>
-                    </select>
-                  </div>
+                  <InputEditable
+                    v-model="fields.establecimiento"
+                    placeholder="Nombre Establecimiento (puede ser nulo)"
+                    aria-label="Establecimiento"
+                  />
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>NOMBRE</td>
+                <td class="bg-light">NOMBRE</td>
                 <td colspan="2">
-                  <div class="highlight-yellow p-1">
-                    <input
-                      class="form-control form-control-sm"
-                      type="text"
-                      v-model="fields.nombre"
-                      placeholder="Nombre completo (puede ser nulo)"
-                      aria-label="Nombre"
-                    />
-                  </div>
+                  <InputEditable
+                    v-model="fields.nombre"
+                    placeholder="Nombre completo (puede ser nulo)"
+                    aria-label="Nombre"
+                  />
                 </td>
               </tr>
 
               <tr>
-                <td>RUT</td>
+                <td class="bg-light">RUT</td>
                 <td colspan="2">
-                  <div class="highlight-yellow p-1">
-                    <input
-                      class="form-control form-control-sm"
-                      type="text"
-                      v-model="fields.rut"
-                      placeholder="RUT (puede ser nulo)"
-                      aria-label="RUT"
-                    />
-                  </div>
+                  <InputEditable
+                    v-model="fields.rut"
+                    placeholder="RUT (puede ser nulo)"
+                    aria-label="RUT"
+                  />
                 </td>
               </tr>
 
               <tr>
-                <td>TIPO DE FUNCIÓN</td>
+                <td class="bg-light">TIPO DE FUNCIÓN</td>
                 <td colspan="2">DOCENTE</td>
               </tr>
 
               <tr>
-                <td>NIVEL O MODALIDAD ENSEÑANZA</td>
+                <td class="bg-light">NIVEL O MODALIDAD ENSEÑANZA</td>
                 <td colspan="2">
                   <div class="highlight-yellow p-1">
                     <input
@@ -170,28 +173,23 @@
                 </td>
               </tr>
 
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-
-              <tr>
+              <tr class="bg-light">
                 <td>FUENTE DE FINANCIAMIENTO</td>
                 <td>HORAS</td>
                 <td>ASIGNATURA Y/O FUNCIÓN</td>
               </tr>
 
               <tr>
-                <td>A CONTRATA SUBV. NORMAL</td>
+                <td class="bg-light">A CONTRATA SUBV. NORMAL</td>
                 <td>
                   <div class="highlight-yellow p-1">
-                    <input
+                    <textarea
                       class="form-control form-control-sm"
                       v-model="fields.horasContrata"
-                      placeholder="04 HORAS BÁSICA 37 HORAS MEDIA"
+                      placeholder=""
                       aria-label="Horas contrata"
-                    />
+                    >
+                    </textarea>
                   </div>
                 </td>
                 <td>DOCENTE</td>
@@ -199,20 +197,33 @@
 
               <tr>
                 <td>JORNADA ESCOLAR COMPLETA</td>
-                <td>-</td>
-                <td>-</td>
+                <td>
+                  <div class="highlight-yellow p-1">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                    ></textarea>
+                  </div>
+                </td>
+                <td>
+                  <div class="highlight-yellow p-1">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                    ></textarea>
+                  </div>
+                </td>
               </tr>
 
               <tr>
                 <td>SUBVENCIÓN PIE D.170</td>
                 <td>
                   <div class="highlight-yellow p-1">
-                    <input
+                    <textarea
                       class="form-control form-control-sm"
-                      v-model="fields.horasPieD170"
-                      placeholder="03 HORAS MEDIA"
+                      :value="fields.horasPieD170"
+                      placeholder=""
                       aria-label="Horas PIE D.170"
-                    />
+                    >
+                    </textarea>
                   </div>
                 </td>
                 <td>COLABORATIVAS</td>
@@ -220,27 +231,48 @@
 
               <tr>
                 <td>SUBVENCIÓN PIE</td>
-                <td>-</td>
-                <td>-</td>
+                <td>
+                  <div class="highlight-yellow p-1">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                    ></textarea>
+                  </div>
+                </td>
+                <td>
+                  <div class="highlight-yellow p-1">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                    ></textarea>
+                  </div>
+                </td>
               </tr>
 
               <tr>
                 <td>SUBVENCIÓN SEP</td>
-                <td>-</td>
-                <td>-</td>
+                <td>
+                  <div class="highlight-yellow p-1">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                    ></textarea>
+                  </div>
+                </td>
+                <td>
+                  <div class="highlight-yellow p-1">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                    ></textarea>
+                  </div>
+                </td>
               </tr>
 
               <tr>
                 <td>TOTAL HORAS</td>
                 <td>
-                  <div class="highlight-yellow p-1">
-                    <input
-                      class="form-control form-control-sm"
-                      v-model="fields.totalHoras"
-                      placeholder="44"
-                      aria-label="Total horas"
-                    />
-                  </div>
+                  <InputEditable
+                    v-model="fields.totalHoras"
+                    placeholder="Total horas"
+                    aria-label="Total horas"
+                  />
                 </td>
                 <td></td>
               </tr>
@@ -248,7 +280,10 @@
               <tr>
                 <td>FECHA DE INICIO</td>
                 <td colspan="2">
-                  <div class="highlight-yellow p-1">
+                  <span v-if="fields.fechaInicio">{{
+                    fields.fechaInicio
+                  }}</span>
+                  <div v-else class="highlight-yellow p-1">
                     <input
                       class="form-control form-control-sm"
                       type="date"
@@ -262,11 +297,15 @@
               <tr>
                 <td>FECHA DE TÉRMINO</td>
                 <td colspan="2">
-                  <div class="highlight-yellow p-1">
+                  <span v-if="fields.fechaTermino"
+                    >{{ fields.fechaTermino }} o hasta que sus servicios sean
+                    necesarios</span
+                  >
+                  <div v-else class="highlight-yellow p-1">
                     <input
                       class="form-control form-control-sm"
                       v-model="fields.fechaTermino"
-                      placeholder="28/02/2026 o hasta que sus servicios sean necesarios"
+                      placeholder="28/02/2026"
                       aria-label="Fecha de termino"
                     />
                   </div>
@@ -300,29 +339,12 @@
           </div>
           <div class="py-5"></div>
           <div class="text-center my-5">
-            <p class="h6 font-weight-bold">HARY DONOSO LÓPEZ</p>
-            <p class="h6 font-weight-bold">FIRMA DIRECTOR EJECUTIVO</p>
+            <p class="h6 font-weight-bold">JULIO VERDEJO AQUEVEQUE</p>
+            <p class="h6 font-weight-bold">FIRMA DIRECTOR (S) EJECUTIVO</p>
             <p class="h6 font-weight-bold">
               SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO
             </p>
           </div>
-
-          <!-- <div class="mt-4">
-            <div class="font-weight-bold">DISTRIBUCIÓN:</div>
-            <div>
-              <div
-                v-for="d in distribucionList"
-                :key="d.id"
-                class="text-muted distribucion-item"
-              >
-                - {{ d.text }}
-                <i
-                  class="bi bi-trash3 text-danger ml-2 pointer"
-                  @click="removeDistribucion(d.id)"
-                ></i>
-              </div>
-            </div>
-          </div> -->
         </div>
 
         <!-- DISTRIBUCIÓN dinámico -->
@@ -370,6 +392,13 @@
             Guardar borrador
           </button>
           <button
+            class="btn btn-success mr-2"
+            @click="GeneratePDF"
+            type="button"
+          >
+            Generar PDF
+          </button>
+          <button
             class="btn btn-outline-secondary"
             @click="resetFromApi"
             type="button"
@@ -384,11 +413,15 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 /* Assets en public/src/assets/ */
 import flagUrl from "../assets/img/flag.png";
 import logoEducacionUrl from "../assets/img/logoDEP.png";
 import logoChinchorroUrl from "../assets/img/Logotipo-Chinchorro-web.png";
+import InputEditable from "../components/inputEditable.vue";
+const isEditingVisto = ref(false);
+const router = useRouter();
 
 /* Editable "VISTO" */
 const vistoText = ref(
@@ -416,15 +449,15 @@ const considerandoList = ref([
 ]);
 
 const fields = reactive({
-  establecimiento: "",
-  nombre: "",
-  rut: "",
+  establecimiento: "LICEO JOVINA NARANJO FERNÁNDEZ",
+  nombre: "Jhon Smith",
+  rut: "16.467.901-2",
   nivel: "(4) EDUCACIÓN BÁSICA/ (40) EDUCACIÓN MEDIA",
-  horasContrata: "04 HORAS BÁSICA 37 HORAS MEDIA",
-  horasPieD170: "03 HORAS MEDIA",
+  horasContrata: "- 04 HORAS BÁSICA \n- 37 HORAS MEDIA",
+  horasPieD170: "- 03 HORAS MEDIA",
   totalHoras: "44",
-  fechaInicio: "",
-  fechaTermino: "28/02/2026 o hasta que sus servicios sean necesarios",
+  fechaInicio: "25/07/2025",
+  fechaTermino: "28/02/2026",
 });
 
 const distribucionList = ref([
@@ -482,6 +515,10 @@ function addDistribucion() {
 }
 function removeDistribucion(i) {
   distribucionList.value.splice(i, 1);
+}
+
+async function GeneratePDF(params) {
+  router.push("/Documento-rex");
 }
 
 async function saveDraft() {
