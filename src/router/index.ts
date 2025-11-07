@@ -16,6 +16,8 @@ import CandidatosView from "../views/CandidatosView.vue";
 
 import BorradorRexView from "../views/BorradorRexView.vue";
 import DocumentoRexView from "../views/DocumentoRex.vue";
+import ContratoAsistenteView from "../views/ContratoAsistenteView.vue";
+import BorradorContratoView from "../views/BorradorContratoView.vue";
 
 import { useAuthStore } from "../store/authStore";
 import { isTokenExpired } from "../utils/validaciones";
@@ -91,6 +93,18 @@ const routes = [
         path: "/Documento-rex",
         name: "DocumentoRex",
         component: DocumentoRexView,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/borrador-contrato",
+        name: "borradorContrato",
+        component: BorradorContratoView,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/Contrato-asistente",
+        name: "ContratoAsistente",
+        component: ContratoAsistenteView,
         meta: { requiresAuth: true },
       },
     ],

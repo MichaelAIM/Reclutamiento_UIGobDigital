@@ -82,3 +82,177 @@ export function encryptId(id: number): string {
   const bytes = Buffer.from(encrypted, "utf8");
   return base62.encode(bytes); // Solo alfanumérico
 }
+
+export function numeroATexto(numero: number) {
+  if (typeof numero !== "number" || isNaN(numero)) {
+    throw new Error("Se requiere un número válido");
+  }
+
+  const unidades = [
+    "",
+    "un",
+    "dos",
+    "tres",
+    "cuatro",
+    "cinco",
+    "seis",
+    "siete",
+    "ocho",
+    "nueve",
+  ];
+  const decenas = [
+    "",
+    "",
+    "veinte",
+    "treinta",
+    "cuarenta",
+    "cincuenta",
+    "sesenta",
+    "setenta",
+    "ochenta",
+    "noventa",
+  ];
+  const especiales = [
+    "diez",
+    "once",
+    "doce",
+    "trece",
+    "catorce",
+    "quince",
+    "dieciséis",
+    "diecisiete",
+    "dieciocho",
+    "diecinueve",
+  ];
+  const veintis = [
+    "veinte",
+    "veintiuno",
+    "veintidós",
+    "veintitrés",
+    "veinticuatro",
+    "veinticinco",
+    "veintiséis",
+    "veintisiete",
+    "veintiocho",
+    "veintinueve",
+  ];
+  const centenas = [
+    "",
+    "ciento",
+    "doscientos",
+    "trescientos",
+    "cuatrocientos",
+    "quinientos",
+    "seiscientos",
+    "setecientos",
+    "ochocientos",
+    "novecientos",
+  ];
+
+  function convertirGrupo(num: number, esMiles = false) {
+    if (num === 0) return "";
+    if (num === 100) return "cien";
+
+    let texto = "";
+    const c = Math.floor(num / 100);
+    const d = Math.floor((num % 100) / 10);
+    const u = num % 10;
+
+    // Centenas
+    if (c > 0) {
+      texto += centenas[c] + " ";
+    }
+
+    // Decenas y unidades
+    const resto = num % 100;
+
+    if (resto === 0) {
+      // No hay decenas ni unidades
+    } else if (resto < 10) {
+      // Unidades simples (1-9)
+      texto += esMiles && u === 1 ? "un" : unidades[u];
+      texto += " ";
+    } else if (resto < 16) {
+      // Números especiales (10-15)
+      texto += especiales[resto - 10] + " ";
+    } else if (resto < 20) {
+      // Dieciséis, diecisiete, etc. (16-19)
+      texto += especiales[resto - 10] + " ";
+    } else if (resto < 30) {
+      // Veintis (20-29)
+      texto += veintis[resto - 20] + " ";
+    } else {
+      // Decenas con "y" (30-99)
+      texto += decenas[d];
+      if (u > 0) {
+        texto += " y " + unidades[u];
+      }
+      texto += " ";
+    }
+
+    return texto.trim();
+  }
+
+  if (numero === 0) return "Cero";
+  if (numero > 999999999) throw new Error("Número demasiado grande");
+
+  let textoFinal = "";
+  const millones = Math.floor(numero / 1000000);
+  const miles = Math.floor((numero % 1000000) / 1000);
+  const unidadesGrupo = numero % 1000;
+
+  // Millones
+  if (millones > 0) {
+    if (millones === 1) {
+      textoFinal += "un millón ";
+    } else {
+      textoFinal += convertirGrupo(millones) + " millones ";
+    }
+  }
+
+  // Miles
+  if (miles > 0) {
+    if (miles === 1) {
+      textoFinal += "mil ";
+    } else {
+      textoFinal += convertirGrupo(miles, true) + " mil ";
+    }
+  }
+
+  // Unidades
+  if (unidadesGrupo > 0 || numero === 0) {
+    textoFinal += convertirGrupo(unidadesGrupo);
+  }
+
+  // Convertir primera letra a mayúscula
+  return textoFinal.trim().charAt(0).toUpperCase() + textoFinal.trim().slice(1);
+}
+
+// Función para formatear moneda
+export function formatoMoneda(monto: number) {
+  const numero = parseFloat(monto.toString().replace(/[$,]/g, ""));
+  return numeroATexto(Math.floor(numero)) + " pesos";
+}
+
+export function formatearFechaHoy() {
+  const fecha = new Date();
+  const dia = fecha.getDate();
+  const meses: string[] = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
+  const mes = meses[fecha.getMonth()];
+  const año = fecha.getFullYear();
+
+  return `${dia} de ${mes} de ${año}`;
+}

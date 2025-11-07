@@ -119,6 +119,50 @@
                       <i class="bi bi-person-lines-fill me-2"></i> Candidatos
                     </a>
                     <a
+                      v-if="
+                        authStore.user.rol === 'admin' ||
+                        authStore.user.rol === 'reclutador'
+                      "
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'postulantes' }"
+                      @click="Go('/aprobar-carta')"
+                    >
+                      <i class="bi bi-people me-2"></i> Carta Oferta
+                    </a>
+                    <a
+                      v-if="
+                        authStore.user.rol === 'admin' ||
+                        authStore.user.rol === 'reclutador'
+                      "
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'postulantes' }"
+                      @click="Go('/borrador-rex')"
+                    >
+                      <i class="bi bi-people me-2"></i> Resoluciones Docentes
+                    </a>
+                    <a
+                      v-if="
+                        authStore.user.rol === 'admin' ||
+                        authStore.user.rol === 'reclutador'
+                      "
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'postulantes' }"
+                      @click="Go('/borrador-contrato')"
+                    >
+                      <i class="bi bi-people me-2"></i> Contratos Asistentes
+                    </a>
+                    <a
+                      v-if="
+                        authStore.user.rol === 'admin' ||
+                        authStore.user.rol === 'reclutador'
+                      "
+                      class="nav-link d-flex align-items-center pointer"
+                      :class="{ active: activeTab === 'postulantes' }"
+                      @click="Go('/postulaciones')"
+                    >
+                      <i class="bi bi-people me-2"></i> Solicitudes
+                    </a>
+                    <a
                       class="nav-link d-flex align-items-center pointer"
                       @click="cerrarSesion()"
                     >

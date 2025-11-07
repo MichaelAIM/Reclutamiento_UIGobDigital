@@ -1,40 +1,6 @@
 <template>
   <div class="container my-4">
     <div class="card p-3">
-      <!-- Header usando Bootstrap grid -->
-      <header
-        class="row align-items-start mb-3 md-mx-5"
-        role="banner"
-        aria-label="Cabecera documento"
-      >
-        <div class="col-6 d-flex flex-column align-items-start">
-          <img :src="flagUrl" class="img-fluid mb-2" alt="" />
-        </div>
-
-        <div class="col-6 text-justify d-flex flex-column">
-          <img
-            :src="logoChinchorroUrl"
-            class="img-fluid mb-1 w-50 align-self-end"
-          />
-        </div>
-      </header>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="d-flex align-items-center my-2">
-            <img :src="logoEducacionUrl" alt="" class="mr-2 w-50" />
-          </div>
-        </div>
-        <div class="col-md-6 px-5 text-justify">
-          <div class="h6 font-weight-bold my-3 align-items-start">
-            SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO
-          </div>
-          <div class="h6 font-weight-bold">RESOLUCIÓN EXENTA</div>
-          <div class="h6 font-weight-bold">
-            NÓMBRESE AL PROFESIONAL DE LA EDUCACIÓN PARA CUMPLIR LABORES
-            DOCENTES A CONTRATA.
-          </div>
-        </div>
-      </div>
       <!-- Body -->
       <section>
         <div class="font-weight-bold">VISTO:</div>
@@ -322,7 +288,7 @@
 
         <!-- Párrafos estáticos -->
         <div class="mt-3">
-          <div class="text-muted">
+          <!--           <div class="text-muted">
             2. Por razones impostergables del buen servicio, el profesional
             asumió sus funciones a contar de la fecha señalada, sin esperar el
             término de la total tramitación de la presente resolución.
@@ -332,12 +298,12 @@
             Contrata y las demás asignaciones que correspondan, según subvención
             de financiamiento, del presupuesto vigente para el año 2025 del
             Servicio Local de Educación Pública de Chinchorro.
-          </div>
+          </div> -->
 
-          <div class="my-3 font-weight-bold">
+          <!--           <div class="my-3 font-weight-bold">
             ANÓTESE, REGÍSTRESE, COMUNÍQUESE Y ARCHÍVESE
-          </div>
-          <div class="py-5"></div>
+          </div> -->
+          <!--           <div class="py-5"></div> -->
           <div class="text-center my-5">
             <p class="h6 font-weight-bold">JULIO VERDEJO AQUEVEQUE</p>
             <p class="h6 font-weight-bold">FIRMA DIRECTOR (S) EJECUTIVO</p>
