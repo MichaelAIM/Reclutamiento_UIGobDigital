@@ -53,7 +53,6 @@
                 </span>
               </div>
             </div>
-
             <div class="d-flex flex-column align-items-end gap-3">
               <div class="mr-md-5">
                 <button
@@ -98,7 +97,6 @@
             </div>
           </div>
         </div>
-
         <!-- Contenido colapsable -->
         <div v-if="expanded[index]" class="mt-2">
           <div class="table-responsive">
@@ -113,7 +111,7 @@
                   <th>Email</th>
                   <th>Especialidad</th>
                   <th>Estado</th>
-                  <th>Acciones</th>
+                  <th width="10%">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -121,7 +119,7 @@
                   v-for="(p, i) in c.candidatos"
                   :key="i"
                   :class="{
-                    'bg-accent-325': p.estado_candidato_id === 3,
+                    'bg-accent-325': p.estado_candidato === 3,
                     'table-striped': true,
                   }"
                 >
@@ -137,10 +135,11 @@
                           class="form-check-input"
                           type="checkbox"
                           :id="`estado-${index}-${i}`"
-                          :disabled="p.estado_candidato_id === 3"
-                          :checked="p.estado_candidato_id > 1"
+                          :disabled="p.estado_candidato === 3"
+                          :checked="p.estado_candidato > 1"
                           @change="
                             cambiarEstadoCandidato(
+                              p.postulacion_id,
                               p.id,
                               $event.target.checked ? 2 : 1
                             )
@@ -150,14 +149,12 @@
                       <span
                         :class="[
                           'badge px-3 py-1',
-                          p.estado_candidato_id < 2
+                          p.estado_candidato < 2
                             ? 'bg-warning text-dark'
                             : 'bg-success text-white',
                         ]"
                       >
-                        {{
-                          p.estado_candidato_id < 2 ? "Pendiente" : "Revisado"
-                        }}
+                        {{ p.estado_candidato < 2 ? "Pendiente" : "Revisado" }}
                       </span>
                     </div>
                   </td>
@@ -173,28 +170,37 @@
                       class="btn btn-sm btn-outline-primary"
                       title="Seleccionar Candidato"
                       @click="
-                        cambiarEstadoCandidato(p.id, 3, c.convocatoria.id, {
-                          institucion: c.convocatoria.institucion_id,
-                          cargo: c.convocatoria.cargo_id,
-                          jornada: c.convocatoria.jornada_id,
-                        })
+                        cambiarEstadoCandidato(
+                          p.postulacion_id,
+                          p.id,
+                          3,
+                          c.convocatoria.id,
+                          {
+                            institucion: c.convocatoria.institucion_id,
+                            cargo: c.convocatoria.cargo_id,
+                            jornada: c.convocatoria.jornada_id,
+                          }
+                        )
                       "
                       v-if="
-                        p.estado_candidato_id < 3 &&
-                        c.convocatoria.estado_id < 4
+                        p.estado_candidato < 3 && c.convocatoria.estado_id < 4
                       "
                     >
                       <i class="bi bi-check-all"></i>
                     </button>
                     <button
                       v-show="
-                        p.estado_candidato_id >= 3 &&
-                        c.convocatoria.estado_id > 3
+                        p.estado_candidato >= 3 && c.convocatoria.estado_id > 3
                       "
                       class="btn btn-sm btn-outline-secondary"
                       title="Quitar selección"
                       @click="
-                        cambiarEstadoCandidato(p.id, 1, c.convocatoria.id)
+                        cambiarEstadoCandidato(
+                          p.postulacion_id,
+                          p.id,
+                          1,
+                          c.convocatoria.id
+                        )
                       "
                     >
                       <i class="bi bi-x-circle"></i>
@@ -244,9 +250,11 @@
 
 <script setup>
 import { onMounted, ref, computed } from "vue";
-import { fetchPostulacionesVigentes } from "../services/postulacionService";
+import {
+  fetchPostulacionesVigentes,
+  putPostulacionCandidato,
+} from "../services/postulacionService";
 import { update_convocatoria } from "../services/convocatoriaServices";
-import { putCandidato } from "../services/candidatoService";
 import ModalCandidato from "../components/modal/ModalCandidato.vue";
 import ModalCartaOferta from "../components/modal/ModalCartaOferta.vue";
 import Swal from "sweetalert2";
@@ -295,18 +303,22 @@ function toggle(index) {
 }
 
 async function cambiarEstadoCandidato(
+  postulacioId,
   candidatoId,
   estado,
   convocatoriaId = null,
-  institucionId = null
+  datos = {}
 ) {
-  const response = await putCandidato(candidatoId, estado);
+  const response = await putPostulacionCandidato(postulacioId, estado);
   if (estado === 3 && convocatoriaId) {
+    const { institucion, cargo, jornada } = datos;
     await cambiarEstadoConvocatoria(convocatoriaId, 4);
     const data = {
       convocatoria_id: convocatoriaId,
       candidato_id: candidatoId,
-      institucion_id: institucionId,
+      institucion_id: institucion,
+      cargo_id: cargo,
+      jornada_id: jornada,
       estado: 1,
     };
     await crearCartaOferta(data);
@@ -352,11 +364,10 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
       : [];
 
     const tieneCandidatoSeleccionado = candidatos.some(
-      (c) => c?.estado_candidato_id === 3
+      (c) => c?.estado_candidato === 3
     );
 
     if (tieneCandidatoSeleccionado) {
-      console.log("Convocatoria con candidato seleccionado (estado_id = 3)");
       await Swal.fire({
         title: "error!",
         text: "Esta convocatoria tiene un candidato seleccionado. Debe eliminar al candidato para reabrir la convocatoria.",
@@ -383,6 +394,7 @@ async function cargarPostulaciones() {
   cargandoPostulaciones.value = true;
   try {
     const { data } = await fetchPostulacionesVigentes(4);
+    console.log("data", data);
 
     const transformada = data.map((item) => {
       const cartaOfertaValida =
@@ -421,6 +433,7 @@ async function cargarPostulaciones() {
               estado_candidato_id: c.estado_candidato_id,
               postulacion_id: p.id,
               created_at_postulacion: p.created_at,
+              estado_candidato: p.estado_candidato,
             };
           }) || [],
       };

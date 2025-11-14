@@ -36,6 +36,7 @@
               type="number"
               :value="carta.horas_pactadas"
               class="form-control d-inline-block w-50 ms-2"
+              :disabled="aprobado"
             />
           </p>
           <p>
@@ -44,6 +45,7 @@
               type="date"
               :value="carta.fecha_ingreso"
               class="form-control d-inline-block w-50 ms-2"
+              :disabled="aprobado"
             />
           </p>
         </div>
@@ -54,7 +56,12 @@
         <p style="white-space: pre-line">{{ carta.glosa_remuneracion }}</p>
       </div>
 
-      <div class="my-4 text-end">
+      <div class="mt-4" v-if="aprobado">
+        <strong>fecha de aprovación: </strong>
+        {{ carta.fecha_apr_director }}
+      </div>
+
+      <div class="my-4 text-end" v-if="!aprobado">
         <button class="btn btn-success" @click="aprobarCarta">
           <i class="bi bi-check-circle me-2"></i>Aprobar Carta
         </button>
@@ -78,6 +85,7 @@ const token = route.query.token as string;
 const carta = ref<any>(null);
 const loading = ref(true);
 const error = ref("");
+const aprobado = ref(false);
 
 onMounted(async () => {
   if (!token) {
@@ -87,6 +95,10 @@ onMounted(async () => {
   }
   try {
     carta.value = await obtenerCartaPorToken(token);
+    if (carta.value.fecha_apr_director) {
+      aprobado.value = true;
+    }
+    console.log("carta", carta.value);
   } catch (err) {
     Swal.fire({
       icon: "error",
@@ -107,8 +119,9 @@ async function aprobarCarta() {
       horas_pactadas: carta.value.horas_pactadas,
     };
     console.log("payload", payload);
-
+    aprobado.value = true;
     await aprobarCartaOferta(token, payload);
+
     Swal.fire({
       icon: "success",
       title: "Carta Aprobada",

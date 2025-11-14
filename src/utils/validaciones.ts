@@ -256,3 +256,11 @@ export function formatearFechaHoy() {
 
   return `${dia} de ${mes} de ${año}`;
 }
+
+export function fechaFormateada(fechaISO: any) {
+  return new Date(fechaISO).toLocaleString("es-CL", {
+    dateStyle: "long",
+    timeStyle: "short",
+    timeZone: "America/Santiago",
+  });
+}

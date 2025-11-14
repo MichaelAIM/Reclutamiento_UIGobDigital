@@ -97,6 +97,16 @@
                 placeholder="Correo del director"
               />
             </div>
+
+            <div class="mt-4 bg-accent-2 px-3" v-if="oferta.fecha_apr_director">
+              <strong>fecha de envio al Director: </strong>
+              {{ fechaFormateada(oferta.fecha_envio_dir) }}
+            </div>
+
+            <div class="mt-4 bg-accent-3 px-3" v-if="oferta.fecha_apr_director">
+              <strong>fecha de aprovación: </strong>
+              {{ fechaFormateada(oferta.fecha_apr_director) }}
+            </div>
           </div>
 
           <div class="col-md-6">
@@ -153,7 +163,7 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="my-3">
           <h5 class="fw-semibold text-secondary">Remuneración</h5>
           <textarea
             v-model="oferta.glosa_remuneracion"
@@ -165,18 +175,30 @@
     </template>
 
     <template #footer>
-      <button class="btn btn-outline-success" @click="">
+      <!--       <button class="btn btn-outline-success" @click="">
         <i class="bi bi-download mr-2"></i>Descargar PDF
-      </button>
-      <button class="btn btn-success" @click="guardarCambios(null)">
+      </button> -->
+      <button
+        class="btn btn-success"
+        @click="guardarCambios(null)"
+        v-if="!oferta.fecha_apr_director"
+      >
         <i class="bi bi-save mr-2"></i>Guardar Cambios
       </button>
       <button
         class="btn btn-primary ml-4"
-        v-if="authStore.user.rol === 'admin'"
+        v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_director"
         @click="guardarCambios(1)"
       >
         <i class="bi bi-send mr-2"></i>Enviar Al Director
+      </button>
+      <button
+        class="btn btn-danger ml-4"
+        v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_director"
+        @click="guardarCambios(3)"
+      >
+        <i class="bi bi-x-octagon"></i>
+        Anular Postulacion
       </button>
     </template>
   </ModalComponent>
@@ -188,6 +210,7 @@ import {
   obtenerCartaOfertaPorId,
   actualizarCartaOferta,
 } from "../../services/cartaOfertaService";
+import { fechaFormateada } from "../../utils/validaciones";
 import { watch, ref } from "vue";
 import Swal from "sweetalert2";
 
@@ -214,7 +237,7 @@ const props = defineProps<{
     user: {
       rol: string;
     };
-  };
+  } | null;
   visible: boolean;
 }>();
 
@@ -228,7 +251,7 @@ async function guardarCambios(enviarDirector: number | null) {
       dato_envio: enviarDirector,
     };
     await actualizarCartaOferta(props.oferta_id!, payload);
-    if (enviarDirector) {
+    if (enviarDirector == 1) {
       Swal.fire(
         "Éxito",
         "Carta oferta enviada al director correctamente.",

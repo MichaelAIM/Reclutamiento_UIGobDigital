@@ -1,6 +1,11 @@
 <template>
-  <div :show-view="showView" class="resolucion-sheet p-4" ref="contractRef">
-    <!-- Contrato completo (texto original íntegro). Cada fragmento "editable" está enlazado a data. -->
+  <div
+    class="resolucion-sheet pt-4"
+    ref="contractRef"
+    style="z-index: -9999; position: relative"
+  >
+    <!-- Contrato c
+     ompleto (texto original íntegro). Cada fragmento "editable" está enlazado a data. -->
     <section class="contract-body">
       <p class="text-center mb-1">
         <strong>CONTRATO DE TRABAJO DE ASISTENTE DE LA EDUCACIÓN</strong>
@@ -8,99 +13,37 @@
       <hr class="mt-1 mb-4" />
       <p>
         En
-        <strong v-if="data.ciudad">{{ data.ciudad }}</strong>
-        <input
-          v-else
-          v-model="data.ciudad"
-          class="form-control form-control-sm inline-input"
-        />
+        <strong>Arica</strong>
         , a
         <strong v-if="data.fecha_resol">{{ data.fecha_resol }}</strong>
-        <input
-          v-else
-          v-model="data.fecha_resol"
-          class="form-control form-control-sm inline-input"
-        />
         , entre el
-        <strong v-if="data.empleador">{{ data.empleador }}</strong>
-        <input
-          v-else
-          v-model="data.empleador"
-          class="form-control form-control-sm inline-input"
-        />
+        <strong>SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO</strong>
         , en adelante el Servicio Local, RUT N°
-        <strong v-if="data.empleadorRUT">{{ data.empleadorRUT }}</strong>
-        <input
-          v-else
-          v-model="data.empleadorRUT"
-          class="form-control form-control-sm inline-input"
-        />
+        <strong>62.000.660-2</strong>
         , representado por su Directora Ejecutiva (s), doña
         <strong v-if="data.repNombre">{{ data.repNombre }}</strong>
-        <input
-          v-else
-          v-model="data.repNombre"
-          class="form-control form-control-sm inline-input"
-        />
         , cédula nacional de identidad Nº
         <strong v-if="data.repRUT">{{ data.repRUT }}</strong>
-        <input
-          v-else
-          v-model="data.repRUT"
-          class="form-control form-control-sm inline-input"
-        />
         , ambos con domicilio en
-        <strong v-if="data.empleadorDomicilio">{{
-          data.empleadorDomicilio
-        }}</strong>
-        <input
-          v-else
-          v-model="data.empleadorDomicilio"
-          class="form-control form-control-sm inline-input"
-        />
+        <strong>Calle Codpa N°2173</strong>
         ; en adelante “el Empleador” y don(a)
         <strong v-if="data.trabajadorNombre">{{
           data.trabajadorNombre
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorNombre"
-          class="form-control form-control-sm inline-input"
-        />
         , RUN
         <strong v-if="data.trabajadorRUN">{{ data.trabajadorRUN }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorRUN"
-          class="form-control form-control-sm inline-input"
-        />
         ,
         <strong v-if="data.trabajadorNacionalidad">{{
           data.trabajadorNacionalidad
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorNacionalidad"
-          class="form-control form-control-sm inline-input"
-        />
         ,
         <strong v-if="data.trabajadorEstado">{{
           data.trabajadorEstado
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorEstado"
-          class="form-control form-control-sm inline-input"
-        />
         , domiciliado en
         <strong v-if="data.trabajadorDomicilio">{{
           data.trabajadorDomicilio
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorDomicilio"
-          class="form-control form-control-sm inline-input"
-        />
         , en adelante “el Trabajador”, expresan que han convenido en el
         siguiente contrato de trabajo:
       </p>
@@ -111,7 +54,7 @@
             <td><strong>PRIMERO:</strong></td>
             <td>
               El trabajador
-              <strong v-if="data.primer_cargo">{{ data.primer_cargo }}</strong>
+              <strong>Asistente de la Educación</strong>
 
               es contratado en su categoría de
               <strong v-if="data.primer_categoria">{{
@@ -169,7 +112,7 @@
                   data.tercero_lunes_fin
                 }}</strong>
               </p>
-              <p>
+              <p class="mb-1">
                 <strong v-if="data.tercero_viernes_inicio">
                   VIERNES: de
                   {{ data.tercero_viernes_inicio }}</strong
@@ -181,24 +124,22 @@
                 }}</strong>
               </p>
 
-              <p>
+              <p class="mb-1">
                 Como consecuencia, la jornada de trabajo diaria será
                 interrumpida por un descanso de
-                <strong v-if="data.tercero_colacion">{{
-                  data.tercero_colacion
-                }}</strong>
+                <strong>30 minutos</strong>
 
                 destinada a colación.
               </p>
 
-              <p>
+              <p class="mb-1">
                 El Empleador, en conformidad con la Ley y de acuerdo con las
                 necesidades de funcionamiento del Servicio Local, a través de la
                 Subdirección de Gestión de Personas, podrá alterar el horario de
                 inicio y término de la jornada diaria de trabajo.
               </p>
 
-              <p>
+              <p class="mb-1">
                 El Trabajador se compromete a laborar con dedicación durante
                 toda la jornada convenida.
               </p>
@@ -207,20 +148,19 @@
           <tr>
             <td><strong>CUARTO:</strong></td>
             <td>
-              <p>
+              <p class="mb-1">
                 El Trabajador percibirá un sueldo base de
-                <strong v-if="data.sueldo">${{ data.sueldo }},-</strong>
-
+                <strong>${{ data.sueldo }}.-</strong>
                 ({{ data.sueldo_texto }}), por mes calendario, la que será
                 liquidada y pagada por períodos vencidos, en las oficinas del
                 empleador, el día 30 de cada mes.
               </p>
 
-              <p>
+              <p class="mb-1">
                 De la remuneración se deducirán los impuestos, las cotizaciones
                 de previsión o seguridad social y las de salud.
               </p>
-              <p>
+              <p class="mb-1">
                 No se podrán hacer otras deducciones, salvo que estén
                 autorizadas por la Ley, el Reglamento Interno o el Contrato, las
                 que hayan sido ordenadas jurídicamente o las que sean
@@ -239,18 +179,18 @@
           <tr>
             <td><strong>SEXTO:</strong></td>
             <td>
-              <p>
+              <p class="mb-1">
                 El Trabajador percibirá, cuando corresponda los siguientes
                 derechos:
               </p>
 
-              <p>
+              <p class="mb-1">
                 El derecho a percibir viáticos, pasajes y gastos reembolsables,
                 mientras desempeñe las funciones del cargo, los que deberán ser
                 fehacientemente acreditados por el mismo.
               </p>
 
-              <p>
+              <p class="mb-1">
                 El derecho, cuando corresponda, a percibir los beneficios de
                 reajuste de remuneraciones a los trabajadores del sector
                 público, otorgados en cada ocasión por el Estado a los
@@ -261,10 +201,7 @@
 
               <p>
                 El trabajador podrá solicitar
-                <strong v-if="data.sexto_permiso_dias">{{
-                  data.sexto_permiso_dias
-                }}</strong>
-
+                <strong>06</strong>
                 días hábiles por año calendario, con goce de remuneraciones,
                 para ausentarse de sus labores por motivos particulares. Estos
                 permisos podrán fraccionarse por días, o medios días y deberán
@@ -338,7 +275,7 @@
               El asistente de la educación estará afecto a las siguientes
               prohibiciones:
 
-              <ul class="ml-0 pl-3 mt-2">
+              <ul class="ml-0 pl-3 mt-2 mb-1">
                 <li>
                   Ejercer facultades, atribuciones o representación de las que
                   no esté legalmente investido, o no le hayan sido delegadas.
@@ -488,9 +425,7 @@
             <td><strong>DÉCIMO SEXTO:</strong></td>
             <td>
               Se deja constancia que la personería de Doña
-              <strong v-if="data.decimo_personeria">{{
-                data.decimo_personeria
-              }}</strong
+              <strong v-if="data.repNombre">{{ data.repNombre }}</strong
               >, consta en la Resolución Exenta RA N°
               <strong v-if="data.decimo_resol">{{ data.decimo_resol }}</strong>
               que la nombra en calidad de Titular Directivo/a jefe/a de Unidad
@@ -505,9 +440,7 @@
             <td><strong>DÉCIMO SÉPTIMO:</strong></td>
             <td>
               El presente contrato se firma en
-              <strong v-if="data.decimo_ejemplares">{{
-                data.decimo_ejemplares
-              }}</strong>
+              <strong>03</strong>
               ejemplares, declarando el Trabajador haber recibido un ejemplar de
               él y que este es fiel reflejo de la relación laboral existente
               entre las partes, y los demás en el Servicio Local.
@@ -517,7 +450,7 @@
             <td><strong>DÉCIMO OCTAVO:</strong></td>
             <td>
               El motivo que origina la celebración del presente contrato es por
-              necesidades del servicio.
+              <strong>{{ data.decimo_motivo }}.</strong>
             </td>
           </tr>
         </tbody>
@@ -525,19 +458,22 @@
 
       <!-- Tabla de firmas - preserva texto exacto -->
       <div class="mt-5">
-        <div class="pt-2">
+        <div class="pt-4">
           <table class="table table-borderless">
-            <tbody style="font-size: 10pt">
+            <tbody style="font-size: 8pt">
               <tr class="text-center">
-                <td>
-                  <div class="signature-line">
+                <td width="43%">
+                  <div class="signature-line px-2">
+                    <hr class="my-0" />
                     <strong>{{ data.trabajadorNombre }}</strong>
                     <br />
                     <strong>{{ data.trabajadorRUN }}</strong>
                   </div>
                 </td>
                 <td>
-                  <div class="signature-line px-3">
+                  <div class="signature-line px-2">
+                    <hr class="my-0 mx-5" />
+
                     <strong>
                       {{ data.repNombre }}
                     </strong>
@@ -563,14 +499,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  computed,
-  defineProps,
-  defineEmits,
-  defineExpose,
-  onMounted,
-} from "vue";
+import { reactive, ref, onMounted, nextTick } from "vue";
 import html2pdf from "html2pdf.js";
 
 // Imágenes institucionales
@@ -583,8 +512,8 @@ const contractRef = ref(null);
 const logoLeftImg = ref(null);
 const logoRightImg = ref(null);
 const autoDownloaded = ref(false);
-// Referencia al contenedor
 const isGenerating = ref(false);
+const showView = ref(false);
 
 const props = defineProps({
   data: {
@@ -592,10 +521,9 @@ const props = defineProps({
     required: true,
     default: () => ({
       fecha_resol: "",
-      repID: 1,
-      repRUT: "",
-      repNombre: "",
       repCargo: "",
+      repNombre: "",
+      repRUT: "",
       empleadorDomicilio: "",
       trabajadorNombre: "",
       trabajadorRUN: "",
@@ -631,150 +559,10 @@ const props = defineProps({
     default: false,
   },
 });
-// Definir emits para eventos
-const emit = defineEmits(["update:motivo", "pdf-generated", "pdf-error"]);
 
-// Función para generar PDF en nueva pestaña
-async function generatePDFInNewTab() {
-  if (!contractRef.value) {
-    console.error("No se encontró la referencia del contrato");
-    emit("pdf-error", "No se pudo generar el PDF");
-    return;
-  }
-
-  isGenerating.value = true;
-
-  try {
-    await waitForImages(contractRef.value);
-    await new Promise((r) => setTimeout(r, 500));
-
-    const opt = {
-      margin: [25, 20, 30, 20],
-      filename: `Contrato_${props.data.trabajadorNombre}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        scrollY: 0,
-      },
-      jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
-      pagebreak: { mode: ["css", "legacy"] },
-    };
-
-    const worker = html2pdf().set(opt).from(contractRef.value);
-    const pdf = await worker.toPdf().get("pdf");
-
-    // Agregar encabezados con logos
-    const totalPages = pdf.internal.getNumberOfPages();
-    const pageWidth = pdf.internal.pageSize.getWidth();
-
-    try {
-      const logoLeftData = await getImageDataUrlFromImport(logoLeft);
-      const logoRightData = await getImageDataUrlFromImport(logoRight);
-
-      for (let i = 1; i <= totalPages; i++) {
-        pdf.setPage(i);
-        if (logoLeftData) pdf.addImage(logoLeftData, "PNG", 20, 5, 53, 8);
-        if (logoRightData)
-          pdf.addImage(logoRightData, "PNG", pageWidth - 90, 5, 59, 16.5);
-      }
-    } catch (imgErr) {
-      console.warn(
-        "No se pudieron procesar las imágenes del encabezado:",
-        imgErr
-      );
-    }
-
-    // Generar blob y abrir en nueva pestaña
-    const pdfBlob = pdf.output("blob");
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-
-    // Abrir en nueva pestaña
-    window.open(pdfUrl, "_blank");
-
-    // Limpiar URL después de un tiempo
-    setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-
-    emit("pdf-generated", pdfBlob);
-  } catch (err) {
-    console.error("Error generando PDF:", err);
-    emit("pdf-error", err.message);
-
-    // Fallback: intentar con escala menor
-    try {
-      opt.html2canvas.scale = 1;
-      await html2pdf().set(opt).from(contractRef.value).save();
-    } catch (e) {
-      console.error("Error en fallback PDF:", e);
-    }
-  } finally {
-    isGenerating.value = false;
-  }
-}
-
-// Función para descargar PDF directamente
-async function generateAndDownloadPDF(
-  filename = `Contrato_${props.data.trabajadorNombre}.pdf`
-) {
-  if (!contractRef.value) return;
-
-  await waitForImages(contractRef.value);
-  await new Promise((r) => setTimeout(r, 250));
-
-  const opt = {
-    margin: [25, 20, 30, 20],
-    filename,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-      scrollY: 0,
-    },
-    jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
-    pagebreak: { mode: ["css", "legacy"] },
-  };
-
-  try {
-    const worker = html2pdf().set(opt).from(contractRef.value);
-    const pdf = await worker.toPdf().get("pdf");
-
-    const totalPages = pdf.internal.getNumberOfPages();
-    const pageWidth = pdf.internal.pageSize.getWidth();
-
-    try {
-      const logoLeftData = await getImageDataUrlFromImport(logoLeft);
-      const logoRightData = await getImageDataUrlFromImport(logoRight);
-
-      for (let i = 1; i <= totalPages; i++) {
-        pdf.setPage(i);
-        if (logoLeftData) pdf.addImage(logoLeftData, "PNG", 20, 5, 53, 8);
-        if (logoRightData)
-          pdf.addImage(logoRightData, "PNG", pageWidth - 90, 5, 59, 16.5);
-      }
-    } catch (imgErr) {
-      console.warn(
-        "No se pudieron procesar las imágenes del encabezado:",
-        imgErr
-      );
-    }
-
-    await worker.save();
-    emit("pdf-generated");
-  } catch (err) {
-    console.error("Error generando PDF", err);
-    emit("pdf-error", err.message);
-    opt.html2canvas.scale = 1;
-    try {
-      await html2pdf().set(opt).from(contractRef.value).save();
-    } catch (e) {
-      console.error("Error en fallback PDF", e);
-    }
-  }
-}
-
-// Helper functions (se mantienen igual)
+defineExpose({ generatePDFInNewTab, generateAndDownloadPDF });
+const emit = defineEmits(["pdf-error", "pdf-generated", "cerrarVista"]);
+// Esperar carga de imágenes antes de capturar
 function waitForImages(containerEl, timeout = 8000) {
   return new Promise((resolve) => {
     const images = Array.from(containerEl.querySelectorAll("img"));
@@ -798,6 +586,206 @@ function waitForImages(containerEl, timeout = 8000) {
   });
 }
 
+// Convertir imagen a base64
+function getImageDataUrl(imgElement) {
+  return new Promise((resolve, reject) => {
+    if (!imgElement || !imgElement.complete) {
+      reject(new Error("Imagen no cargada"));
+      return;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = imgElement.naturalWidth;
+    canvas.height = imgElement.naturalHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(imgElement, 0, 0);
+
+    try {
+      const dataUrl = canvas.toDataURL("image/png");
+      resolve(dataUrl);
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+// Generar y descargar PDF
+async function generateAndDownloadPDF() {
+  const safeName = `Contrato_${
+    (props.data && props.data.trabajadorNombre) || "sin-nombre"
+  }.pdf`;
+  if (!contractRef.value) return;
+
+  await waitForImages(contractRef.value);
+  await new Promise((r) => setTimeout(r, 250));
+
+  const opt = {
+    margin: [25, 20, 30, 20], // Margen superior para el encabezado
+    filename: safeName,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      scrollY: 0,
+    },
+    jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
+    //pagebreak: { mode: ["avoid-all"] },
+    pagebreak: { mode: ["css", "legacy"] },
+  };
+
+  try {
+    const worker = html2pdf().set(opt).from(contractRef.value);
+    const pdf = await worker.toPdf().get("pdf");
+
+    // Obtener el número total de páginas
+    const totalPages = pdf.internal.getNumberOfPages();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    // Convertir las imágenes de los logos a base64
+    const logoLeftData = await getImageDataUrlFromImport(logoLeft);
+    const logoRightData = await getImageDataUrlFromImport(logoRight);
+
+    try {
+      if (logoLeftImg.value) {
+        logoLeftData = await getImageDataUrl(logoLeftImg.value);
+      }
+      if (logoRightImg.value) {
+        logoRightData = await getImageDataUrl(logoRightImg.value);
+      }
+
+      // Agregar encabezado en todas las páginas
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+
+        // Logo izquierdo
+        if (logoLeftData) {
+          pdf.addImage(logoLeftData, "PNG", 20, 5, 53, 8);
+        }
+
+        // Logo derecho
+        if (logoRightData) {
+          pdf.addImage(logoRightData, "PNG", pageWidth - 90, 5, 59, 16.5);
+        }
+      }
+
+      console.log(`Encabezados agregados a ${totalPages} páginas`);
+    } catch (imgErr) {
+      console.warn(
+        "No se pudieron procesar las imágenes del encabezado:",
+        imgErr
+      );
+    }
+
+    // Guardar el PDF
+    await worker.save();
+  } catch (err) {
+    console.error("Error generando PDF", err);
+    // Fallback con menor calidad
+    opt.html2canvas.scale = 1;
+    try {
+      await html2pdf().set(opt).from(contractRef.value).save();
+    } catch (e) {
+      console.error("Error en fallback PDF", e);
+    }
+  }
+}
+
+// Función para generar PDF en nueva pestaña
+async function generatePDFInNewTab() {
+  const safeName = `Contrato_${
+    (props.data && props.data.trabajadorNombre) || "sin-nombre"
+  }.pdf`;
+
+  await nextTick(); // espera que el DOM esté listo
+  await new Promise((r) => setTimeout(r, 250)); // espera adicional
+
+  const el = contractRef.value;
+  if (!el) {
+    console.error("No se encontró el contrato");
+    return;
+  }
+
+  isGenerating.value = true;
+
+  try {
+    await waitForImages(contractRef.value);
+    await new Promise((r) => setTimeout(r, 250));
+
+    const opt = {
+      margin: [25, 20, 31, 20], // Margen superior para el encabezado
+      filename: safeName,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        scrollY: 0,
+      },
+      jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
+      //pagebreak: { mode: ["avoid-all"] },
+      pagebreak: { mode: ["css", "legacy"] },
+    };
+
+    const worker = html2pdf().set(opt).from(contractRef.value);
+    const pdf = await worker.toPdf().get("pdf");
+
+    // Agregar encabezados con logos
+    const totalPages = pdf.internal.getNumberOfPages();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    try {
+      const logoLeftData = await getImageDataUrlFromImport(logoLeft);
+      const logoRightData = await getImageDataUrlFromImport(logoRight);
+
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+
+        // Logo izquierdo
+        if (logoLeftData) {
+          pdf.addImage(logoLeftData, "PNG", 20, 5, 53, 8);
+        }
+
+        // Logo derecho
+        if (logoRightData) {
+          pdf.addImage(logoRightData, "PNG", pageWidth - 90, 5, 59, 16.5);
+        }
+      }
+    } catch (imgErr) {
+      console.warn(
+        "No se pudieron procesar las imágenes del encabezado:",
+        imgErr
+      );
+    }
+
+    // Generar blob y abrir en nueva pestaña
+    const pdfBlob = pdf.output("blob");
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    emit("cerrarVista");
+    // Abrir en nueva pestaña
+    window.open(pdfUrl, "_blank");
+
+    // Limpiar URL después de un tiempo
+    setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+
+    //emit("pdf-generated", pdfBlob);
+  } catch (err) {
+    console.error("Error generando PDF:", err);
+    emit("pdf-error", err.message);
+
+    // Fallback: intentar con escala menor
+    try {
+      opt.html2canvas.scale = 1;
+      await html2pdf().set(opt).from(contractRef.value).save();
+    } catch (e) {
+      console.error("Error en fallback PDF:", e);
+    }
+  } finally {
+    isGenerating.value = false;
+  }
+}
+
 function getImageDataUrlFromImport(imagePath) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -815,24 +803,19 @@ function getImageDataUrlFromImport(imagePath) {
   });
 }
 
-// Auto-generar PDF si la prop autoGenerate es true
-onMounted(() => {
-  if (props.autoGenerate) {
-    setTimeout(() => {
-      generatePDFInNewTab();
-    }, 1000);
-  }
-});
-
-// Exponer métodos al componente padre
-defineExpose({
-  generateAndDownloadPDF,
-  generatePDFInNewTab,
-  isGenerating,
+onMounted(async () => {
+  //if (autoDownloaded.value) return;
+  //autoDownloaded.value = true;
+  //await new Promise((r) => setTimeout(r, 500));
+  // generateAndDownloadPDF();
+  //generatePDFInNewTab();
 });
 </script>
 
 <style scoped>
+.margen-firma {
+  margin-bottom: 151px;
+}
 .resolucion-sheet {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10pt;
@@ -842,9 +825,10 @@ defineExpose({
   margin: 0 auto;
   line-height: 1.5;
 }
-.table-bordered td,
-.table-bordered th {
-  padding: 6px;
+tr td:last-child {
+  padding-left: 0px;
+  padding-right: 0px;
+  font-size: 10pt;
 }
 p {
   font-size: 10pt;
@@ -859,7 +843,7 @@ ul.li {
 }
 /* Header text */
 .header-text .entity {
-  font-size: 12pt;
+  font-size: 10pt;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -878,7 +862,7 @@ ul.li {
   min-width: 120px;
   max-width: 420px;
   padding: 0.125rem 0.35rem;
-  font-size: 10pt;
+  font-size: 8pt;
   line-height: 1.2;
   border: 1px dashed #bbb;
   border-radius: 2px;
@@ -910,12 +894,15 @@ ul.li {
   height: 1px;
   margin: 20px 0 0 0;
 }
-
+p,
+li {
+  page-break-inside: avoid !important;
+}
 /* Impresión/PDF */
 @media print {
   .resolucion-sheet {
     max-width: 100%;
-    font-size: 13px;
+    font-size: 10pt;
   }
   .logo {
     max-height: 65px;

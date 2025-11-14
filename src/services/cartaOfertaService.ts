@@ -18,8 +18,8 @@ export const crearCartaOferta = (data: {
   institucion_id?: number;
   cargo_id?: number;
   jornada_id?: number;
-  fecha_ingreso?: string;
   estado?: number;
+  fecha_ingreso?: string;
   fecha_apr_director?: string;
   fecha_envio_dir?: string;
   glosa_remuneracion?: string;

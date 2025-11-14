@@ -125,9 +125,9 @@
                       "
                       class="nav-link d-flex align-items-center pointer"
                       :class="{ active: activeTab === 'postulantes' }"
-                      @click="Go('/aprobar-carta')"
+                      @click="Go('/Cartas-ofertas')"
                     >
-                      <i class="bi bi-people me-2"></i> Carta Oferta
+                      <i class="bi bi-people me-2"></i> Cartas Oferta
                     </a>
                     <a
                       v-if="

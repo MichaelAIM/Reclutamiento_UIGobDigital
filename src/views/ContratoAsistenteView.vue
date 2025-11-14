@@ -1,6 +1,7 @@
 <template>
-  <div class="resolucion-sheet py-4" ref="contractRef">
-    <!-- Contrato completo (texto original íntegro). Cada fragmento "editable" está enlazado a data. -->
+  <div class="resolucion-sheet pt-4" ref="contractRef">
+    <!-- Contrato c
+     ompleto (texto original íntegro). Cada fragmento "editable" está enlazado a data. -->
     <section class="contract-body">
       <p class="text-center mb-1">
         <strong>CONTRATO DE TRABAJO DE ASISTENTE DE LA EDUCACIÓN</strong>
@@ -11,74 +12,34 @@
         <strong>Arica</strong>
         , a
         <strong v-if="data.fecha_resol">{{ data.fecha_resol }}</strong>
-        <input
-          v-else
-          v-model="data.fecha_resol"
-          class="form-control form-control-sm inline-input"
-        />
         , entre el
         <strong>SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO</strong>
         , en adelante el Servicio Local, RUT N°
         <strong>62.000.660-2</strong>
         , representado por su Directora Ejecutiva (s), doña
         <strong v-if="data.repNombre">{{ data.repNombre }}</strong>
-        <input
-          v-else
-          v-model="data.repNombre"
-          class="form-control form-control-sm inline-input"
-        />
         , cédula nacional de identidad Nº
         <strong v-if="data.repRUT">{{ data.repRUT }}</strong>
-        <input
-          v-else
-          v-model="data.repRUT"
-          class="form-control form-control-sm inline-input"
-        />
         , ambos con domicilio en
         <strong>Calle Codpa N°2173</strong>
         ; en adelante “el Empleador” y don(a)
         <strong v-if="data.trabajadorNombre">{{
           data.trabajadorNombre
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorNombre"
-          class="form-control form-control-sm inline-input"
-        />
         , RUN
         <strong v-if="data.trabajadorRUN">{{ data.trabajadorRUN }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorRUN"
-          class="form-control form-control-sm inline-input"
-        />
         ,
         <strong v-if="data.trabajadorNacionalidad">{{
           data.trabajadorNacionalidad
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorNacionalidad"
-          class="form-control form-control-sm inline-input"
-        />
         ,
         <strong v-if="data.trabajadorEstado">{{
           data.trabajadorEstado
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorEstado"
-          class="form-control form-control-sm inline-input"
-        />
         , domiciliado en
         <strong v-if="data.trabajadorDomicilio">{{
           data.trabajadorDomicilio
         }}</strong>
-        <input
-          v-else
-          v-model="data.trabajadorDomicilio"
-          class="form-control form-control-sm inline-input"
-        />
         , en adelante “el Trabajador”, expresan que han convenido en el
         siguiente contrato de trabajo:
       </p>
@@ -310,7 +271,7 @@
               El asistente de la educación estará afecto a las siguientes
               prohibiciones:
 
-              <ul class="ml-0 pl-3 mt-2">
+              <ul class="ml-0 pl-3 mt-2 mb-1">
                 <li>
                   Ejercer facultades, atribuciones o representación de las que
                   no esté legalmente investido, o no le hayan sido delegadas.
@@ -594,6 +555,8 @@ const props = defineProps({
   },
 });
 
+console.log("props", props.data);
+
 // Esperar carga de imágenes antes de capturar
 function waitForImages(containerEl, timeout = 8000) {
   return new Promise((resolve) => {
@@ -643,9 +606,10 @@ function getImageDataUrl(imgElement) {
 }
 
 // Generar y descargar PDF
-async function generateAndDownloadPDF(
-  filename = `Contrato_${data.trabajadorNombre}.pdf`
-) {
+async function generateAndDownloadPDF() {
+  const safeName = `Contrato_${
+    (props.data && props.data.trabajadorNombre) || "sin-nombre"
+  }.pdf`;
   if (!contractRef.value) return;
 
   await waitForImages(contractRef.value);
@@ -653,7 +617,7 @@ async function generateAndDownloadPDF(
 
   const opt = {
     margin: [25, 20, 30, 20], // Margen superior para el encabezado
-    filename,
+    filename: safeName,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: {
       scale: 2,
@@ -723,6 +687,97 @@ async function generateAndDownloadPDF(
   }
 }
 
+// Función para generar PDF en nueva pestaña
+async function generatePDFInNewTab() {
+  const safeName = `Contrato_${
+    (props.data && props.data.trabajadorNombre) || "sin-nombre"
+  }.pdf`;
+
+  if (!contractRef.value) {
+    console.error("No se encontró la referencia del contrato");
+    emit("pdf-error", "No se pudo generar el PDF");
+    return;
+  }
+
+  isGenerating.value = true;
+
+  try {
+    await waitForImages(contractRef.value);
+    await new Promise((r) => setTimeout(r, 250));
+
+    const opt = {
+      margin: [25, 20, 31, 20], // Margen superior para el encabezado
+      filename: safeName,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        scrollY: 0,
+      },
+      jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
+      //pagebreak: { mode: ["avoid-all"] },
+      pagebreak: { mode: ["css", "legacy"] },
+    };
+
+    const worker = html2pdf().set(opt).from(contractRef.value);
+    const pdf = await worker.toPdf().get("pdf");
+
+    // Agregar encabezados con logos
+    const totalPages = pdf.internal.getNumberOfPages();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    try {
+      const logoLeftData = await getImageDataUrlFromImport(logoLeft);
+      const logoRightData = await getImageDataUrlFromImport(logoRight);
+
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+
+        // Logo izquierdo
+        if (logoLeftData) {
+          pdf.addImage(logoLeftData, "PNG", 20, 5, 53, 8);
+        }
+
+        // Logo derecho
+        if (logoRightData) {
+          pdf.addImage(logoRightData, "PNG", pageWidth - 90, 5, 59, 16.5);
+        }
+      }
+    } catch (imgErr) {
+      console.warn(
+        "No se pudieron procesar las imágenes del encabezado:",
+        imgErr
+      );
+    }
+
+    // Generar blob y abrir en nueva pestaña
+    const pdfBlob = pdf.output("blob");
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    // Abrir en nueva pestaña
+    window.open(pdfUrl, "_blank");
+
+    // Limpiar URL después de un tiempo
+    setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
+
+    //emit("pdf-generated", pdfBlob);
+  } catch (err) {
+    console.error("Error generando PDF:", err);
+    emit("pdf-error", err.message);
+
+    // Fallback: intentar con escala menor
+    try {
+      opt.html2canvas.scale = 1;
+      await html2pdf().set(opt).from(contractRef.value).save();
+    } catch (e) {
+      console.error("Error en fallback PDF:", e);
+    }
+  } finally {
+    isGenerating.value = false;
+  }
+}
+
 function getImageDataUrlFromImport(imagePath) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -744,11 +799,15 @@ onMounted(async () => {
   if (autoDownloaded.value) return;
   autoDownloaded.value = true;
   await new Promise((r) => setTimeout(r, 500));
-  generateAndDownloadPDF();
+  // generateAndDownloadPDF();
+  generatePDFInNewTab();
 });
 </script>
 
 <style scoped>
+.margen-firma {
+  margin-bottom: 151px;
+}
 .resolucion-sheet {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 10pt;
@@ -761,6 +820,7 @@ onMounted(async () => {
 tr td:last-child {
   padding-left: 0px;
   padding-right: 0px;
+  font-size: 10pt;
 }
 p {
   font-size: 10pt;
@@ -775,7 +835,7 @@ ul.li {
 }
 /* Header text */
 .header-text .entity {
-  font-size: 12pt;
+  font-size: 10pt;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -794,7 +854,7 @@ ul.li {
   min-width: 120px;
   max-width: 420px;
   padding: 0.125rem 0.35rem;
-  font-size: 10pt;
+  font-size: 8pt;
   line-height: 1.2;
   border: 1px dashed #bbb;
   border-radius: 2px;
@@ -834,7 +894,7 @@ li {
 @media print {
   .resolucion-sheet {
     max-width: 100%;
-    font-size: 13px;
+    font-size: 10pt;
   }
   .logo {
     max-height: 65px;

@@ -440,7 +440,7 @@ async function loadFromApi() {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error("No data");
     const data = await res.json();
-
+    console.log("data", data);
     fields.establecimiento = data.establecimiento ?? fields.establecimiento;
     fields.nombre = data.nombre ?? fields.nombre;
     fields.rut = data.rut ?? fields.rut;
@@ -468,7 +468,15 @@ async function loadFromApi() {
   }
 }
 
-onMounted(() => loadFromApi());
+onMounted(() => {
+  loadFromApi();
+  const id = route.params.id;
+  if (id) {
+    console.log("Esta es la id = " + id);
+  } else {
+    alert("error");
+  }
+});
 
 function addConsiderando() {
   considerandoList.value.push({ id: newId(), text: "" });

@@ -220,7 +220,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="contract-paragraph">
         <strong>UNDÉCIMO:</strong> La vigencia del presente contrato es a contar
         del
         <strong v-if="data.undecimo_inicio">{{ data.undecimo_inicio }}</strong>
@@ -241,7 +241,7 @@
         justificadas.
       </div>
 
-      <p>
+      <div class="contract-paragraph">
         <strong>DUODÉCIMO:</strong> Se deja constancia que el Trabajador comenzó
         a prestar sus servicios en el Servicio Local de Educación Pública
         Chinchorro, el día
@@ -253,9 +253,9 @@
           v-model="data.duodecimo_inicio"
           class="form-control form-control-sm inline-input"
         />.
-      </p>
+      </div>
 
-      <p>
+      <div class="contract-paragraph">
         <strong>DÉCIMO:</strong> Se deja constancia que la personería de Doña
         <strong>{{ data.repNombre }}</strong>
         , consta en la Resolución Exenta RA N°
@@ -271,9 +271,9 @@
         orden de subrogancia de Director Ejecutivo y en uso de las facultades
         que me asisten como Directora Ejecutiva (S) del Servicio Local de
         Educación Pública de Chinchorro.
-      </p>
+      </div>
 
-      <div>
+      <div class="contract-paragraph">
         <strong>DÉCIMO:</strong> El motivo que origina la celebración del
         presente contrato es por
         <div class="highlight-yellow p-1">
@@ -335,7 +335,7 @@
         </button>
         <button
           class="btn btn-success"
-          @click="generatePDFInNewTab"
+          @click="abrirPDF"
           type="button"
           :disabled="generatingPDF"
         >
@@ -343,7 +343,7 @@
             v-if="generatingPDF"
             class="spinner-border spinner-border-sm me-2"
           ></span>
-          {{ generatingPDF ? "Generando..." : "Abrir PDF en nueva pestaña" }}
+          {{ generatingPDF ? "Generando..." : "Generar Vista Previa" }}
         </button>
         <button
           class="btn btn-info"
@@ -351,7 +351,7 @@
           type="button"
           :disabled="generatingPDF"
         >
-          Descargar PDF directamente
+          Aceptar e enviar PDF directamente
         </button>
         <button
           class="btn btn-outline-secondary"
@@ -362,44 +362,41 @@
           Recargar desde API
         </button>
       </div>
+
+      <ContratoComponent
+        v-if="mostrarContrato"
+        ref="contratoRef"
+        :data="data"
+        @cerrarVista="cerrarVistaContrato"
+      />
     </section>
   </div>
-
-  <ContratoComponent
-    ref="contratoRef"
-    :data="data"
-    :show-view="false"
-    :auto-generate="autoGeneratePDF"
-    @pdf-generated="onPDFGenerated"
-    @pdf-error="onPDFError"
-  />
 </template>
 
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, nextTick, onMounted } from "vue";
 import ContratoComponent from "../components/Contrato.vue";
-// Si es un archivo TypeScript, asegúrate de que la exportación sea compatible
+import { obtenerCartaOfertaPorId } from "../services/cartaOfertaService";
 import {
   formatoMoneda,
   numeroATexto,
   formatearFechaHoy,
-} from "../utils/validaciones"; // Sin .ts
-import { useRouter } from "vue-router";
-/*
-  Valores iniciales
-*/
+} from "../utils/validaciones";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
 const contratoRef = ref(null);
 const generatingPDF = ref(false);
 const autoGeneratePDF = ref(false);
+const mostrarContrato = ref(false);
 
 const data = reactive({
-  fecha_resol: "18 de marzo de 2025",
+  fecha_resol: formatearFechaHoy(),
   repID: 1,
   repRUT: "12355432-9",
   repNombre: "JULIO VERDEJO AQUEVEQUE ",
   repCargo: "FIRMA DIRECTORA EJECUTIVA (S)",
-  empleadorDomicilio: "Calle Codpa N°2173",
+  empleadorDomicilio: "Calle Codpa Nº2173",
   trabajadorNombre: "JOHANNA DE LOURDES TOMALA CHAVEZ",
   trabajadorRUN: "23025402-8",
   trabajadorNacionalidad: "Ecuatoriana",
@@ -421,90 +418,65 @@ const data = reactive({
   undecimo_inicio: "03 de marzo de 2025",
   undecimo_termino: "28 de febrero de 2026",
   duodecimo_inicio: "03 de marzo de 2025",
-  decimo_resol: "RA N°125934/191/2023",
+  decimo_resol: "RA Nº125934/191/2023",
   decimo_motivo: "NECESIDADES DEL SERVICIO",
 });
 
-const sueldoLimpio = computed(() => {
+const sueldoTexto = computed(() => {
   if (data.sueldo === null || data.sueldo === undefined || data.sueldo === "") {
     return null;
   }
-
   const numeroLimpio = data.sueldo.toString().replace(/[$,]/g, "");
   const numero = parseInt(numeroLimpio);
-  return isNaN(numero) ? null : numero;
+  return numeroATexto(isNaN(numero) ? null : numero);
 });
 
-data.sueldo_texto = computed(() => {
-  if (sueldoLimpio.value === null) {
-    return "";
-  }
-
-  try {
-    return numeroATexto(sueldoLimpio.value);
-  } catch (e) {
-    console.error("Error al convertir número:", e);
-    return "";
-  }
-});
 const contractRef = ref(null);
 
-async function GeneratePDF(params) {
-  router.push("/Contrato-asistente");
+function cerrarVistaContrato() {
+  mostrarContrato.value = false;
 }
 
-// Función para abrir PDF en nueva pestaña
-async function generatePDFInNewTab() {
-  if (!contratoRef.value) return;
-
+async function abrirPDF() {
   generatingPDF.value = true;
+  mostrarContrato.value = true;
+  await nextTick(); // espera que Vue actualice el DOM
+  await new Promise((r) => setTimeout(r, 250)); // espera extra para asegurar render
+
+  if (!contratoRef.value || !contratoRef.value.generatePDFInNewTab) {
+    console.error("Referencia al contrato no disponible");
+    generatingPDF.value = false;
+    mostrarContrato.value = false;
+
+    return;
+  }
+
   try {
     await contratoRef.value.generatePDFInNewTab();
-  } catch (error) {
-    console.error("Error al generar PDF:", error);
-    alert("Error al generar el PDF. Por favor, intente nuevamente.");
+  } catch (err) {
+    console.error("Error al generar PDF:", err);
   } finally {
     generatingPDF.value = false;
   }
 }
 
-// Función para descargar PDF directamente
-async function generateAndDownloadPDF() {
-  if (!contratoRef.value) return;
-
-  generatingPDF.value = true;
-  try {
-    await contratoRef.value.generateAndDownloadPDF();
-  } catch (error) {
-    console.error("Error al descargar PDF:", error);
-    alert("Error al descargar el PDF. Por favor, intente nuevamente.");
-  } finally {
-    generatingPDF.value = false;
-  }
-}
-
-// Event handlers
-function onPDFGenerated() {
-  console.log("PDF generado exitosamente");
-  generatingPDF.value = false;
-}
-
-function onPDFError(error) {
-  console.error("Error al generar PDF:", error);
-  generatingPDF.value = false;
-  alert("Error al generar el PDF: " + error);
-}
-
-// Otras funciones del padre
 function saveDraft() {
   console.log("Guardando borrador...", data);
   // Implementar lógica de guardado
 }
 
-function resetFromApi() {
+async function resetFromApi(nuevoId) {
   console.log("Recargando desde API...");
   // Implementar lógica de recarga desde API
+
+  const dataos = await obtenerCartaOfertaPorId(nuevoId);
+  console.log("datos", dataos);
 }
+
+onMounted(async () => {
+  data.sueldo_texto = sueldoTexto;
+  resetFromApi(route.params.id);
+});
 </script>
 
 <style scoped>
@@ -515,12 +487,16 @@ function resetFromApi() {
 }
 
 .resolucion-sheet {
-  font-size: 1rem !important;
+  font-size: 10pt;
   color: #000;
   background: #fff;
   max-width: 900px;
   margin: 0 auto;
   line-height: 1.5;
+}
+
+strong {
+  font-size: 10pt;
 }
 
 /* Header text */

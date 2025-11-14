@@ -13,11 +13,13 @@ import DashboardView from "../views/DashboardView.vue";
 import ConvocatoriasView from "../views/ConvocatoriaView.vue";
 import PostulacionesView from "../views/PostulacionesView.vue";
 import CandidatosView from "../views/CandidatosView.vue";
+import CartasOfertaView from "../views/CartaOfertaView.vue";
 
 import BorradorRexView from "../views/BorradorRexView.vue";
 import DocumentoRexView from "../views/DocumentoRex.vue";
 import ContratoAsistenteView from "../views/ContratoAsistenteView.vue";
 import BorradorContratoView from "../views/BorradorContratoView.vue";
+import NotFoundView from "../views/NotFoundView.vue";
 
 import { useAuthStore } from "../store/authStore";
 import { isTokenExpired } from "../utils/validaciones";
@@ -84,7 +86,7 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: "/borrador-rex",
+        path: "/borrador-rex/:id",
         name: "borradorRex",
         component: BorradorRexView,
         meta: { requiresAuth: true },
@@ -96,7 +98,7 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: "/borrador-contrato",
+        path: "/borrador-contrato/:id",
         name: "borradorContrato",
         component: BorradorContratoView,
         meta: { requiresAuth: true },
@@ -105,6 +107,12 @@ const routes = [
         path: "/Contrato-asistente",
         name: "ContratoAsistente",
         component: ContratoAsistenteView,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/Cartas-ofertas",
+        name: "CartasOferta",
+        component: CartasOfertaView,
         meta: { requiresAuth: true },
       },
     ],
@@ -126,6 +134,11 @@ const routes = [
     name: "convocatoriasView",
     component: ConvocatoriasView,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: NotFoundView,
   },
 ];
 

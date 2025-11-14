@@ -18,6 +18,20 @@ export const fetchPostulacionesVigentes = async (estado: number) => {
   }
 };
 
+export const putPostulacionCandidato = async (
+  postulacioId: number,
+  nuevoEstadoId: number
+) => {
+  try {
+    const response = await api.put("/postulaciones/candidato/" + postulacioId, {
+      estado_candidato: nuevoEstadoId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar candidatos:", error);
+  }
+};
+
 export const fetchPostulacionById = (id: number) =>
   api.get(`/postulaciones/${id}`);
 
