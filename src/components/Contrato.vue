@@ -465,7 +465,7 @@
                 <td width="43%">
                   <div class="signature-line px-2">
                     <hr class="my-0" />
-                    <strong>{{ data.trabajadorNombre }}</strong>
+                    <strong>{{ nombreMayus }}</strong>
                     <br />
                     <strong>{{ data.trabajadorRUN }}</strong>
                   </div>
@@ -474,19 +474,19 @@
                   <div class="signature-line px-2">
                     <hr class="my-0 mx-5" />
 
-                    <strong>
+                    <strong style="font-size: 8pt">
                       {{ data.repNombre }}
                     </strong>
                     <br />
-                    <strong>
+                    <strong style="font-size: 8pt">
                       {{ data.repCargo }}
                     </strong>
                     <br />
-                    <strong
+                    <strong style="font-size: 8pt"
                       >SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO</strong
                     >
                     <br />
-                    <strong>RUT N° 62.000.660-2</strong>
+                    <strong style="font-size: 8pt">RUT N° 62.000.660-2</strong>
                   </div>
                 </td>
               </tr>
@@ -499,7 +499,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, nextTick } from "vue";
+import { reactive, ref, onMounted, nextTick, computed } from "vue";
 import html2pdf from "html2pdf.js";
 
 // Imágenes institucionales
@@ -514,6 +514,10 @@ const logoRightImg = ref(null);
 const autoDownloaded = ref(false);
 const isGenerating = ref(false);
 const showView = ref(false);
+
+const nombreMayus = computed(
+  () => props.data.trabajadorNombre?.toUpperCase() || ""
+);
 
 const props = defineProps({
   data: {

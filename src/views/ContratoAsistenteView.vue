@@ -1,7 +1,12 @@
 <template>
   <div class="resolucion-sheet pt-4" ref="contractRef">
-    <!-- Contrato c
-     ompleto (texto original íntegro). Cada fragmento "editable" está enlazado a data. -->
+    <!-- Encabezado con logos (oculto en la vista normal, pero visible en PDF) -->
+    <div class="header-logos" style="display: none">
+      <img :src="logoLeft" alt="Logo izquierdo" ref="logoLeftImg" />
+      <img :src="logoRight" alt="Logo derecho" ref="logoRightImg" />
+    </div>
+
+    <!-- Contrato completo (texto original íntegro). Cada fragmento "editable" está enlazado a data. -->
     <section class="contract-body">
       <p class="text-center mb-1">
         <strong>CONTRATO DE TRABAJO DE ASISTENTE DE LA EDUCACIÓN</strong>
@@ -320,7 +325,7 @@
                 </li>
                 <li>
                   Atentar contra los bienes de la institución, cometer actos que
-                  produzcan la destrucción de materiales, instrumentos o
+                  producen la destrucción de materiales, instrumentos o
                   productos de trabajo o disminuyan su valor o causen su
                   deterioro.
                 </li>
@@ -458,10 +463,10 @@
           <table class="table table-borderless">
             <tbody style="font-size: 8pt">
               <tr class="text-center">
-                <td width="43%">
+                <td>
                   <div class="signature-line px-2">
                     <hr class="my-0" />
-                    <strong>{{ data.trabajadorNombre }}</strong>
+                    <strong>{{ `JUAN` }}</strong>
                     <br />
                     <strong>{{ data.trabajadorRUN }}</strong>
                   </div>
@@ -469,20 +474,20 @@
                 <td>
                   <div class="signature-line px-2">
                     <hr class="my-0 mx-5" />
-
                     <strong>
+                      style="font-size: 8pt"
                       {{ data.repNombre }}
                     </strong>
                     <br />
-                    <strong>
+                    <strong style="font-size: 8pt">
                       {{ data.repCargo }}
                     </strong>
                     <br />
-                    <strong
+                    <strong style="font-size: 8pt"
                       >SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO</strong
                     >
                     <br />
-                    <strong>RUT N° 62.000.660-2</strong>
+                    <strong style="font-size: 8pt">RUT N° 62.000.660-2</strong>
                   </div>
                 </td>
               </tr>
@@ -557,6 +562,7 @@ const props = defineProps({
 
 console.log("props", props.data);
 
+const nombreMayus = computed(() => data.trabajadorNombre?.toUpperCase() || "");
 // Esperar carga de imágenes antes de capturar
 function waitForImages(containerEl, timeout = 8000) {
   return new Promise((resolve) => {
@@ -626,8 +632,11 @@ async function generateAndDownloadPDF() {
       scrollY: 0,
     },
     jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
-    //pagebreak: { mode: ["avoid-all"] },
-    pagebreak: { mode: ["css", "legacy"] },
+    // Configuración mejorada para saltos de página
+    pagebreak: {
+      mode: ["css", "legacy"],
+      avoid: ["tr"], // Evita dividir las filas de la tabla
+    },
   };
 
   try {
@@ -639,16 +648,10 @@ async function generateAndDownloadPDF() {
     const pageWidth = pdf.internal.pageSize.getWidth();
 
     // Convertir las imágenes de los logos a base64
-    const logoLeftData = await getImageDataUrlFromImport(logoLeft);
-    const logoRightData = await getImageDataUrlFromImport(logoRight);
-
+    let logoLeftData, logoRightData;
     try {
-      if (logoLeftImg.value) {
-        logoLeftData = await getImageDataUrl(logoLeftImg.value);
-      }
-      if (logoRightImg.value) {
-        logoRightData = await getImageDataUrl(logoRightImg.value);
-      }
+      logoLeftData = await getImageDataUrlFromImport(logoLeft);
+      logoRightData = await getImageDataUrlFromImport(logoRight);
 
       // Agregar encabezado en todas las páginas
       for (let i = 1; i <= totalPages; i++) {
@@ -688,6 +691,7 @@ async function generateAndDownloadPDF() {
 }
 
 // Función para generar PDF en nueva pestaña
+// Reemplaza tu función generatePDFInNewTab con esta versión mejorada
 async function generatePDFInNewTab() {
   const safeName = `Contrato_${
     (props.data && props.data.trabajadorNombre) || "sin-nombre"
@@ -695,7 +699,6 @@ async function generatePDFInNewTab() {
 
   if (!contractRef.value) {
     console.error("No se encontró la referencia del contrato");
-    emit("pdf-error", "No se pudo generar el PDF");
     return;
   }
 
@@ -703,10 +706,12 @@ async function generatePDFInNewTab() {
 
   try {
     await waitForImages(contractRef.value);
-    await new Promise((r) => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, 500)); // Más tiempo para asegurar carga
 
+    // CONFIGURACIÓN MEJORADA
     const opt = {
-      margin: [25, 20, 31, 20], // Margen superior para el encabezado
+      // MÁRGENES REDUCIDOS para evitar cortes
+      margin: [10, 10, 15, 10], // [top, left, bottom, right] - reducidos
       filename: safeName,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: {
@@ -714,16 +719,32 @@ async function generatePDFInNewTab() {
         useCORS: true,
         logging: false,
         scrollY: 0,
+        // CONFIGURACIONES CRÍTICAS PARA EVITAR CORTES
+        width: contractRef.value.scrollWidth,
+        height: contractRef.value.scrollHeight,
+        windowWidth: contractRef.value.scrollWidth,
+        letterRendering: true,
       },
-      jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
-      //pagebreak: { mode: ["avoid-all"] },
-      pagebreak: { mode: ["css", "legacy"] },
+      jsPDF: {
+        unit: "mm",
+        format: [216, 330],
+        orientation: "portrait",
+        // Configuración de compresión para mejor manejo
+        compress: true,
+      },
+      // CONFIGURACIÓN MEJORADA DE SALTO DE PÁGINA
+      pagebreak: {
+        mode: ["css", "legacy"],
+        before: ".page-break",
+        after: ".avoid-this",
+        avoid: ["img", ".signature-line"], // solo evitar división en estos elementos
+      },
     };
 
     const worker = html2pdf().set(opt).from(contractRef.value);
     const pdf = await worker.toPdf().get("pdf");
 
-    // Agregar encabezados con logos
+    // Agregar encabezados con logos (tu código existente)
     const totalPages = pdf.internal.getNumberOfPages();
     const pageWidth = pdf.internal.pageSize.getWidth();
 
@@ -736,12 +757,12 @@ async function generatePDFInNewTab() {
 
         // Logo izquierdo
         if (logoLeftData) {
-          pdf.addImage(logoLeftData, "PNG", 20, 5, 53, 8);
+          pdf.addImage(logoLeftData, "PNG", 15, 8, 53, 8); // Ajustado para nuevos márgenes
         }
 
         // Logo derecho
         if (logoRightData) {
-          pdf.addImage(logoRightData, "PNG", pageWidth - 90, 5, 59, 16.5);
+          pdf.addImage(logoRightData, "PNG", pageWidth - 85, 8, 59, 16.5); // Ajustado
         }
       }
     } catch (imgErr) {
@@ -760,16 +781,22 @@ async function generatePDFInNewTab() {
 
     // Limpiar URL después de un tiempo
     setTimeout(() => URL.revokeObjectURL(pdfUrl), 1000);
-
-    //emit("pdf-generated", pdfBlob);
   } catch (err) {
     console.error("Error generando PDF:", err);
-    emit("pdf-error", err.message);
 
-    // Fallback: intentar con escala menor
+    // FALLBACK MÁS ROBUSTO
     try {
-      opt.html2canvas.scale = 1;
-      await html2pdf().set(opt).from(contractRef.value).save();
+      const fallbackOpt = {
+        margin: 5, // Márgenes mínimos
+        filename: safeName,
+        image: { type: "jpeg", quality: 0.95 },
+        html2canvas: {
+          scale: 1, // Escala menor para evitar problemas
+          useCORS: true,
+        },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }, // Cambiar a A4 si hay problemas
+      };
+      await html2pdf().set(fallbackOpt).from(contractRef.value).save();
     } catch (e) {
       console.error("Error en fallback PDF:", e);
     }
@@ -827,12 +854,19 @@ p {
   font-family: Verdana, Geneva, sans-serif;
   margin: 0;
   line-height: 1.5;
+  /* PERMITIR división de párrafos entre páginas */
+  page-break-inside: auto;
+  break-inside: auto;
 }
-ul.li {
+ul li {
   max-width: 900px;
   margin: 0;
   line-height: 1.5;
+  /* PERMITIR división de items de lista */
+  page-break-inside: auto;
+  break-inside: auto;
 }
+
 /* Header text */
 .header-text .entity {
   font-size: 10pt;
@@ -886,15 +920,33 @@ ul.li {
   height: 1px;
   margin: 20px 0 0 0;
 }
-p,
-li {
-  page-break-inside: avoid !important;
+
+/* NUEVAS REGLAS CRÍTICAS PARA EVITAR CORTES */
+.contract-body {
+  box-sizing: border-box;
 }
+
+/* Garantizar que el texto se divida correctamente */
+.contract-body td {
+  page-break-inside: auto;
+  break-inside: auto;
+}
+
+/* Controlar líneas huérfanas y viudas */
+.contract-body p,
+.contract-body li {
+  orphans: 3; /* mínimo 3 líneas al final de página */
+  widows: 3; /* mínimo 3 líneas al inicio de página */
+}
+
 /* Impresión/PDF */
 @media print {
   .resolucion-sheet {
     max-width: 100%;
     font-size: 10pt;
+    /* Asegurar que use todo el espacio disponible */
+    width: 100%;
+    box-sizing: border-box;
   }
   .logo {
     max-height: 65px;
@@ -906,8 +958,48 @@ li {
     page-break-before: always;
     break-before: page;
   }
+
+  /* REGLAS CRÍTICAS PARA IMPRESIÓN */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .contract-body {
+    /* Asegurar que el contenido use el espacio completo */
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Permitir que las tablas se dividan naturalmente */
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: auto;
+    page-break-after: auto;
+  }
+
+  td {
+    page-break-inside: auto;
+    page-break-before: auto;
+  }
+
+  /* Control más estricto para evitar cortes de línea */
+  p,
+  li,
+  td {
+    page-break-inside: auto;
+    page-break-before: auto;
+    page-break-after: auto;
+  }
 }
+
+/* Márgenes específicos para el formato de página */
 @page {
   size: 216mm 330mm; /* folio */
+  margin: 15mm 15mm 20mm 15mm; /* REDUCIR márgenes para más espacio */
+  /* Estas propiedades son para el contexto de página en CSS puro */
 }
 </style>

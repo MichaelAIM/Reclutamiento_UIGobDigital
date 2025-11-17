@@ -7,6 +7,11 @@ export const listarCartasOfertas = async () => {
   return response.data;
 };
 
+export const listarFirmantes = async () => {
+  const response = await api.get("/firmantes");
+  return response.data;
+};
+
 export const obtenerCartaOfertaPorId = async (id: number) => {
   const response = await api.get(`${baseURL}/${id}`);
   return response.data;

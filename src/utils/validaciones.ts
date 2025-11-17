@@ -257,10 +257,23 @@ export function formatearFechaHoy() {
   return `${dia} de ${mes} de ${año}`;
 }
 
+export function FormatearFecha(fechaISO: any) {
+  return new Date(fechaISO).toLocaleString("es-CL", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/Santiago",
+  });
+}
+
 export function fechaFormateada(fechaISO: any) {
   return new Date(fechaISO).toLocaleString("es-CL", {
     dateStyle: "long",
     timeStyle: "short",
     timeZone: "America/Santiago",
   });
+}
+
+export function getSemana() {
+  return ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 }

@@ -22,10 +22,12 @@
         <div class="highlight-yellow p-1">
           <select
             v-model="data.repID"
+            @change="cambiarFirmante"
             class="form-control form-control-sm inline-input"
           >
-            <option value="1">JULIO VERDEJO AQUEVEQUE</option>
-            <option value="2">WALTER VALLEJOS GONZÄLEZ</option>
+            <option :value="f.id" v-for="f in firmantes" :key="f.id">
+              {{ f.nombre }}
+            </option>
           </select>
         </div>
         , cédula nacional de identidad Nº
@@ -36,14 +38,8 @@
           class="form-control form-control-sm inline-input"
         />
         , ambos con domicilio en
-        <strong v-if="data.empleadorDomicilio">{{
-          data.empleadorDomicilio
-        }}</strong>
-        <input
-          v-else
-          v-model="data.empleadorDomicilio"
-          class="form-control form-control-sm inline-input"
-        />
+        <strong>Calle Codpa Nº2173</strong>
+
         ; en adelante "el Empleador" y don(a)
         <strong v-if="data.trabajadorNombre">{{
           data.trabajadorNombre
@@ -60,7 +56,7 @@
           v-model="data.trabajadorRUN"
           class="form-control form-control-sm inline-input"
         />
-        ,
+        , de nacionalidad
         <strong v-if="data.trabajadorNacionalidad">{{
           data.trabajadorNacionalidad
         }}</strong>
@@ -92,14 +88,7 @@
       </div>
 
       <div class="contract-paragraph">
-        <strong>PRIMERO:</strong> El trabajador
-        <strong v-if="data.primer_cargo">{{ data.primer_cargo }}</strong>
-        <input
-          v-else
-          v-model="data.primer_cargo"
-          class="form-control form-control-sm inline-input"
-        />
-        es contratado en su categoría de
+        <strong>PRIMERO:</strong> El trabajador es contratado en su categoría de
         <strong v-if="data.primer_categoria">{{
           data.primer_categoria
         }}</strong>
@@ -245,12 +234,10 @@
         <strong>DUODÉCIMO:</strong> Se deja constancia que el Trabajador comenzó
         a prestar sus servicios en el Servicio Local de Educación Pública
         Chinchorro, el día
-        <strong v-if="data.duodecimo_inicio">{{
-          data.duodecimo_inicio
-        }}</strong>
+        <strong v-if="data.undecimo_inicio">{{ data.undecimo_inicio }}</strong>
         <input
           v-else
-          v-model="data.duodecimo_inicio"
+          v-model="data.undecimo_inicio"
           class="form-control form-control-sm inline-input"
         />.
       </div>
@@ -279,7 +266,7 @@
         <div class="highlight-yellow p-1">
           <input
             type="text"
-            :value="data.decimo_motivo"
+            v-model="data.decimo_motivo"
             class="form-control form-control-sm inline-input"
             style="min-width: 350px"
           />
@@ -295,7 +282,7 @@
               <tr class="text-center">
                 <td>
                   <div class="signature-line">
-                    <strong>{{ data.trabajadorNombre }}</strong>
+                    <strong>{{ nombreMayus }}</strong>
                     <br />
                     <strong>{{ data.trabajadorRUN }}</strong>
                   </div>
@@ -306,9 +293,7 @@
                       {{ data.repNombre }}
                     </strong>
                     <br />
-                    <strong>
-                      {{ data.repCargo }}
-                    </strong>
+                    <strong> FIRMA {{ data.repCargo }} </strong>
                     <br />
                     <strong
                       >SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO</strong
@@ -326,7 +311,7 @@
       <!-- Botones de control -->
       <div class="d-flex my-4 justify-content-center gap-3">
         <button
-          class="btn btn-primary"
+          class="btn btn-outline-primary"
           @click="saveDraft"
           type="button"
           :disabled="generatingPDF"
@@ -334,7 +319,7 @@
           Guardar borrador
         </button>
         <button
-          class="btn btn-success"
+          class="btn btn-outline-success"
           @click="abrirPDF"
           type="button"
           :disabled="generatingPDF"
@@ -353,14 +338,6 @@
         >
           Aceptar e enviar PDF directamente
         </button>
-        <button
-          class="btn btn-outline-secondary"
-          @click="resetFromApi"
-          type="button"
-          :disabled="generatingPDF"
-        >
-          Recargar desde API
-        </button>
       </div>
 
       <ContratoComponent
@@ -376,11 +353,16 @@
 <script setup>
 import { reactive, ref, computed, nextTick, onMounted } from "vue";
 import ContratoComponent from "../components/Contrato.vue";
-import { obtenerCartaOfertaPorId } from "../services/cartaOfertaService";
+import {
+  obtenerCartaOfertaPorId,
+  listarFirmantes,
+} from "../services/cartaOfertaService";
 import {
   formatoMoneda,
   numeroATexto,
+  FormatearFecha,
   formatearFechaHoy,
+  getSemana,
 } from "../utils/validaciones";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
@@ -394,33 +376,35 @@ const data = reactive({
   fecha_resol: formatearFechaHoy(),
   repID: 1,
   repRUT: "12355432-9",
-  repNombre: "JULIO VERDEJO AQUEVEQUE ",
-  repCargo: "FIRMA DIRECTORA EJECUTIVA (S)",
-  empleadorDomicilio: "Calle Codpa Nº2173",
-  trabajadorNombre: "JOHANNA DE LOURDES TOMALA CHAVEZ",
-  trabajadorRUN: "23025402-8",
-  trabajadorNacionalidad: "Ecuatoriana",
-  trabajadorEstado: "casada",
-  trabajadorDomicilio: "Av. Juan Antonio Ríos #926, comuna de Arica",
+  repNombre: "JULIO VERDEJO AQUEVEQUE",
+  repCargo: "",
+  decimo_resol: "RA Nº125934/191/2023",
   primer_cargo: "Asistente de la Educación",
-  primer_categoria: "ADMINISTRATIVO",
-  primer_funciones: "INSPECTORA DE PATIO",
-  segundo_establecimiento: "LICEO JOVINA NARANJO FERNÁNDEZ",
-  segundo_ciudad: "Arica",
-  tercero_horas: "44",
+  trabajadorNombre: "",
+  trabajadorRUN: "",
+  trabajadorNacionalidad: "",
+  trabajadorEstado: "",
+  trabajadorDomicilio: "",
+  primer_categoria: "",
+  primer_funciones: "",
+  segundo_establecimiento: "",
+  segundo_ciudad: "",
+  tercero_horas: "",
+  undecimo_inicio: "",
   tercero_lunes_inicio: "08:00",
   tercero_lunes_fin: "17:00",
   tercero_viernes_inicio: "08:00",
   tercero_viernes_fin: "16:00",
-  sueldo: 225879,
+  sueldo: 0,
   sueldo_texto: "",
-  quinto_fuente: "SUBVENCIÓN NORMAL",
-  undecimo_inicio: "03 de marzo de 2025",
-  undecimo_termino: "28 de febrero de 2026",
-  duodecimo_inicio: "03 de marzo de 2025",
-  decimo_resol: "RA Nº125934/191/2023",
-  decimo_motivo: "NECESIDADES DEL SERVICIO",
+  quinto_fuente: "",
+  undecimo_termino: "",
+  decimo_motivo: "",
 });
+
+const nombreMayus = computed(() => data.trabajadorNombre?.toUpperCase() || "");
+
+const firmantes = ref(null);
 
 const sueldoTexto = computed(() => {
   if (data.sueldo === null || data.sueldo === undefined || data.sueldo === "") {
@@ -466,16 +450,41 @@ function saveDraft() {
 }
 
 async function resetFromApi(nuevoId) {
-  console.log("Recargando desde API...");
-  // Implementar lógica de recarga desde API
+  firmantes.value = await listarFirmantes();
+  await cambiarFirmante();
+  const response = await obtenerCartaOfertaPorId(nuevoId);
 
-  const dataos = await obtenerCartaOfertaPorId(nuevoId);
-  console.log("datos", dataos);
+  console.log("response", firmantes.value);
+  if (response) {
+    data.trabajadorNombre = response.Candidato.nombre_completo;
+    data.trabajadorRUN = response.Candidato.rut;
+    data.trabajadorNacionalidad = response.Candidato.nacionalidade.nombre;
+    data.trabajadorEstado = response.Candidato.estados_civile.nombre;
+    data.trabajadorDomicilio = response.Candidato.direccion;
+    data.primer_funciones = response.cargo.nombre;
+    data.primer_categoria = response.cargo.categoriaCargo.nombre;
+    data.segundo_establecimiento = response.institucione.nombre;
+    data.segundo_ciudad = response.institucione.ciudade.nombre;
+    data.tercero_horas = response.horas_pactadas;
+    data.undecimo_inicio = FormatearFecha(response.fecha_ingreso);
+  }
+}
+
+function cambiarFirmante() {
+  const newFirmante = firmantes.value.find(
+    (f) => f.id === parseInt(data.repID)
+  );
+  if (newFirmante) {
+    data.repRUT = newFirmante.rut;
+    data.repNombre = newFirmante.nombre;
+    data.repCargo = newFirmante.cargo;
+    data.decimo_resol = newFirmante.rex;
+  }
 }
 
 onMounted(async () => {
   data.sueldo_texto = sueldoTexto;
-  resetFromApi(route.params.id);
+  await resetFromApi(route.params.id);
 });
 </script>
 
