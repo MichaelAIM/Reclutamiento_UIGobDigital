@@ -277,3 +277,17 @@ export function fechaFormateada(fechaISO: any) {
 export function getSemana() {
   return ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 }
+
+export function formatDate(dateString: string) {
+  if (!dateString) return "";
+
+  // Tomar solo la parte de la fecha (antes de T o espacio)
+  const datePart = dateString.split("T")[0].split(" ")[0];
+  const [year, month, day] = datePart.split("-");
+
+  return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+}
+
+export const formatDateTime = (dateTimeString: string): string => {
+  return formatDate(dateTimeString);
+};

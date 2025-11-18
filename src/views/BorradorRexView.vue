@@ -128,7 +128,7 @@
               <tr>
                 <td class="bg-light">NIVEL O MODALIDAD ENSEÑANZA</td>
                 <td colspan="2">
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <input
                       class="form-control form-control-sm"
                       v-model="fields.nivel"
@@ -148,7 +148,7 @@
               <tr>
                 <td class="bg-light">A CONTRATA SUBV. NORMAL</td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="form-control form-control-sm"
                       v-model="fields.horasContrata"
@@ -158,20 +158,27 @@
                     </textarea>
                   </div>
                 </td>
-                <td>DOCENTE</td>
+                <td>
+                  <div class="highlight-yellow p-1 w-100">
+                    <textarea
+                      class="w-100 form-control form-control-sm"
+                      v-model="fields.funcionContrata"
+                    ></textarea>
+                  </div>
+                </td>
               </tr>
 
               <tr>
                 <td>JORNADA ESCOLAR COMPLETA</td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
                     ></textarea>
                   </div>
                 </td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
                     ></textarea>
@@ -182,7 +189,7 @@
               <tr>
                 <td>SUBVENCIÓN PIE D.170</td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="form-control form-control-sm"
                       :value="fields.horasPieD170"
@@ -192,20 +199,30 @@
                     </textarea>
                   </div>
                 </td>
-                <td>COLABORATIVAS</td>
+                <td>
+                  <div class="highlight-yellow p-1 w-100">
+                    <textarea
+                      class="form-control form-control-sm"
+                      :value="fields.funcionPie"
+                      placeholder=""
+                      aria-label=""
+                    >
+                    </textarea>
+                  </div>
+                </td>
               </tr>
 
               <tr>
                 <td>SUBVENCIÓN PIE</td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
                     ></textarea>
                   </div>
                 </td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
                     ></textarea>
@@ -216,14 +233,14 @@
               <tr>
                 <td>SUBVENCIÓN SEP</td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
                     ></textarea>
                   </div>
                 </td>
                 <td>
-                  <div class="highlight-yellow p-1">
+                  <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
                     ></textarea>
@@ -280,7 +297,18 @@
 
               <tr>
                 <td>CALIDAD JURIDICA</td>
-                <td colspan="2">CONTRATA</td>
+
+                <td colspan="2">
+                  <div class="highlight-yellow p-1 w-100">
+                    <select
+                      v-model="fields.calidadJuridica"
+                      class="form-control form-control-sm inline-input"
+                    >
+                      <option value="1">CONTRATA</option>
+                      <option value="2">TITULAR</option>
+                    </select>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -288,22 +316,6 @@
 
         <!-- Párrafos estáticos -->
         <div class="mt-3">
-          <!--           <div class="text-muted">
-            2. Por razones impostergables del buen servicio, el profesional
-            asumió sus funciones a contar de la fecha señalada, sin esperar el
-            término de la total tramitación de la presente resolución.
-          </div>
-          <div class="text-muted mt-2">
-            3. IMPÚTESE, al presente gasto a la cuenta 21-02-001 Personal
-            Contrata y las demás asignaciones que correspondan, según subvención
-            de financiamiento, del presupuesto vigente para el año 2025 del
-            Servicio Local de Educación Pública de Chinchorro.
-          </div> -->
-
-          <!--           <div class="my-3 font-weight-bold">
-            ANÓTESE, REGÍSTRESE, COMUNÍQUESE Y ARCHÍVESE
-          </div> -->
-          <!--           <div class="py-5"></div> -->
           <div class="text-center my-5">
             <p class="h6 font-weight-bold">JULIO VERDEJO AQUEVEQUE</p>
             <p class="h6 font-weight-bold">FIRMA DIRECTOR (S) EJECUTIVO</p>
@@ -379,7 +391,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 /* Assets en public/src/assets/ */
 import flagUrl from "../assets/img/flag.png";
@@ -390,8 +402,10 @@ import {
   obtenerCartaOfertaPorId,
   listarFirmantes,
 } from "../services/cartaOfertaService";
+import { formatDate } from "../utils/validaciones";
 const isEditingVisto = ref(false);
 const router = useRouter();
+const route = useRoute();
 
 /* Editable "VISTO" */
 const vistoText = ref(
@@ -420,14 +434,17 @@ const considerandoList = ref([
 
 const fields = reactive({
   establecimiento: "LICEO JOVINA NARANJO FERNÁNDEZ",
-  nombre: "Jhon Smith",
-  rut: "16.467.901-2",
+  nombre: "",
+  rut: "",
   nivel: "(4) EDUCACIÓN BÁSICA/ (40) EDUCACIÓN MEDIA",
   horasContrata: "- 04 HORAS BÁSICA \n- 37 HORAS MEDIA",
   horasPieD170: "- 03 HORAS MEDIA",
-  totalHoras: "44",
-  fechaInicio: "25/07/2025",
+  totalHoras: 0,
+  fechaInicio: "",
   fechaTermino: "28/02/2026",
+  calidadJuridica: 1,
+  funcionPie: "COLABORATIVAS",
+  funcionContrata: "DOCENTE",
 });
 
 const distribucionList = ref([
@@ -441,21 +458,21 @@ const API_URL = "/api/resolucion/18787300-2";
 
 async function loadFromApi() {
   try {
-    const res = await obtenerCartaOfertaPorId();
-    if (!res.ok) throw new Error("No data");
-    const data = await res.json();
-    console.log("data", data);
-    fields.establecimiento = data.establecimiento ?? fields.establecimiento;
-    fields.nombre = data.nombre ?? fields.nombre;
-    fields.rut = data.rut ?? fields.rut;
-    fields.nivel = data.nivel ?? fields.nivel;
+    const data = await obtenerCartaOfertaPorId(route.params.id);
+    console.log("res", data);
+    console.log("datas", data.Candidato.nombre_completo);
+    fields.establecimiento = data.institucione.nombre.toUpperCase();
+    fields.nombre = data.Candidato.nombre_completo.toUpperCase();
+    fields.rut = data.Candidato.rut;
+    /*     fields.nivel = fields.nivel;
     fields.horasContrata = data.horasContrata ?? fields.horasContrata;
-    fields.horasPieD170 = data.horasPieD170 ?? fields.horasPieD170;
-    fields.totalHoras = data.totalHoras ?? fields.totalHoras;
-    fields.fechaInicio = data.fechaInicio ?? fields.fechaInicio;
-    fields.fechaTermino = data.fechaTermino ?? fields.fechaTermino;
+    fields.horasPieD170 = data.horasPieD170 ?? fields.horasPieD170;*/
+    fields.totalHoras = data.horas_pactadas;
+    fields.fechaInicio = formatDate(data.fecha_ingreso);
+    /*
+    fields.fechaTermino = data.fechaTermino ?? fields.fechaTermino; */
 
-    if (Array.isArray(data.considerandos) && data.considerandos.length) {
+    /* if (Array.isArray(data.considerandos) && data.considerandos.length) {
       considerandoList.value = data.considerandos.map((t) => ({
         id: newId(),
         text: t,
@@ -466,20 +483,19 @@ async function loadFromApi() {
         id: newId(),
         text: t,
       }));
-    }
+    } */
   } catch (e) {
     console.warn("No se cargaron datos desde API, usando valores por defecto");
   }
 }
 
 onMounted(() => {
-  loadFromApi();
-  const id = route.params.id;
-  if (id) {
-    console.log("Esta es la id = " + id);
+  if (route.params.id) {
+    console.log("Esta es la id = " + route.params.id);
   } else {
     alert("error");
   }
+  loadFromApi();
 });
 
 function addConsiderando() {
@@ -541,6 +557,7 @@ function resetFromApi() {
 .highlight-yellow {
   background: #fff6cc;
   border-radius: 3px;
+  display: inline-block;
 }
 .highlight-burdeo {
   background: #f7dede;

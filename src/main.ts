@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
+import datePlugin from "./date";
 import { router } from "./router";
 import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
@@ -35,4 +36,5 @@ app.use(VueReCaptcha, {
 
 app.use(pinia);
 app.use(router);
+app.use(datePlugin);
 app.mount("#app");

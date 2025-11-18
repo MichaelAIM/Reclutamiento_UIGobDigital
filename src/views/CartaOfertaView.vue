@@ -4,9 +4,9 @@
       <h2 class="h4 mb-0 text-secondary fw-semibold">
         Cartas Oferta Aprobadas
       </h2>
-      <button class="btn btn-outline-success" @click="exportarExcel">
+      <!--       <button class="btn btn-outline-success" @click="exportarExcel">
         <i class="bi bi-file-earmark-excel me-1"></i> Exportar a Excel
-      </button>
+      </button> -->
     </div>
 
     <div class="table-responsive">
