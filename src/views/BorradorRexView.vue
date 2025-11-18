@@ -386,6 +386,10 @@ import flagUrl from "../assets/img/flag.png";
 import logoEducacionUrl from "../assets/img/logoDEP.png";
 import logoChinchorroUrl from "../assets/img/Logotipo-Chinchorro-web.png";
 import InputEditable from "../components/inputEditable.vue";
+import {
+  obtenerCartaOfertaPorId,
+  listarFirmantes,
+} from "../services/cartaOfertaService";
 const isEditingVisto = ref(false);
 const router = useRouter();
 
@@ -437,7 +441,7 @@ const API_URL = "/api/resolucion/18787300-2";
 
 async function loadFromApi() {
   try {
-    const res = await fetch(API_URL);
+    const res = await obtenerCartaOfertaPorId();
     if (!res.ok) throw new Error("No data");
     const data = await res.json();
     console.log("data", data);
