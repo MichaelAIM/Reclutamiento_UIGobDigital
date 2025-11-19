@@ -98,13 +98,29 @@
               />
             </div>
 
+            <div
+              class="mt-4 bg-accent-4 px-3"
+              v-if="oferta.fecha_envio_candidato"
+            >
+              <strong>fecha de envio al Candidato: </strong>
+              {{ fechaFormateada(oferta.fecha_envio_candidato) }}
+            </div>
+
+            <div
+              class="mt-4 bg-accent-5 text-white px-3"
+              v-if="oferta.fecha_apr_candidato"
+            >
+              <strong>fecha de aprovación Candidato: </strong>
+              {{ fechaFormateada(oferta.fecha_apr_candidato) }}
+            </div>
+
             <div class="mt-4 bg-accent-2 px-3" v-if="oferta.fecha_apr_director">
               <strong>fecha de envio al Director: </strong>
               {{ fechaFormateada(oferta.fecha_envio_dir) }}
             </div>
 
             <div class="mt-4 bg-accent-3 px-3" v-if="oferta.fecha_apr_director">
-              <strong>fecha de aprovación: </strong>
+              <strong>fecha de aprovación Director: </strong>
               {{ fechaFormateada(oferta.fecha_apr_director) }}
             </div>
           </div>
@@ -144,7 +160,7 @@
 
             <div class="form-group">
               <label class="font-weight-bold"
-                >Horas Pactadas (confirmar):</label
+                >(*) Horas Pactadas (confirmar):</label
               >
               <input
                 type="number"
@@ -153,7 +169,9 @@
               />
             </div>
             <div class="form-group">
-              <label class="font-weight-bold">Fecha de ingreso (desde) :</label>
+              <label class="font-weight-bold"
+                >(*) Fecha de ingreso (desde) :</label
+              >
               <input
                 type="date"
                 class="form-control w-50"
@@ -164,7 +182,7 @@
         </div>
 
         <div class="my-3">
-          <h5 class="fw-semibold text-secondary">Remuneración</h5>
+          <h5 class="fw-semibold text-secondary">(*) Remuneración</h5>
           <textarea
             v-model="oferta.glosa_remuneracion"
             rows="8"
@@ -179,7 +197,15 @@
         <i class="bi bi-download mr-2"></i>Descargar PDF
       </button> -->
       <button
-        class="btn btn-success"
+        class="btn btn-danger"
+        v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_director"
+        @click="guardarCambios(3)"
+      >
+        <i class="bi bi-x-octagon"></i>
+        Anular Postulacion
+      </button>
+      <button
+        class="btn btn-success ml-4"
         @click="guardarCambios(null)"
         v-if="!oferta.fecha_apr_director"
       >
@@ -190,15 +216,14 @@
         v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_director"
         @click="guardarCambios(1)"
       >
-        <i class="bi bi-send mr-2"></i>Enviar Al Director
+        <i class="bi bi-envelope-at mr-2"></i> Enviar Al Director
       </button>
       <button
-        class="btn btn-danger ml-4"
-        v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_director"
-        @click="guardarCambios(3)"
+        class="btn btn-outline-primary ml-4"
+        v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_candidato"
+        @click="guardarCambios(1)"
       >
-        <i class="bi bi-x-octagon"></i>
-        Anular Postulacion
+        <i class="bi bi-envelope-at-fill mr-2"></i> Enviar Al Candidato
       </button>
     </template>
   </ModalComponent>
@@ -227,7 +252,7 @@ const oferta = ref<any>({
   jornada: { nombre: "" },
   Candidato: { nombre_completo: "", rut: "" },
   fecha_ingreso: "",
-  horas_pactadas: null,
+  horas_pactadas: 0,
   glosa_remuneracion: "",
 });
 const enviandoCorreo = ref(false);
@@ -242,6 +267,14 @@ const props = defineProps<{
 }>();
 
 async function guardarCambios(enviarDirector: number | null) {
+  if (
+    !oferta.value.fecha_ingreso ||
+    !oferta.value.horas_pactadas ||
+    !oferta.value.glosa_remuneracion
+  ) {
+    Swal.fire("Error", "Debe completar todos los campos con (*) .", "error");
+    return false;
+  }
   enviandoCorreo.value = true;
   try {
     const payload = {
@@ -275,6 +308,22 @@ watch(
       console.log("Cambio en oferta_id:", anteriorId, "→", nuevoId);
       try {
         oferta.value = await obtenerCartaOfertaPorId(nuevoId);
+        if (
+          oferta.value.Convocatorium.jornada_id == 1 &&
+          !oferta.value.horas_pactadas
+        ) {
+          oferta.value.horas_pactadas = 44;
+        } else if (
+          oferta.value.Convocatorium.jornada_id == 3 &&
+          !oferta.value.horas_pactadas
+        ) {
+          oferta.value.horas_pactadas = 22;
+        } else if (
+          oferta.value.Convocatorium.jornada_id == 3 &&
+          !oferta.value.horas_pactadas
+        ) {
+          oferta.value.horas_pactadas = 33;
+        }
         console.log("oferta data:", oferta);
       } catch (error) {
         console.error("Error al obtener la carta oferta:", error);

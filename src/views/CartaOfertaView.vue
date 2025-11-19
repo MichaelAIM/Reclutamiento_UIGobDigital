@@ -143,7 +143,7 @@ async function exportarExcel() {
 
 onMounted(async () => {
   try {
-    const data = await listarCartasOfertas();
+    const data = await listarCartasOfertas(3);
     cartasOferta.value = data;
 
     await nextTick(); // Espera a que el DOM se actualice con los datos
