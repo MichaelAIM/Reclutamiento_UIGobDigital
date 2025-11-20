@@ -221,7 +221,7 @@
       <button
         class="btn btn-outline-primary ml-4"
         v-if="authStore?.user?.rol === 'admin' && !oferta.fecha_apr_candidato"
-        @click="guardarCambios(1)"
+        @click="guardarCambios(4)"
       >
         <i class="bi bi-envelope-at-fill mr-2"></i> Enviar Al Candidato
       </button>
@@ -285,11 +285,7 @@ async function guardarCambios(enviarDirector: number | null) {
     };
     await actualizarCartaOferta(props.oferta_id!, payload);
     if (enviarDirector == 1) {
-      Swal.fire(
-        "Éxito",
-        "Carta oferta enviada al director correctamente.",
-        "success"
-      );
+      Swal.fire("Éxito", "Carta oferta enviada correctamente.", "success");
     } else {
       Swal.fire("Éxito", "Cambios guardados correctamente.", "success");
     }

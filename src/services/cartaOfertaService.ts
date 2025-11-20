@@ -68,6 +68,7 @@ export async function obtenerCartaPorToken(token: string) {
 export async function aprobarCartaOferta(
   token: string,
   payload?: {
+    esDirector: boolean;
     fecha_ingreso?: string;
     horas_pactadas?: number;
   }

@@ -32,7 +32,9 @@
           <p><strong>RUT:</strong> {{ carta.Candidato?.rut }}</p>
           <p>
             <strong>Horas pactadas: </strong>
+            <span v-if="!esDirector">{{ carta.horas_pactadas }}</span>
             <input
+              v-else
               type="number"
               :value="carta.horas_pactadas"
               class="form-control d-inline-block w-50 ms-2"
@@ -41,7 +43,9 @@
           </p>
           <p>
             <strong>Fecha de ingreso: </strong>
+            <span v-if="!esDirector">{{ carta.fecha_ingreso }}</span>
             <input
+              v-else
               type="date"
               :value="carta.fecha_ingreso"
               class="form-control d-inline-block w-50 ms-2"
@@ -82,10 +86,12 @@ import Swal from "sweetalert2";
 const route = useRoute();
 //const token = route.params.token as string;
 const token = route.query.token as string;
+const director = route.query.alt as string;
 const carta = ref<any>(null);
 const loading = ref(true);
 const error = ref("");
 const aprobado = ref(false);
+const esDirector = ref(false);
 
 onMounted(async () => {
   if (!token) {
@@ -93,6 +99,10 @@ onMounted(async () => {
     loading.value = false;
     return;
   }
+  if (director === "D1r") {
+    esDirector.value = true;
+  }
+  console.log("Token = ", token);
   try {
     carta.value = await obtenerCartaPorToken(token);
     if (carta.value.fecha_apr_director) {
@@ -117,9 +127,9 @@ async function aprobarCarta() {
     const payload = {
       fecha_ingreso: carta.value.fecha_ingreso,
       horas_pactadas: carta.value.horas_pactadas,
+      esDirector: esDirector.value,
     };
     console.log("payload", payload);
-    aprobado.value = true;
     await aprobarCartaOferta(token, payload);
 
     Swal.fire({
