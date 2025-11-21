@@ -1,4 +1,17 @@
 <template>
+  <div v-if="enviandoCorreo" class="modal-overlay">
+    <div
+      class="d-flex justify-content-center align-items-center"
+      style="height: 100vh"
+    >
+      <div class="text-center">
+        <div class="spinner-border text-white" role="status">
+          <span class="visually-hidden"></span>
+        </div>
+        <p class="text-muted mt-3">Procesando...</p>
+      </div>
+    </div>
+  </div>
   <div class="offset-md-4 col-md-4">
     <a class="banner border mb-3 flex-wrap bg-white">
       <div class="line"></div>
@@ -133,13 +146,6 @@
       </button>
     </template>
   </Modal>
-
-  <div v-if="cargandoRecuperacion" class="loader-overlay">
-    <div class="text-center">
-      <div class="spinner-border text-secondary mb-3" role="status"></div>
-      <p class="fw-semibold text-white">Procesando recuperación…</p>
-    </div>
-  </div>
 </template>
 
 <script setup>
@@ -164,6 +170,7 @@ const mostrarPassword = ref(false);
 const cargandoRecuperacion = ref(false);
 const mostrarRecuperar = ref(false);
 const rutRecuperacion = ref("");
+const enviandoCorreo = ref(false);
 
 async function enviarRecuperacion() {
   if (!validarRut(rutRecuperacion.value)) {
@@ -209,6 +216,8 @@ function onRutInput(e) {
 }
 
 async function iniciarSesion() {
+  enviandoCorreo.value = true;
+
   if (!validarRut(usuario.value)) {
     Swal.fire({ icon: "warning", title: "RUT inválido" });
     return;
@@ -234,6 +243,7 @@ async function iniciarSesion() {
       password: password.value,
       recaptcha: recaptchaToken,
     });
+    enviandoCorreo.value = false;
 
     Swal.fire({
       icon: "success",
@@ -243,6 +253,8 @@ async function iniciarSesion() {
 
     router.push("/perfil");
   } catch (error) {
+    enviandoCorreo.value = false;
+
     let mensajeError = error.message;
     if (error.response.data) {
       mensajeError = error.response.data.message || mensajeError;
@@ -315,5 +327,17 @@ button.bg-white:hover {
 
 .fs-0875 {
   font-size: 0.875rem !important;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
