@@ -24,9 +24,18 @@
       />
       <h4 class="fw-bold text-dark mt-3">
         CARTA OFERTA:
-        <span class="rounded-pill bg-letra px-3 py-1 ml-3 text-white">{{
-          oferta.estado_carta_ofertum.nombre
-        }}</span>
+        <span
+          v-if="oferta.estado_carta_ofertum?.nombre"
+          class="rounded-pill bg-letra px-3 py-1 ml-3 text-white"
+        >
+          {{ oferta.estado_carta_ofertum.nombre }}
+        </span>
+        <span
+          v-else
+          class="rounded-pill bg-secondary px-3 py-1 ml-3 text-white"
+        >
+          Estado no disponible
+        </span>
       </h4>
     </template>
 

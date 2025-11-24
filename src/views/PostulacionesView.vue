@@ -259,7 +259,10 @@ import ModalCandidato from "../components/modal/ModalCandidato.vue";
 import ModalCartaOferta from "../components/modal/ModalCartaOferta.vue";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../store/authStore";
-import { crearCartaOferta } from "../services/cartaOfertaService";
+import {
+  crearCartaOferta,
+  actualizarCartaOferta,
+} from "../services/cartaOfertaService";
 
 const convocatorias = ref([]);
 const mostrarModalCandidato = ref(false);
@@ -331,13 +334,33 @@ async function cambiarEstadoCandidato(
     } */
   }
   if (estado === 1 && convocatoriaId) {
-    const listaConvocatorias = Object.values(convocatorias.value);
-    const convocatoriaObj = listaConvocatorias.find(
+    // Buscar índice de la convocatoria en la lista
+    const convIndex = convocatorias.value.findIndex(
       (c) => c.convocatoria?.id === convocatoriaId
     );
-    convocatoriaObj.estado_candidato_id = 1;
+
+    if (convIndex === -1) {
+      console.warn(`Convocatoria con ID ${convocatoriaId} no encontrada`);
+    } else {
+      // Buscar índice del candidato usando id del candidato o id de la postulacion
+      const candidatoIndex = convocatorias.value[
+        convIndex
+      ].candidatos.findIndex(
+        (p) => p.id === candidatoId && p.postulacion_id === postulacioId
+      );
+
+      if (candidatoIndex === -1) {
+        console.warn(
+          `Candidato/postulación no encontrada en la convocatoria ${convocatoriaId}`
+        );
+      } else {
+        convocatorias.value[convIndex].candidatos[
+          candidatoIndex
+        ].estado_candidato = 1;
+      }
+    }
+
     await cambiarEstadoConvocatoria(convocatoriaId, 2);
-    // Aqui cambiar esrado de la carta oferta a "Anulada"
   }
   if (response) {
     await cargarPostulaciones();
@@ -367,6 +390,8 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
       (c) => c?.estado_candidato === 3
     );
 
+    console.log("tieneCandidatoSeleccionado = ", tieneCandidatoSeleccionado);
+
     if (tieneCandidatoSeleccionado) {
       await Swal.fire({
         title: "error!",
@@ -377,12 +402,23 @@ async function cambiarEstadoConvocatoria(convocatoriaId, estado) {
       return;
     } else {
       console.log("🔍 No hay candidatos seleccionados aún");
+      const payload = {
+        dato_envio: 3,
+      };
+
+      //console.log("convocatoriaObj", convocatoriaObj);
+      await actualizarCartaOferta(
+        convocatoriaObj.convocatoria.cartaOferta.id,
+        payload
+      );
+      // Aqui cambiar estado de la carta oferta a "Anulada"
     }
   }
 
   const response = await update_convocatoria(convocatoriaId, {
     estado_id: estado,
   });
+
   await cargarPostulaciones();
 }
 
@@ -394,7 +430,6 @@ async function cargarPostulaciones() {
   cargandoPostulaciones.value = true;
   try {
     const { data } = await fetchPostulacionesVigentes(4);
-    console.log("data", data);
 
     const transformada = data.map((item) => {
       const cartaOfertaValida =
@@ -440,6 +475,8 @@ async function cargarPostulaciones() {
     });
 
     convocatorias.value = transformada;
+
+    console.log("data", convocatorias.value);
   } catch (error) {
     console.error("Error al cargar postulaciones:", error);
   } finally {

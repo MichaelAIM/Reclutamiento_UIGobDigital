@@ -131,7 +131,7 @@ async function aprobarCarta() {
     };
     console.log("payload", payload);
     await aprobarCartaOferta(token, payload);
-
+    aprobado.value = true;
     Swal.fire({
       icon: "success",
       title: "Carta Aprobada",
