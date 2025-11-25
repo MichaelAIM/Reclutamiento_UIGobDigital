@@ -22,21 +22,7 @@
         class="mb-2"
         style="max-width: 180px"
       />
-      <h4 class="fw-bold text-dark mt-3">
-        CARTA OFERTA:
-        <span
-          v-if="oferta.estado_carta_ofertum?.nombre"
-          class="rounded-pill bg-letra px-3 py-1 ml-3 text-white"
-        >
-          {{ oferta.estado_carta_ofertum.nombre }}
-        </span>
-        <span
-          v-else
-          class="rounded-pill bg-secondary px-3 py-1 ml-3 text-white"
-        >
-          Estado no disponible
-        </span>
-      </h4>
+      <h4 class="fw-bold text-dark mt-3">CARTA OFERTA:</h4>
     </template>
 
     <template #body>
@@ -340,8 +326,31 @@
           </div>
         </div>
         <div class="col-md-3 py-5">
+          <p class="border border-success py-1">
+            <strong
+              class="font-weight-bold bg-success text-white py-2 my-0 px-2 rounded-md"
+            >
+              Estado:
+            </strong>
+            <span v-if="oferta.estado_carta_ofertum?.nombre" class="ml-2">
+              {{ ` ${oferta.estado_carta_ofertum.nombre.toUpperCase()}` }}
+            </span>
+            <span v-else> Estado no disponible </span>
+          </p>
+          <p class="border border-success py-1">
+            <strong
+              class="font-weight-bold bg-success text-white py-2 my-0 px-2 rounded-md"
+            >
+              Creación:
+            </strong>
+            <span v-if="oferta.created_at" class="ml-2">
+              {{ ` ${formatoFechaHora(oferta.created_at)}` }}</span
+            >
+            <span v-else> Error! no disponible </span>
+          </p>
+
           <button
-            class="btn btn-danger"
+            class="btn btn-danger mt-4"
             v-if="
               authStore?.user?.rol === 'admin' && !oferta.fecha_apr_director
             "
@@ -393,7 +402,7 @@ import {
   obtenerCartaOfertaPorId,
   actualizarCartaOferta,
 } from "../../services/cartaOfertaService";
-import { fechaFormateada } from "../../utils/validaciones";
+import { fechaFormateada, formatoFechaHora } from "../../utils/validaciones";
 import { watch, ref } from "vue";
 import Swal from "sweetalert2";
 

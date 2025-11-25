@@ -291,3 +291,15 @@ export function formatDate(dateString: string) {
 export const formatDateTime = (dateTimeString: string): string => {
   return formatDate(dateTimeString);
 };
+
+export function formatoFechaHora(fechaISO: any) {
+  const fecha = new Date(fechaISO);
+  const dia = fecha.getDate().toString().padStart(2, "0");
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+  const año = fecha.getFullYear().toString().slice(-2);
+  const horas = fecha.getHours().toString().padStart(2, "0");
+  const minutos = fecha.getMinutes().toString().padStart(2, "0");
+  const segundos = fecha.getSeconds().toString().padStart(2, "0");
+
+  return `${dia}/${mes}/${año} ${horas}:${minutos}:${segundos}`;
+}

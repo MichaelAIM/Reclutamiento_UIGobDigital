@@ -565,7 +565,9 @@ const props = defineProps({
 });
 
 defineExpose({ generatePDFInNewTab, generateAndDownloadPDF });
+
 const emit = defineEmits(["pdf-error", "pdf-generated", "cerrarVista"]);
+
 // Esperar carga de imágenes antes de capturar
 function waitForImages(containerEl, timeout = 8000) {
   return new Promise((resolve) => {
