@@ -387,10 +387,20 @@
       </section>
     </div>
   </div>
+  <div v-if="showPdfComponent" class="d-none">
+  <ResolucionPDF
+    ref="pdfComponent"
+    :data="pdfData"
+    :autoGenerate="autoGeneratePdf"
+    :autoOpenInNewTab="false"
+    @pdf-generated="onPdfGenerated"
+    @pdf-error="onPdfError"
+  />
+</div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 /* Assets en public/src/assets/ */
@@ -402,7 +412,12 @@ import {
   obtenerCartaOfertaPorId,
   listarFirmantes,
 } from "../services/cartaOfertaService";
-import { formatDate } from "../utils/validaciones";
+import { formatDate, FormatearFecha } from "../utils/validaciones";
+import ResolucionPDF from "../components/Resolucion.vue";
+
+const showPdfComponent = ref(false);
+const autoGeneratePdf = ref(true);
+const pdfComponent = ref(null);
 const isEditingVisto = ref(false);
 const router = useRouter();
 const route = useRoute();
@@ -425,11 +440,7 @@ const considerandoList = ref([
   {
     id: newId(),
     text: `Que, el Art. 22 de la ley 21.040 letra d establece que el director ejecutivo podrá “Contratar y designar, así como poner término a las funciones del personal del Servicio Local y de los profesionales de la educación, asistentes de la educación y otros profesionales de los establecimientos educacionales de su dependencia, de conformidad a la normativa vigente, según corresponda”.`,
-  },
-  {
-    id: newId(),
-    text: `Que, con fecha 19 de enero de 2025, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional Liceo Jovina Naranjo Fernández.`,
-  },
+  }
 ]);
 
 const fields = reactive({
@@ -438,14 +449,22 @@ const fields = reactive({
   rut: "",
   nivel: "(4) EDUCACIÓN BÁSICA/ (40) EDUCACIÓN MEDIA",
   horasContrata: "- 04 HORAS BÁSICA \n- 37 HORAS MEDIA",
+  funcionContrata: "DOCENTE",
+  horasJornada: "",
+  funcionJornada: "",
   horasPieD170: "- 03 HORAS MEDIA",
+  funcionPie: "COLABORATIVAS",
+  horasPie: "",
+  funcionPieGeneral: "",
+  horasSep: "",
+  funcionSep: "",
   totalHoras: 0,
   fechaInicio: "",
   fechaTermino: "28/02/2026",
-  calidadJuridica: 1,
-  funcionPie: "COLABORATIVAS",
-  funcionContrata: "DOCENTE",
+  calidadJuridica: "CONTRATA",
 });
+
+const tercerConsiderando = ref("");
 
 const distribucionList = ref([
   { id: newId(), text: "Subdirección Gestión y Desarrollo de Personas" },
@@ -454,7 +473,30 @@ const distribucionList = ref([
   { id: newId(), text: "Oficina de partes" },
 ]);
 
-const API_URL = "/api/resolucion/18787300-2";
+// Datos computados para el PDF
+const pdfData = computed(() => ({
+  visto: vistoText.value,
+  considerando: considerandoList.value.map(item => item.text),
+  establecimiento: fields.establecimiento,
+  nombre: fields.nombre,
+  rut: fields.rut,
+  nivel_ensenanza: fields.nivel,
+  horas: fields.horasContrata,
+  jornada: fields.horasJornada,
+  subvencion_pie: fields.horasPieD170,
+  subvencion_sep: fields.horasSep,
+  total_horas: fields.totalHoras,
+  fecha_inicio: fields.fechaInicio,
+  fecha_termino: fields.fechaTermino,
+  sign_name: "JULIO VERDEJO AQUEVEQUE",
+  sign_role: "DIRECTOR (S) EJECUTIVO",
+  distribution: distribucionList.value.map((item, index) => ({
+    id: index + 1,
+    name: item.text
+  }))
+}));
+
+
 
 async function loadFromApi() {
   try {
@@ -469,6 +511,7 @@ async function loadFromApi() {
     fields.horasPieD170 = data.horasPieD170 ?? fields.horasPieD170;*/
     fields.totalHoras = data.horas_pactadas;
     fields.fechaInicio = formatDate(data.fecha_ingreso);
+    considerandoList.value.push({ id: newId(), text: `Que, con fecha ${FormatearFecha(data.fecha_ingreso)}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional ${fields.establecimiento}.` });
     /*
     fields.fechaTermino = data.fechaTermino ?? fields.fechaTermino; */
 
@@ -512,7 +555,12 @@ function removeDistribucion(i) {
 }
 
 async function GeneratePDF(params) {
-  router.push("/Documento-rex");
+  showPdfComponent.value = true;
+  autoGeneratePdf.value = true;
+  pdfComponent.value.generateAndDownloadPDF();
+  showPdfComponent.value = false;
+  autoGeneratePdf.value = false;
+  //router.push("/Documento-rex");/* Generar PDF */
 }
 
 async function saveDraft() {

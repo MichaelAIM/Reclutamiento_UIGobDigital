@@ -16,7 +16,7 @@
 import { ref, watch } from "vue";
 
 const props = defineProps({
-  modelValue: String,
+  modelValue: String | Number,
   type: { type: String, default: "text" },
   placeholder: String,
   ariaLabel: String,

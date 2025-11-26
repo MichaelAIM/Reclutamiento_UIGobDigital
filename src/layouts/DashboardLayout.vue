@@ -129,7 +129,7 @@
                     >
                       <i class="bi bi-people me-2"></i> Cartas Oferta
                     </a>
-                    <a
+<!--                     <a
                       v-if="
                         authStore.user.rol === 'admin' ||
                         authStore.user.rol === 'reclutador'
@@ -161,7 +161,7 @@
                       @click="Go('/postulaciones')"
                     >
                       <i class="bi bi-people me-2"></i> Solicitudes
-                    </a>
+                    </a> -->
                     <a
                       class="nav-link d-flex align-items-center pointer"
                       @click="cerrarSesion()"

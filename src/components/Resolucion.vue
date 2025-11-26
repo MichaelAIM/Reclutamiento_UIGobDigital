@@ -265,7 +265,7 @@ function getImageDataUrl(imgElement) {
 }
 
 // Generar y descargar PDF
-async function generateAndDownloadPDF(filename = "Resolucion_Ardiles.pdf") {
+async function generateAndDownloadPDF(filename = "Resolucion.pdf") {
   if (!resolucionRef.value) return;
 
   await waitForImages(resolucionRef.value);
@@ -364,9 +364,10 @@ function getImageDataUrlFromImport(imagePath) {
 onMounted(async () => {
   if (autoDownloaded.value) return;
   autoDownloaded.value = true;
-  await new Promise((r) => setTimeout(r, 500));
-  generateAndDownloadPDF();
 });
+
+
+
 </script>
 
 <style scoped>

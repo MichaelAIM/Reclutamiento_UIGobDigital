@@ -40,6 +40,7 @@
                 <i class="bi bi-eye"></i>
               </button>
               <button
+              v-if="c.estado_carta_ofertum.id === 3"
                 class="btn btn-sm btn-outline-primary me-1"
                 title="Generar Documento"
                 @click="generarDocumento(c.id, c.cargo.tipo_cargo_id)"
@@ -143,7 +144,7 @@ async function exportarExcel() {
 
 onMounted(async () => {
   try {
-    const data = await listarCartasOfertas(3);
+    const data = await listarCartasOfertas(1,2,3);
     cartasOferta.value = data;
 
     await nextTick(); // Espera a que el DOM se actualice con los datos
@@ -159,7 +160,7 @@ onMounted(async () => {
         language: {
           search: "Buscar:",
           lengthMenu: "Mostrar _MENU_ registros",
-          info: "Mostrando _START_ a _END_ de _TOTAL_ Cartas_Oferta",
+          info: "Mostrando _START_ a _END_ de _TOTAL_ Cartas Oferta",
           paginate: {
             next: "Siguiente",
             previous: "Anterior",
