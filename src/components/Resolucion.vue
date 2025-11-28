@@ -30,7 +30,7 @@
       <br />
       <div class="section-title">VISTO:</div>
       <br />
-      <div class="section-body"> <!-- Este debe ser dinámico (props) -->
+      <div class="section-body">
         {{ props.data.visto }}
       </div>
     </section>
@@ -39,10 +39,12 @@
     <section class="mt-3">
       <div class="section-title">CONSIDERANDO:</div>
       <br />
-      <div class="section-body"> <!-- Este debe ser dinámico (props) en v-for-->
-        <div v-for="item in props.data.considerando" :key="item">
-          {{ item }}
-        </div>
+      <div
+        v-for="item in props.data.considerando"
+        :key="item"
+        class="section-body mb-2"
+      >
+        {{ item }}
       </div>
     </section>
 
@@ -52,7 +54,7 @@
       <div class="section-title">RESUELVO:</div>
       <br />
       <ol class="resoluciones-list">
-        <li class="mb-2">
+        <li>
           <span class="font-weight-bold">NÓMBRESE</span>, al profesional de la
           educación que cumplirá funciones docentes que se indican a
           continuación:
@@ -68,13 +70,14 @@
                 <tr>
                   <td>NOMBRE</td>
                   <td colspan="2" class="cell-left">
-                   {{ props.data.nombre }}
+                    {{ props.data.nombre }}
                   </td>
                 </tr>
                 <tr>
                   <td>RUT</td>
                   <td colspan="2" class="cell-left">
-                    {{ props.data.rut }} </td>
+                    {{ props.data.rut }}
+                  </td>
                 </tr>
                 <tr>
                   <td class="cell-strong">TIPO DE FUNCIÓN</td>
@@ -135,13 +138,16 @@
 
                 <tr>
                   <td>FECHA DE INICIO</td>
-                  <td colspan="2" class="cell-left">{{ props.data.fecha_inicio }}</td>
+                  <td colspan="2" class="cell-left">
+                    {{ props.data.fecha_inicio }}
+                  </td>
                 </tr>
 
                 <tr>
                   <td>FECHA DE TÉRMINO</td>
                   <td colspan="2" class="cell-left">
-                    {{ props.data.fecha_termino }} o hasta que sus servicios sean necesarios
+                    {{ props.data.fecha_termino }} o hasta que sus servicios
+                    sean necesarios
                   </td>
                 </tr>
 
@@ -176,17 +182,23 @@
       <br />
       <br />
       <div class="signature-block mt-4 text-center">
-        <div class="sign-name">{{ props.data.sign_name }}</div><!-- Este debe ser dinámico (props) -->
-        <div class="sign-role">{{ props.data.sign_role }}</div><!-- Este debe ser dinámico (props) -->
+        <div class="sign-name">{{ props.data.sign_name }}</div>
+        <!-- Este debe ser dinámico (props) -->
+        <div class="sign-role">{{ props.data.sign_role }}</div>
+        <!-- Este debe ser dinámico (props) -->
         <div class="sign-entity mt-1">
           SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO
-        </div><!-- Este debe ser dinámico (props) -->
+        </div>
+        <!-- Este debe ser dinámico (props) -->
       </div>
 
       <div class="distribution mt-4" style="font-size: 8pt">
         <div class="dist-title">DISTRIBUCIÓN:</div>
         <ul class="dist-list mb-0">
-          <li v-for="item in props.data.distribution" :key="item.id">{{ item.name }}</li><!-- Este debe ser dinámico (props) en v-for -->
+          <li v-for="item in props.data.distribution" :key="item.id">
+            {{ item.name }}
+          </li>
+          <!-- Este debe ser dinámico (props) en v-for -->
         </ul>
       </div>
     </section>
@@ -205,10 +217,10 @@ import logoRight from "../assets/img/Logotipo-Chinchorro-web.png";
 const props = defineProps({
   data: { type: Object, required: false, default: () => ({}) },
   autoGenerate: { type: Boolean, default: false },
-  autoOpenInNewTab: { type: Boolean, default: false }
+  autoOpenInNewTab: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(['pdf-generated', 'pdf-error']);
+const emit = defineEmits(["pdf-generated", "pdf-error"]);
 
 // Referencia al contenedor de la resolución
 const resolucionRef = ref(null);
@@ -265,10 +277,31 @@ function getImageDataUrl(imgElement) {
 }
 
 // Generar y descargar PDF
-async function generateAndDownloadPDF(filename = "Resolucion.pdf") {
-  if (!resolucionRef.value) return;
+async function generateAndDownloadPDF(
+  filename = `Rex_${new Date().getFullYear()}_${props.data.nombre}.pdf`
+) {
+  console.log("Iniciando generación de PDF...");
 
-  await waitForImages(resolucionRef.value);
+  // Capturar el elemento inmediatamente en una variable local
+  const element = resolucionRef.value;
+
+  console.log("element:", element);
+
+  if (!element) {
+    console.error("element es null o undefined");
+    return;
+  }
+
+  if (!(element instanceof HTMLElement)) {
+    console.error("element no es un elemento HTML válido");
+    return;
+  }
+
+  console.log("element.innerHTML length:", element.innerHTML?.length);
+  console.log("element.offsetWidth:", element.offsetWidth);
+  console.log("element.offsetHeight:", element.offsetHeight);
+
+  await waitForImages(element);
   await new Promise((r) => setTimeout(r, 250));
 
   const opt = {
@@ -285,8 +318,12 @@ async function generateAndDownloadPDF(filename = "Resolucion.pdf") {
     pagebreak: { mode: ["css", "legacy"] },
   };
 
+  console.log("Configuración de html2pdf:", opt);
+
   try {
-    const worker = html2pdf().set(opt).from(resolucionRef.value);
+    // Intentar pasar el elemento directamente
+    console.log("Intentando generar PDF con html2pdf...");
+    const worker = html2pdf().set(opt).from(element);
     const pdf = await worker.toPdf().get("pdf");
 
     // Obtener el número total de páginas
@@ -366,8 +403,14 @@ onMounted(async () => {
   autoDownloaded.value = true;
 });
 
+function generatePDF() {
+  generateAndDownloadPDF();
+}
 
-
+// Exponer la función para que el componente padre pueda llamarla
+defineExpose({
+  generatePDF,
+});
 </script>
 
 <style scoped>

@@ -174,6 +174,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
+                      v-model="fields.horasJornadaCompleta"
                     ></textarea>
                   </div>
                 </td>
@@ -181,6 +182,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
+                      v-model="fields.funcionJornadaCompleta"
                     ></textarea>
                   </div>
                 </td>
@@ -192,7 +194,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="form-control form-control-sm"
-                      :value="fields.horasPieD170"
+                      v-model="fields.horasPieD170"
                       placeholder=""
                       aria-label="Horas PIE D.170"
                     >
@@ -203,7 +205,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="form-control form-control-sm"
-                      :value="fields.funcionPie"
+                      v-model="fields.funcionPie170"
                       placeholder=""
                       aria-label=""
                     >
@@ -218,6 +220,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
+                      v-model="fields.horasPieGeneral"
                     ></textarea>
                   </div>
                 </td>
@@ -225,6 +228,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
+                      v-model="fields.funcionPieGeneral"
                     ></textarea>
                   </div>
                 </td>
@@ -236,6 +240,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
+                      v-model="fields.horasSep"
                     ></textarea>
                   </div>
                 </td>
@@ -243,6 +248,7 @@
                   <div class="highlight-yellow p-1 w-100">
                     <textarea
                       class="w-100 form-control form-control-sm"
+                      v-model="fields.funcionSep"
                     ></textarea>
                   </div>
                 </td>
@@ -280,12 +286,22 @@
               <tr>
                 <td>FECHA DE TÉRMINO</td>
                 <td colspan="2">
-                  <span v-if="fields.fechaTermino"
-                    >{{ fields.fechaTermino }} o hasta que sus servicios sean
-                    necesarios</span
-                  >
+                  <div v-if="fields.fechaTermino">
+                    <span
+                      >{{ fields.fechaTermino }} o hasta que sus servicios sean
+                      necesarios</span
+                    >
+                    <button
+                      class="btn btn-sm btn-outline-secondary border-0"
+                      @click="habilitarFechaTermino"
+                    >
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                  </div>
+
                   <div v-else class="highlight-yellow p-1">
                     <input
+                      type="date"
                       class="form-control form-control-sm"
                       v-model="fields.fechaTermino"
                       placeholder="28/02/2026"
@@ -317,8 +333,17 @@
         <!-- Párrafos estáticos -->
         <div class="mt-3">
           <div class="text-center my-5">
-            <p class="h6 font-weight-bold">JULIO VERDEJO AQUEVEQUE</p>
-            <p class="h6 font-weight-bold">FIRMA DIRECTOR (S) EJECUTIVO</p>
+            <select
+              v-model="fields.firmanteId"
+              @change="cambiarFirmante"
+              class="form-control form-control-sm inline-input"
+            >
+              <option :value="f.id" v-for="f in firmantes" :key="f.id">
+                {{ f.nombre }}
+              </option>
+            </select>
+            <p class="h6 font-weight-bold">{{ fields.firmanteRut }}</p>
+            <p class="h6 font-weight-bold">{{ fields.firmanteCargo }}</p>
             <p class="h6 font-weight-bold">
               SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO
             </p>
@@ -369,13 +394,23 @@
           <button class="btn btn-primary mr-2" @click="saveDraft" type="button">
             Guardar borrador
           </button>
+
           <button
             class="btn btn-success mr-2"
             @click="GeneratePDF"
             type="button"
+            :disabled="isGeneratingPdf"
           >
-            Generar PDF
+            <span
+              v-if="isGeneratingPdf"
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <span v-if="isGeneratingPdf">Generando...</span>
+            <span v-else>Generar PDF</span>
           </button>
+
           <button
             class="btn btn-outline-secondary"
             @click="resetFromApi"
@@ -387,20 +422,23 @@
       </section>
     </div>
   </div>
-  <div v-if="showPdfComponent" class="d-none">
-  <ResolucionPDF
-    ref="pdfComponent"
-    :data="pdfData"
-    :autoGenerate="autoGeneratePdf"
-    :autoOpenInNewTab="false"
-    @pdf-generated="onPdfGenerated"
-    @pdf-error="onPdfError"
-  />
-</div>
+  <div
+    v-if="showPdfComponent"
+    style="position: absolute; left: -9999px; top: -9999px; width: 900px"
+  >
+    <ResolucionPDF
+      ref="pdfComponent"
+      :data="pdfData"
+      :autoGenerate="autoGeneratePdf"
+      :autoOpenInNewTab="false"
+      @pdf-generated="onPdfGenerated"
+      @pdf-error="onPdfError"
+    />
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 /* Assets en public/src/assets/ */
@@ -421,6 +459,7 @@ const pdfComponent = ref(null);
 const isEditingVisto = ref(false);
 const router = useRouter();
 const route = useRoute();
+const isGeneratingPdf = ref(false);
 
 /* Editable "VISTO" */
 const vistoText = ref(
@@ -440,28 +479,31 @@ const considerandoList = ref([
   {
     id: newId(),
     text: `Que, el Art. 22 de la ley 21.040 letra d establece que el director ejecutivo podrá “Contratar y designar, así como poner término a las funciones del personal del Servicio Local y de los profesionales de la educación, asistentes de la educación y otros profesionales de los establecimientos educacionales de su dependencia, de conformidad a la normativa vigente, según corresponda”.`,
-  }
+  },
 ]);
 
 const fields = reactive({
-  establecimiento: "LICEO JOVINA NARANJO FERNÁNDEZ",
+  establecimiento: "",
   nombre: "",
   rut: "",
-  nivel: "(4) EDUCACIÓN BÁSICA/ (40) EDUCACIÓN MEDIA",
-  horasContrata: "- 04 HORAS BÁSICA \n- 37 HORAS MEDIA",
+  nivel: "",
+  horasContrata: null,
   funcionContrata: "DOCENTE",
-  horasJornada: "",
-  funcionJornada: "",
-  horasPieD170: "- 03 HORAS MEDIA",
-  funcionPie: "COLABORATIVAS",
-  horasPie: "",
+  horasJornadaCompleta: null,
+  funcionJornadaCompleta: "",
+  horasPieD170: null,
+  funcionPie170: "",
+  horasPieGeneral: null,
   funcionPieGeneral: "",
-  horasSep: "",
+  horasSep: null,
   funcionSep: "",
+  firmanteId: 1,
+  firmanteRut: "",
+  firmanteCargo: "",
   totalHoras: 0,
   fechaInicio: "",
-  fechaTermino: "28/02/2026",
-  calidadJuridica: "CONTRATA",
+  fechaTermino: "28/02/2025",
+  calidadJuridica: 1,
 });
 
 const tercerConsiderando = ref("");
@@ -476,31 +518,49 @@ const distribucionList = ref([
 // Datos computados para el PDF
 const pdfData = computed(() => ({
   visto: vistoText.value,
-  considerando: considerandoList.value.map(item => item.text),
+  considerando: considerandoList.value.map((item) => item.text),
   establecimiento: fields.establecimiento,
   nombre: fields.nombre,
   rut: fields.rut,
   nivel_ensenanza: fields.nivel,
   horas: fields.horasContrata,
-  jornada: fields.horasJornada,
+  funcion: fields.funcionContrata,
+  horas_pie: fields.horasPieGeneral,
+  funcion_pie: fields.funcionPieGeneral,
+  horas_sep: fields.horasSep,
+  funcion_sep: fields.funcionSep,
   subvencion_pie: fields.horasPieD170,
   subvencion_sep: fields.horasSep,
   total_horas: fields.totalHoras,
   fecha_inicio: fields.fechaInicio,
   fecha_termino: fields.fechaTermino,
-  sign_name: "JULIO VERDEJO AQUEVEQUE",
-  sign_role: "DIRECTOR (S) EJECUTIVO",
+  sign_name: fields.firmanteNombre,
+  sign_role: fields.firmanteCargo,
   distribution: distribucionList.value.map((item, index) => ({
     id: index + 1,
-    name: item.text
-  }))
+    name: item.text,
+  })),
 }));
 
+const firmantes = ref(null);
 
+function cambiarFirmante() {
+  const newFirmante = firmantes.value.find(
+    (f) => f.id === parseInt(fields.firmanteId)
+  );
+  if (newFirmante) {
+    fields.firmanteRut = newFirmante.rut;
+    fields.firmanteNombre = newFirmante.nombre;
+    fields.firmanteCargo = newFirmante.cargo;
+  }
+}
 
 async function loadFromApi() {
   try {
+    firmantes.value = await listarFirmantes();
+    await cambiarFirmante();
     const data = await obtenerCartaOfertaPorId(route.params.id);
+
     console.log("res", data);
     console.log("datas", data.Candidato.nombre_completo);
     fields.establecimiento = data.institucione.nombre.toUpperCase();
@@ -511,7 +571,14 @@ async function loadFromApi() {
     fields.horasPieD170 = data.horasPieD170 ?? fields.horasPieD170;*/
     fields.totalHoras = data.horas_pactadas;
     fields.fechaInicio = formatDate(data.fecha_ingreso);
-    considerandoList.value.push({ id: newId(), text: `Que, con fecha ${FormatearFecha(data.fecha_ingreso)}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional ${fields.establecimiento}.` });
+    considerandoList.value.push({
+      id: newId(),
+      text: `Que, con fecha ${FormatearFecha(
+        data.fecha_ingreso
+      )}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional <b>${
+        fields.establecimiento
+      }</b>.`,
+    });
     /*
     fields.fechaTermino = data.fechaTermino ?? fields.fechaTermino; */
 
@@ -531,6 +598,10 @@ async function loadFromApi() {
     console.warn("No se cargaron datos desde API, usando valores por defecto");
   }
 }
+
+const habilitarFechaTermino = () => {
+  fields.fechaTermino = null;
+};
 
 onMounted(() => {
   if (route.params.id) {
@@ -555,15 +626,35 @@ function removeDistribucion(i) {
 }
 
 async function GeneratePDF(params) {
+  isGeneratingPdf.value = true;
   showPdfComponent.value = true;
   autoGeneratePdf.value = true;
-  pdfComponent.value.generateAndDownloadPDF();
+
+  // Esperar a que Vue renderice el componente
+  await nextTick();
+
+  // Verificar que el componente existe y llamar al método
+  if (pdfComponent.value && pdfComponent.value.generatePDF) {
+    pdfComponent.value.generatePDF();
+    isGeneratingPdf.value = false;
+  } else {
+    console.error("El componente PDF no está disponible");
+  }
+
   showPdfComponent.value = false;
   autoGeneratePdf.value = false;
-  //router.push("/Documento-rex");/* Generar PDF */
 }
 
-async function saveDraft() {
+function onPdfGenerated() {
+  console.log("PDF generado exitosamente");
+}
+
+function onPdfError(error) {
+  console.error("Error al generar PDF:", error);
+  alert("Error al generar el PDF");
+}
+
+/* async function saveDraft() {
   const payload = {
     establecimiento: fields.establecimiento,
     nombre: fields.nombre,
@@ -589,7 +680,7 @@ async function saveDraft() {
   } catch (err) {
     alert("No se pudo guardar el borrador");
   }
-}
+} */
 
 function resetFromApi() {
   loadFromApi();

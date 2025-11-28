@@ -29,12 +29,6 @@
       <div class="row">
         <div class="col-md-9">
           <div class="card shadow-sm border-0 p-4 bg-white">
-            <div class="text-center mb-4">
-              <!--       <p class="text-muted">
-        Servicio Local de Educación Pública de Chinchorro
-      </p> -->
-            </div>
-
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group border border-success">
@@ -387,12 +381,6 @@
         </div>
       </div>
     </template>
-
-    <template #footer>
-      <!--       <button class="btn btn-outline-success" @click="">
-        <i class="bi bi-download mr-2"></i>Descargar PDF
-      </button> -->
-    </template>
   </ModalComponent>
 </template>
 <script setup lang="ts">
@@ -407,6 +395,7 @@ import { watch, ref } from "vue";
 import Swal from "sweetalert2";
 
 const ModalComponent = Modal as any;
+
 const oferta = ref<any>({
   institucione: {
     nombre: "",
@@ -422,7 +411,9 @@ const oferta = ref<any>({
   horas_pactadas: 0,
   glosa_remuneracion: "",
 });
+
 const enviandoCorreo = ref(false);
+
 const props = defineProps<{
   oferta_id: number | null;
   authStore: {
@@ -435,14 +426,17 @@ const props = defineProps<{
 
 async function guardarCambios(enviarDirector: number | null) {
   enviandoCorreo.value = true;
-  if (
-    !oferta.value.fecha_ingreso ||
-    !oferta.value.horas_pactadas ||
-    !oferta.value.glosa_remuneracion
-  ) {
-    Swal.fire("Error", "Debe completar todos los campos con (*) .", "error");
-    enviandoCorreo.value = false;
-    return false;
+
+  if (enviarDirector === 1 || enviarDirector === 4) {
+    if (
+      !oferta.value.fecha_ingreso ||
+      !oferta.value.horas_pactadas ||
+      !oferta.value.glosa_remuneracion
+    ) {
+      Swal.fire("Error", "Debe completar todos los campos con (*) .", "error");
+      enviandoCorreo.value = false;
+      return false;
+    }
   }
 
   if (enviarDirector === 3) {
@@ -514,11 +508,6 @@ watch(
 );
 
 const emit = defineEmits(["update:visible"]);
-
-/* function descargarPDF() {
-  // Lógica para descargar la carta oferta en PDF
-  alert("Descargando carta oferta en PDF...");
-} */
 </script>
 <style scoped>
 .card {
