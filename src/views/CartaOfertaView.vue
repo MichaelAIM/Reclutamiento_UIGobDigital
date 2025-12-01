@@ -40,7 +40,7 @@
                 <i class="bi bi-eye"></i>
               </button>
               <button
-              v-if="c.estado_carta_ofertum.id === 3"
+                v-if="c.estado_carta_ofertum.id === 3"
                 class="btn btn-sm btn-outline-primary me-1"
                 title="Generar Documento"
                 @click="generarDocumento(c.id, c.cargo.tipo_cargo_id)"
@@ -144,7 +144,7 @@ async function exportarExcel() {
 
 onMounted(async () => {
   try {
-    const data = await listarCartasOfertas(1,2,3);
+    const data = await listarCartasOfertas("1,2,3");
     cartasOferta.value = data;
 
     await nextTick(); // Espera a que el DOM se actualice con los datos

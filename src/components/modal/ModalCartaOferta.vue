@@ -463,7 +463,7 @@ async function guardarCambios(enviarDirector: number | null) {
       dato_envio: enviarDirector,
     };
     await actualizarCartaOferta(props.oferta_id!, payload);
-    if (enviarDirector == 1) {
+    if (enviarDirector == 1 || enviarDirector == 4) {
       Swal.fire("Éxito", "Carta oferta enviada correctamente.", "success");
     } else {
       Swal.fire("Éxito", "Cambios guardados correctamente.", "success");

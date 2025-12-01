@@ -464,11 +464,23 @@ async function cargarPostulaciones() {
               nombre_completo: c.nombre_completo,
               rut: c.rut,
               correo: c.correo,
+              telefono: c.telefono,
+              nacionalidade: c.nacionalidade,
+              estados_civile: c.estados_civile,
+              direccion: c.direccion,
+              fecha_nacimiento: c.fecha_nacimiento,
               especialidad: c.especialidad,
               estado_candidato_id: c.estado_candidato_id,
               postulacion_id: p.id,
               created_at_postulacion: p.created_at,
               estado_candidato: p.estado_candidato,
+              cargos: c.cargos,
+              modalidades_horarias: c.modalidades_horarias,
+              ciudades: c.ciudades,
+              nivel_educacion: c.nivel_educacion,
+              titulos_profesionale: c.titulos_profesionale,
+              jornadas: c.jornadas,
+              comentarios: c.comentarios,
             };
           }) || [],
       };
@@ -476,7 +488,7 @@ async function cargarPostulaciones() {
 
     convocatorias.value = transformada;
 
-    console.log("data", convocatorias.value);
+    console.log("data", data);
   } catch (error) {
     console.error("Error al cargar postulaciones:", error);
   } finally {

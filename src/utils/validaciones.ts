@@ -3,6 +3,8 @@ import { jwtDecode } from "jwt-decode"; // ✅ correcto
 import CryptoJS from "crypto-js";
 import baseX from "base-x";
 import { Buffer } from "buffer";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 
 interface JwtPayload {
   exp: number;
@@ -258,12 +260,7 @@ export function formatearFechaHoy() {
 }
 
 export function FormatearFecha(fechaISO: any) {
-  return new Date(fechaISO).toLocaleString("es-CL", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "America/Santiago",
-  });
+  return dayjs(fechaISO).locale("es").format("D [de] MMMM [de] YYYY");
 }
 
 export function fechaFormateada(fechaISO: any) {

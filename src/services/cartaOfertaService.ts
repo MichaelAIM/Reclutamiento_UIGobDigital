@@ -50,7 +50,7 @@ export const eliminarCartaOferta = (id: number) => {
   return api.delete(`${baseURL}/${id}`);
 };
 
-export const listarCartasOfertas = async (estado: number) => {
+export const listarCartasOfertas = async (estado: string) => {
   let urlEstado = "";
   if (estado) {
     urlEstado = `?est=${estado}`;

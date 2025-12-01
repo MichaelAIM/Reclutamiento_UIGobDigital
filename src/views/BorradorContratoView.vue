@@ -18,7 +18,7 @@
         <strong>SERVICIO LOCAL DE EDUCACIÓN PÚBLICA DE CHINCHORRO</strong>
         , en adelante el Servicio Local, RUT N°
         <strong>62.000.660-2</strong>
-        , representado por su Directora Ejecutiva (s), doña
+        , representado por su {{ data.repCargo }}, don
         <div class="highlight-yellow p-1">
           <select
             v-model="data.repID"
@@ -189,23 +189,32 @@
         <div class="highlight-yellow p-1">
           <input
             v-model.number="data.sueldo"
-            type="number"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
             class="form-control form-control-sm inline-input"
           />
         </div>
-        ({{ data.sueldo_texto }}.-), por mes calendario, la que será liquidada y
-        pagada por períodos vencidos, en las oficinas del empleador, el día 30
-        de cada mes.
+        <strong> ({{ data.sueldo_texto }}.-)</strong>, por mes calendario, la
+        que será liquidada y pagada por períodos vencidos, en las oficinas del
+        empleador, el día 30 de cada mes.
       </div>
 
       <div class="contract-paragraph">
         <strong>QUINTO:</strong> El presente gasto será con cargo a
         <div class="highlight-yellow p-1">
-          <input
-            type="text"
+          <select
             v-model="data.quinto_fuente"
             class="form-control form-control-sm inline-input"
-          />.
+          >
+            <option
+              v-for="subvencion in subvenciones"
+              :key="subvencion.id"
+              :value="subvencion.nombre"
+            >
+              {{ subvencion.nombre }}
+            </option>
+          </select>
         </div>
       </div>
 
@@ -221,12 +230,14 @@
         hasta el
         <div class="highlight-yellow p-1">
           <input
-            type="text"
-            v-model="data.undecimo_termino"
+            type="date"
+            v-model="undecimoTermino"
             class="form-control form-control-sm inline-input"
+            @change="data.undecimo_termino = FormatearFecha(undecimoTermino)"
           />
         </div>
-        , y podrá ponérsele término cuando concurran para ello causas
+        <strong>{{ data.undecimo_termino }}</strong
+        >, y podrá ponérsele término cuando concurran para ello causas
         justificadas.
       </div>
 
@@ -307,7 +318,6 @@
           </table>
         </div>
       </div>
-
       <!-- Botones de control -->
       <div class="d-flex my-4 justify-content-center gap-3">
         <button
@@ -401,6 +411,27 @@ const data = reactive({
   undecimo_termino: "",
   decimo_motivo: "",
 });
+
+const subvenciones = ref([
+  {
+    id: 1,
+    nombre: " Subvención NORMAL",
+  },
+  {
+    id: 2,
+    nombre: " Subvención PIE",
+  },
+  {
+    id: 3,
+    nombre: " Subvención SEP",
+  },
+  {
+    id: 4,
+    nombre: " Subvención VTF - JUNJI",
+  },
+]);
+
+const undecimoTermino = ref("");
 
 const nombreMayus = computed(() => data.trabajadorNombre?.toUpperCase() || "");
 
