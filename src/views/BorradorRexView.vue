@@ -138,134 +138,6 @@
                   </div>
                 </td>
               </tr>
-
-              <tr class="bg-light">
-                <td>FUENTE DE FINANCIAMIENTO</td>
-                <td>HORAS</td>
-                <td>ASIGNATURA Y/O FUNCIÓN</td>
-              </tr>
-
-              <tr>
-                <td class="bg-light">A CONTRATA SUBV. NORMAL</td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="form-control form-control-sm"
-                      v-model="fields.horasContrata"
-                      placeholder=""
-                      aria-label="Horas contrata"
-                    >
-                    </textarea>
-                  </div>
-                </td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.funcionContrata"
-                    ></textarea>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>JORNADA ESCOLAR COMPLETA</td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.horasJornadaCompleta"
-                    ></textarea>
-                  </div>
-                </td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.funcionJornadaCompleta"
-                    ></textarea>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>SUBVENCIÓN PIE D.170</td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="form-control form-control-sm"
-                      v-model="fields.horasPieD170"
-                      placeholder=""
-                      aria-label="Horas PIE D.170"
-                    >
-                    </textarea>
-                  </div>
-                </td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="form-control form-control-sm"
-                      v-model="fields.funcionPie170"
-                      placeholder=""
-                      aria-label=""
-                    >
-                    </textarea>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>SUBVENCIÓN PIE</td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.horasPieGeneral"
-                    ></textarea>
-                  </div>
-                </td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.funcionPieGeneral"
-                    ></textarea>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>SUBVENCIÓN SEP</td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.horasSep"
-                    ></textarea>
-                  </div>
-                </td>
-                <td>
-                  <div class="highlight-yellow p-1 w-100">
-                    <textarea
-                      class="w-100 form-control form-control-sm"
-                      v-model="fields.funcionSep"
-                    ></textarea>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>TOTAL HORAS</td>
-                <td>
-                  <InputEditable
-                    v-model="fields.totalHoras"
-                    placeholder="Total horas"
-                    aria-label="Total horas"
-                  />
-                </td>
-                <td></td>
-              </tr>
-
               <tr>
                 <td>FECHA DE INICIO</td>
                 <td colspan="2">
@@ -323,6 +195,125 @@
                       <option value="1">CONTRATA</option>
                       <option value="2">TITULAR</option>
                     </select>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>TOTAL HORAS</td>
+                <td>
+                  <InputEditable
+                    v-model="fields.totalHoras"
+                    placeholder="Total horas"
+                    aria-label="Total horas"
+                  />
+                </td>
+                <td></td>
+              </tr>
+
+              <tr>
+                <td colspan="3">Distribución horaria</td>
+              </tr>
+
+              <tr>
+                <td colspan="3">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Fuente de financiamiento</th>
+                          <th>Nivel</th>
+                          <th>Horas</th>
+                          <th>Asignatura / Función</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(item, index) in fields.distribucion"
+                          :key="index"
+                        >
+                          <td>
+                            <select
+                              class="form-control form-control-sm"
+                              v-model="item.fuente"
+                              required
+                            >
+                              <option value="">Seleccione…</option>
+                              <option>A CONTRATA SUBV. NORMAL</option>
+                              <option>JORNADA ESCOLAR COMPLETA</option>
+                              <option>SUBVENCIÓN PIE D.170</option>
+                              <option>SUBVENCIÓN PIE</option>
+                              <option>SUBVENCIÓN SEP</option>
+                            </select>
+                          </td>
+                          <td>
+                            <select
+                              class="form-control form-control-sm"
+                              v-model="item.nivel"
+                              required
+                            >
+                              <option value="">Seleccione…</option>
+                              <option>Basica</option>
+                              <option>Media</option>
+                            </select>
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              class="form-control form-control-sm"
+                              v-model.number="item.horas"
+                              min="1"
+                              max="44"
+                              required
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              class="form-control form-control-sm"
+                              v-model="item.funcion"
+                              required
+                            />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-danger"
+                              @click="removeRow(index)"
+                            >
+                              Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-secondary"
+                    @click="addRow"
+                  >
+                    Agregar fila
+                  </button>
+
+                  <!-- Totales -->
+                  <div class="mt-3">
+                    <p>
+                      <strong>Total horas Básica:</strong>
+                      {{ totalHorasBasica }}
+                    </p>
+                    <p>
+                      <strong>Total horas Media:</strong>
+                      {{ totalHorasMedia }}
+                    </p>
+                    <p>
+                      <strong>Total horas Global:</strong>
+                      {{ totalHorasTotal }}
+                    </p>
+                    <small class="text-muted"
+                      >El total debe estar entre 1 y 44 horas.</small
+                    >
                   </div>
                 </td>
               </tr>
@@ -463,7 +454,13 @@ const isGeneratingPdf = ref(false);
 
 /* Editable "VISTO" */
 const vistoText = ref(
-  `La ley N°21.722 de Presupuestos del Sector Público para el año 2025; La ley N° 21.040 que crea el Sistema de Educación Pública; el Decreto con fuerza de ley N°39, de fecha 21 de Diciembre 2018, del Ministerio de Educación, que fija planta de personal del Servicio Local de Educación Pública de Chinchorro que comprende las comunas de Arica, Camarones, Putre y General Lagos y otras materias que indica; la Ley N° 18.575 Orgánica Constitucional de Bases Generales de la Administración del Estado; la Ley N°19.880 que establece Bases de los Procedimiento Administrativos; la Ley N° 18.834, sobre Estatuto Administrativo; la Resolución N° 06, de 2019 fija normas sobre exención del trámite de toma de razón de las materias de personal que indica; el Decreto N° 11 de 2021 que establece el orden de subrogancia de Director Ejecutivo; el Decreto Supremo N° 50 de 2024 que nombra Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro; y las, facultades que invisto como Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro;`
+  `La ley N°21.722 de Presupuestos del Sector Público para el año 2025; La ley N° 21.040 que crea el Sistema de Educación Pública; el Decreto con fuerza de ley N°39, 
+  de fecha 21 de Diciembre 2018, del Ministerio de Educación, que fija planta de personal del Servicio Local de Educación Pública de Chinchorro que 
+  comprende las comunas de Arica, Camarones, Putre y General Lagos y otras materias que indica; la Ley N° 18.575 Orgánica Constitucional de Bases Generales de la 
+  Administración del Estado; la Ley N°19.880 que establece Bases de los Procedimiento Administrativos; la Ley N° 18.834, sobre Estatuto Administrativo; la 
+  Resolución N° 06, de 2019 fija normas sobre exención del trámite de toma de razón de las materias de personal que indica; el Decreto N° 11 de 2021 que establece 
+  el orden de subrogancia de Director Ejecutivo; el Decreto Supremo N° 50 de 2024 que nombra Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro; 
+  y las, facultades que invisto como Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro;`
 );
 
 let nextId = 1;
@@ -474,11 +471,15 @@ function newId() {
 const considerandoList = ref([
   {
     id: newId(),
-    text: `Que, la Ley 19.070 en su artículo N°6 establece “La función docente es aquella de carácter profesional de nivel superior, que lleva a cabo directamente los procesos sistemáticos de enseñanza y educación, lo que incluye el diagnóstico, planificación, ejecución y evaluación de los mismos procesos y de las actividades educativas generales y complementarias que tienen lugar en las unidades educacionales de nivel parvulario, básico y medio”.`,
+    text: `Que, la Ley 19.070 en su artículo N°6 establece “La función docente es aquella de carácter profesional de nivel superior, que lleva a 
+    cabo directamente los procesos sistemáticos de enseñanza y educación, lo que incluye el diagnóstico, planificación, ejecución y evaluación de los mismos 
+    procesos y de las actividades educativas generales y complementarias que tienen lugar en las unidades educacionales de nivel parvulario, básico y medio”.`,
   },
   {
     id: newId(),
-    text: `Que, el Art. 22 de la ley 21.040 letra d establece que el director ejecutivo podrá “Contratar y designar, así como poner término a las funciones del personal del Servicio Local y de los profesionales de la educación, asistentes de la educación y otros profesionales de los establecimientos educacionales de su dependencia, de conformidad a la normativa vigente, según corresponda”.`,
+    text: `Que, el Art. 22 de la ley 21.040 letra d establece que el director ejecutivo podrá “Contratar y designar, así como poner término a las 
+    funciones del personal del Servicio Local y de los profesionales de la educación, asistentes de la educación y otros profesionales de los establecimientos 
+    educacionales de su dependencia, de conformidad a la normativa vigente, según corresponda”.`,
   },
 ]);
 
@@ -504,7 +505,71 @@ const fields = reactive({
   fechaInicio: "",
   fechaTermino: "28/02/2025",
   calidadJuridica: 1,
+  distribucion: [],
 });
+
+// ➕ Agregar una fila nueva
+function addRow() {
+  fields.distribucion.push({
+    fuente: "", // Ej: "A CONTRATA SUBV. NORMAL"
+    nivel: "", // "Basica" o "Media"
+    horas: 0, // Número de horas
+    funcion: "", // Asignatura o función
+  });
+}
+
+function updateNivel() {
+  let text = "";
+  if (totalHorasBasica.value > 0) {
+    text = `(${totalHorasBasica.value}) EDUCACIÓN BÁSICA`;
+  }
+  if (totalHorasMedia.value > 0) {
+    if (text.length > 0) {
+      text += "/";
+    }
+    text += ` (${totalHorasMedia.value}) EDUCACIÓN MEDIA`;
+  }
+  fields.nivel = text;
+}
+
+// ➖ Eliminar una fila por índice
+function removeRow(index) {
+  fields.distribucion.splice(index, 1);
+}
+
+// Totales calculados automáticamente
+const totalHorasBasica = computed(() =>
+  fields.distribucion
+    .filter((item) => item.nivel === "Basica")
+    .reduce((sum, item) => sum + (item.horas || 0), 0)
+);
+
+const totalHorasMedia = computed(() =>
+  fields.distribucion
+    .filter((item) => item.nivel === "Media")
+    .reduce((sum, item) => sum + (item.horas || 0), 0)
+);
+
+const totalHorasTotal = computed(
+  () => totalHorasBasica.value + totalHorasMedia.value
+);
+
+// Validación de la distribución
+function validarDistribucion() {
+  if (!fields.distribucion.length) {
+    return "Debe registrar al menos una fila en la distribución horaria.";
+  }
+  if (totalHorasTotal.value < 1 || totalHorasTotal.value > 44) {
+    return "El total de horas debe estar entre 1 y 44.";
+  }
+  const filaIncompleta = fields.distribucion.find(
+    (d) => !d.fuente || !d.nivel || !d.horas || !d.funcion
+  );
+  if (filaIncompleta) {
+    return "Complete todos los campos en cada fila (fuente, nivel, horas, función).";
+  }
+  return null; // Distribución válida
+}
 
 const tercerConsiderando = ref("");
 
@@ -558,42 +623,22 @@ function cambiarFirmante() {
 async function loadFromApi() {
   try {
     firmantes.value = await listarFirmantes();
-    await cambiarFirmante();
+    cambiarFirmante();
     const data = await obtenerCartaOfertaPorId(route.params.id);
-
-    console.log("res", data);
-    console.log("datas", data.Candidato.nombre_completo);
     fields.establecimiento = data.institucione.nombre.toUpperCase();
     fields.nombre = data.Candidato.nombre_completo.toUpperCase();
     fields.rut = data.Candidato.rut;
-    /*     fields.nivel = fields.nivel;
-    fields.horasContrata = data.horasContrata ?? fields.horasContrata;
-    fields.horasPieD170 = data.horasPieD170 ?? fields.horasPieD170;*/
     fields.totalHoras = data.horas_pactadas;
     fields.fechaInicio = formatDate(data.fecha_ingreso);
     considerandoList.value.push({
       id: newId(),
       text: `Que, con fecha ${FormatearFecha(
         data.fecha_ingreso
-      )}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional <b>${
+      )}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 
+      2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional ${
         fields.establecimiento
-      }</b>.`,
+      }.`,
     });
-    /*
-    fields.fechaTermino = data.fechaTermino ?? fields.fechaTermino; */
-
-    /* if (Array.isArray(data.considerandos) && data.considerandos.length) {
-      considerandoList.value = data.considerandos.map((t) => ({
-        id: newId(),
-        text: t,
-      }));
-    }
-    if (Array.isArray(data.distribucion) && data.distribucion.length) {
-      distribucionList.value = data.distribucion.map((t) => ({
-        id: newId(),
-        text: t,
-      }));
-    } */
   } catch (e) {
     console.warn("No se cargaron datos desde API, usando valores por defecto");
   }
@@ -610,6 +655,7 @@ onMounted(() => {
     alert("error");
   }
   loadFromApi();
+  addRow();
 });
 
 function addConsiderando() {
@@ -654,41 +700,12 @@ function onPdfError(error) {
   alert("Error al generar el PDF");
 }
 
-/* async function saveDraft() {
-  const payload = {
-    establecimiento: fields.establecimiento,
-    nombre: fields.nombre,
-    rut: fields.rut,
-    nivel: fields.nivel,
-    horasContrata: fields.horasContrata,
-    horasPieD170: fields.horasPieD170,
-    totalHoras: fields.totalHoras,
-    fechaInicio: fields.fechaInicio,
-    fechaTermino: fields.fechaTermino,
-    considerandos: considerandoList.value.map((c) => c.text),
-    distribucion: distribucionList.value.map((d) => d.text),
-    vistoText: vistoText.value,
-  };
-  try {
-    const res = await fetch(API_URL, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error("Save failed");
-    alert("Borrador guardado correctamente");
-  } catch (err) {
-    alert("No se pudo guardar el borrador");
-  }
-} */
-
 function resetFromApi() {
   loadFromApi();
 }
 </script>
 
 <style scoped>
-/* Highlights colores solicitados */
 .highlight-green {
   background: #d9f5d9;
   border-radius: 3px;

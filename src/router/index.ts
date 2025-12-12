@@ -20,6 +20,7 @@ import DocumentoRexView from "../views/DocumentoRex.vue";
 import ContratoAsistenteView from "../views/ContratoAsistenteView.vue";
 import BorradorContratoView from "../views/BorradorContratoView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import SolicitudesView from "../views/SolicitudesView.vue";
 
 import { useAuthStore } from "../store/authStore";
 import { isTokenExpired } from "../utils/validaciones";
@@ -134,6 +135,12 @@ const routes = [
     name: "convocatoriasView",
     component: ConvocatoriasView,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/solicitudesView",
+    name: "solicitudesView",
+    component: SolicitudesView,
+    meta: { requiresAuth: false },
   },
   {
     path: "/:pathMatch(.*)*",

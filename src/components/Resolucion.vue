@@ -96,43 +96,21 @@
                   <td class="cell-strong">ASIGNATURA Y/O FUNCIÓN</td>
                 </tr>
 
-                <tr>
-                  <td>A CONTRATA SUBV. NORMAL</td>
-                  <td class="cell-left">
-                    {{ props.data.horas }}
-                  </td>
-                  <td class="cell-left">DOCENTE</td>
+                <!-- Iterar sobre la distribución -->
+                <tr
+                  v-for="(item, index) in props.data.distribucion"
+                  :key="index"
+                  v-if="item.horas > 0"
+                >
+                  <td>{{ item.fuente }}</td>
+                  <td class="cell-left">{{ item.horas }}</td>
+                  <td class="cell-left">{{ item.funcion }}</td>
                 </tr>
 
-                <tr>
-                  <td>JORNADA ESCOLAR COMPLETA</td>
-                  <td>{{ props.data.jornada }}</td>
-                  <td>
-                    {{ props.data.asignatura }}
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>SUBVENCIÓN PIE D.170</td>
-                  <td>{{ props.data.subvencion_pie }}</td>
-                  <td>{{ props.data.asignatura }}</td>
-                </tr>
-
-                <tr>
-                  <td>SUBVENCIÓN PIE</td>
-                  <td>{{ props.data.subvencion_pie }}</td>
-                  <td>{{ props.data.asignatura }}</td>
-                </tr>
-
-                <tr>
-                  <td>SUBVENCIÓN SEP</td>
-                  <td>{{ props.data.subvencion_sep }}</td>
-                  <td>{{ props.data.asignatura }}</td>
-                </tr>
-
+                <!-- Fila de totales -->
                 <tr>
                   <td>TOTAL HORAS</td>
-                  <td class="cell-left">{{ props.data.total_horas }}</td>
+                  <td class="cell-left">{{ totalHoras }}</td>
                   <td></td>
                 </tr>
 
