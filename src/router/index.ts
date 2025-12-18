@@ -21,7 +21,7 @@ import ContratoAsistenteView from "../views/ContratoAsistenteView.vue";
 import BorradorContratoView from "../views/BorradorContratoView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import SolicitudesView from "../views/SolicitudesView.vue";
-
+import PrintRexView from "../components/Rex.vue";
 import { useAuthStore } from "../store/authStore";
 import { isTokenExpired } from "../utils/validaciones";
 
@@ -146,6 +146,12 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "not-found",
     component: NotFoundView,
+  },
+  {
+    path: "/print-rex/:id",
+    name: "print-rex",
+    component: PrintRexView,
+    meta: { requiresAuth: true },
   },
 ];
 

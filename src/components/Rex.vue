@@ -31,6 +31,7 @@
       <div class="section-title">VISTO:</div>
       <br />
       <div class="section-body">
+        <!-- Este debe ser dinámico (props) -->
         {{ props.data.visto }}
       </div>
     </section>
@@ -39,12 +40,11 @@
     <section class="mt-3">
       <div class="section-title">CONSIDERANDO:</div>
       <br />
-      <div
-        v-for="item in props.data.considerando"
-        :key="item"
-        class="section-body mb-2"
-      >
-        {{ item }}
+      <div class="section-body">
+        <!-- Este debe ser dinámico (props) en v-for-->
+        <div v-for="item in props.data.considerando" :key="item">
+          {{ item }}
+        </div>
       </div>
     </section>
 
@@ -54,7 +54,7 @@
       <div class="section-title">RESUELVO:</div>
       <br />
       <ol class="resoluciones-list">
-        <li>
+        <li class="mb-2">
           <span class="font-weight-bold">NÓMBRESE</span>, al profesional de la
           educación que cumplirá funciones docentes que se indican a
           continuación:
@@ -96,24 +96,45 @@
                   <td class="cell-strong">ASIGNATURA Y/O FUNCIÓN</td>
                 </tr>
 
-                <!-- Iterar sobre la distribución -->
-                <tr
-                  v-for="(item, index) in props.data.distribucion"
-                  :key="index"
-                >
-                  <td v-if="item.horas > 0">{{ item.fuente }}</td>
-                  <td v-if="item.horas > 0" class="cell-left">
-                    {{ item.horas }}
+                <tr>
+                  <td>A CONTRATA SUBV. NORMAL</td>
+                  <td class="cell-left">
+                    {{ props.data.horas }}
                   </td>
-                  <td v-if="item.horas > 0" class="cell-left">
-                    {{ item.funcion }}
+                  <td class="cell-left">DOCENTE</td>
+                </tr>
+
+                <tr>
+                  <td>JORNADA ESCOLAR COMPLETA</td>
+                  <td>{{ props.data.jornada }}</td>
+                  <td>
+                    {{ props.data.asignatura }}
                   </td>
                 </tr>
 
-                <!-- Fila de totales -->
+                <tr>
+                  <td>SUBVENCIÓN PIE D.170</td>
+                  <td>{{ props.data.subvencion_pie }}</td>
+                  <td>{{ props.data.asignatura }}</td>
+                </tr>
+
+                <tr>
+                  <td>SUBVENCIÓN PIE</td>
+                  <td>{{ props.data.subvencion_pie }}</td>
+                  <td>{{ props.data.asignatura }}</td>
+                </tr>
+
+                <tr>
+                  <td>SUBVENCIÓN SEP</td>
+                  <td>{{ props.data.subvencion_sep }}</td>
+                  <td>{{ props.data.asignatura }}</td>
+                </tr>
+
                 <tr>
                   <td>TOTAL HORAS</td>
-                  <td class="cell-left">{{ totalHoras }}</td>
+                  <td class="cell-left">
+                    {{ props.data.total_horas }}
+                  </td>
                   <td></td>
                 </tr>
 
@@ -258,31 +279,10 @@ function getImageDataUrl(imgElement) {
 }
 
 // Generar y descargar PDF
-async function generateAndDownloadPDF(
-  filename = `Rex_${new Date().getFullYear()}_${props.data.nombre}.pdf`
-) {
-  console.log("Iniciando generación de PDF...");
+async function generateAndDownloadPDF(filename = "Resolucion.pdf") {
+  if (!resolucionRef.value) return;
 
-  // Capturar el elemento inmediatamente en una variable local
-  const element = resolucionRef.value;
-
-  console.log("element:", element);
-
-  if (!element) {
-    console.error("element es null o undefined");
-    return;
-  }
-
-  if (!(element instanceof HTMLElement)) {
-    console.error("element no es un elemento HTML válido");
-    return;
-  }
-
-  console.log("element.innerHTML length:", element.innerHTML?.length);
-  console.log("element.offsetWidth:", element.offsetWidth);
-  console.log("element.offsetHeight:", element.offsetHeight);
-
-  await waitForImages(element);
+  await waitForImages(resolucionRef.value);
   await new Promise((r) => setTimeout(r, 250));
 
   const opt = {
@@ -295,16 +295,16 @@ async function generateAndDownloadPDF(
       logging: false,
       scrollY: 0,
     },
-    jsPDF: { unit: "mm", format: [216, 330], orientation: "portrait" },
+    jsPDF: {
+      unit: "mm",
+      format: [216, 330],
+      orientation: "portrait",
+    },
     pagebreak: { mode: ["css", "legacy"] },
   };
 
-  console.log("Configuración de html2pdf:", opt);
-
   try {
-    // Intentar pasar el elemento directamente
-    console.log("Intentando generar PDF con html2pdf...");
-    const worker = html2pdf().set(opt).from(element);
+    const worker = html2pdf().set(opt).from(resolucionRef.value);
     const pdf = await worker.toPdf().get("pdf");
 
     // Obtener el número total de páginas
@@ -382,15 +382,6 @@ function getImageDataUrlFromImport(imagePath) {
 onMounted(async () => {
   if (autoDownloaded.value) return;
   autoDownloaded.value = true;
-});
-
-function generatePDF() {
-  generateAndDownloadPDF();
-}
-
-// Exponer la función para que el componente padre pueda llamarla
-defineExpose({
-  generatePDF,
 });
 </script>
 
@@ -541,6 +532,7 @@ defineExpose({
   margin-top: 2px;
 }
 .signature-block .sign-entity {
+  font-size: 12px;
   font-size: 12px;
   color: #000;
 }
