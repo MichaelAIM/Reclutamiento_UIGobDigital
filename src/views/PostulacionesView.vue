@@ -80,7 +80,6 @@
                 >
                   <i class="bi bi-archive-fill text-warning"></i>
                 </button>
-                {{ c.convocatoria }}
                 <button
                   v-if="c.convocatoria.estado_id > 3"
                   @click="verCartaoferta(c.convocatoria.cartaOferta)"

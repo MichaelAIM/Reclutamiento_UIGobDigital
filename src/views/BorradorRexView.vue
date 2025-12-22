@@ -487,7 +487,6 @@ const fields = reactive({
   establecimiento: "",
   nombre: "",
   rut: "",
-  nivel: "",
   horasContrata: null,
   funcionContrata: "DOCENTE",
   firmanteId: 1,
@@ -500,7 +499,7 @@ const fields = reactive({
   distribucion: [],
 });
 
-// ➕ Agregar una fila nueva
+// Agregar una fila nueva
 function addRow() {
   fields.distribucion.push({
     fuente: "", // Ej: "A CONTRATA SUBV. NORMAL"
@@ -521,10 +520,10 @@ function updateNivel() {
     }
     text += ` (${totalHorasMedia.value}) EDUCACIÓN MEDIA`;
   }
-  fields.nivel = text;
+  return text;
 }
 
-// ➖ Eliminar una fila por índice
+// Eliminar una fila por índice
 function removeRow(index) {
   fields.distribucion.splice(index, 1);
 }
@@ -579,16 +578,16 @@ const pdfData = computed(() => ({
   establecimiento: fields.establecimiento,
   nombre: fields.nombre,
   rut: fields.rut,
-  nivel_ensenanza: fields.nivel,
+  nivel_ensenanza: updateNivel(),
   horas: fields.horasContrata,
   funcion: fields.funcionContrata,
-  horas_pie: fields.horasPieGeneral,
-  total_horas: fields.totalHoras,
+  total_horas: totalHorasTotal.value,
   fecha_inicio: fields.fechaInicio,
   fecha_termino: fields.fechaTermino,
   sign_name: fields.firmanteNombre,
   sign_role: fields.firmanteCargo,
-  distribution: fields.distribucion,
+  distribucion_horaria: fields.distribucion,
+  distribution: distribucionList.value,
 }));
 
 const firmantes = ref(null);
@@ -654,11 +653,19 @@ function addDistribucion() {
 function removeDistribucion(i) {
   distribucionList.value.splice(i, 1);
 }
-
 async function GeneratePDF(params) {
   isGeneratingPdf.value = true;
   showPdfComponent.value = true;
   autoGeneratePdf.value = true;
+
+  if (totalHorasTotal.value != fields.totalHoras) {
+    swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "La distribución horaria no coincide con las horas pactadas",
+    });
+    return;
+  }
 
   // Esperar a que Vue renderice el componente
   await nextTick();
@@ -674,7 +681,6 @@ async function GeneratePDF(params) {
   showPdfComponent.value = false;
   autoGeneratePdf.value = false;
 }
-
 function onPdfGenerated() {
   console.log("PDF generado exitosamente");
 }

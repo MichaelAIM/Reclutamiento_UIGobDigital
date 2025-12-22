@@ -31,7 +31,6 @@
       <div class="section-title">VISTO:</div>
       <br />
       <div class="section-body">
-        <!-- Este debe ser dinámico (props) -->
         {{ props.data.visto }}
       </div>
     </section>
@@ -40,11 +39,12 @@
     <section class="mt-3">
       <div class="section-title">CONSIDERANDO:</div>
       <br />
-      <div class="section-body">
-        <!-- Este debe ser dinámico (props) en v-for-->
-        <div v-for="item in props.data.considerando" :key="item">
-          {{ item }}
-        </div>
+      <div
+        v-for="item in props.data.considerando"
+        :key="item"
+        class="section-body"
+      >
+        {{ item }}
       </div>
     </section>
 
@@ -532,7 +532,6 @@ onMounted(async () => {
   margin-top: 2px;
 }
 .signature-block .sign-entity {
-  font-size: 12px;
   font-size: 12px;
   color: #000;
 }

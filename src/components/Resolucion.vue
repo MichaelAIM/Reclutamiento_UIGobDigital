@@ -30,7 +30,7 @@
       <br />
       <div class="section-title">VISTO:</div>
       <br />
-      <div class="section-body">
+      <div class="section-body text-justify">
         {{ props.data.visto }}
       </div>
     </section>
@@ -42,7 +42,7 @@
       <div
         v-for="item in props.data.considerando"
         :key="item"
-        class="section-body mb-2"
+        class="section-body mb-2 text-justify"
       >
         {{ item }}
       </div>
@@ -54,7 +54,7 @@
       <div class="section-title">RESUELVO:</div>
       <br />
       <ol class="resoluciones-list">
-        <li>
+        <li class="mb-2">
           <span class="font-weight-bold">NÓMBRESE</span>, al profesional de la
           educación que cumplirá funciones docentes que se indican a
           continuación:
@@ -95,10 +95,9 @@
                   <td class="cell-strong">HORAS</td>
                   <td class="cell-strong">ASIGNATURA Y/O FUNCIÓN</td>
                 </tr>
-
                 <!-- Iterar sobre la distribución -->
                 <tr
-                  v-for="(item, index) in props.data.distribucion"
+                  v-for="(item, index) in props.data.distribucion_horaria"
                   :key="index"
                 >
                   <td v-if="item.horas > 0">{{ item.fuente }}</td>
