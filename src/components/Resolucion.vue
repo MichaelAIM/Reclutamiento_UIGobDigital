@@ -19,7 +19,10 @@
           <div class="entity my-3">RESOLUCIÓN EXENTA</div>
           <div class="entity mt-2">
             NÓMBRESE AL PROFESIONAL DE LA EDUCACIÓN PARA CUMPLIR LABORES
-            DOCENTES A CONTRATA.
+            DOCENTES
+            {{
+              props.data.tipo_vacante_id == 1 ? "A CONTRATO" : "POR REEMPLAZO"
+            }}
           </div>
         </div>
       </div>
@@ -67,22 +70,26 @@
                     {{ props.data.establecimiento }}
                   </td>
                 </tr>
+
                 <tr>
                   <td>NOMBRE</td>
                   <td colspan="2" class="cell-left">
                     {{ props.data.nombre }}
                   </td>
                 </tr>
+
                 <tr>
                   <td>RUT</td>
                   <td colspan="2" class="cell-left">
                     {{ props.data.rut }}
                   </td>
                 </tr>
+
                 <tr>
                   <td class="cell-strong">TIPO DE FUNCIÓN</td>
                   <td colspan="2" class="cell-left">DOCENTE</td>
                 </tr>
+
                 <tr>
                   <td>NIVEL O MODALIDAD ENSEÑANZA</td>
                   <td colspan="2" class="cell-left">
@@ -102,7 +109,7 @@
                 >
                   <td v-if="item.horas > 0">{{ item.fuente }}</td>
                   <td v-if="item.horas > 0" class="cell-left">
-                    {{ item.horas }}
+                    {{ `${item.horas} horas ${item.nivel}` }}
                   </td>
                   <td v-if="item.horas > 0" class="cell-left">
                     {{ item.funcion }}
@@ -112,8 +119,9 @@
                 <!-- Fila de totales -->
                 <tr>
                   <td>TOTAL HORAS</td>
-                  <td class="cell-left">{{ totalHoras }}</td>
-                  <td></td>
+                  <td colspan="2" class="cell-left">
+                    {{ props.data.total_horas }}
+                  </td>
                 </tr>
 
                 <tr>
@@ -176,7 +184,7 @@
         <div class="dist-title">DISTRIBUCIÓN:</div>
         <ul class="dist-list mb-0">
           <li v-for="item in props.data.distribution" :key="item.id">
-            {{ item.name }}
+            {{ item.text }}
           </li>
           <!-- Este debe ser dinámico (props) en v-for -->
         </ul>
@@ -505,7 +513,6 @@ defineExpose({
 .table-head td,
 .table-head th {
   font-weight: 700;
-  text-align: center;
 }
 .table-bordered td,
 .table-bordered th {

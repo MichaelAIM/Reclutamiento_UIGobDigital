@@ -1,5 +1,12 @@
 <template>
   <div class="container my-4">
+    <h1>
+      {{
+        fields.tipo_vacante_id == 1
+          ? "Nueva Contratación"
+          : "Reemplazo de Contratación"
+      }}
+    </h1>
     <div class="card p-3">
       <!-- Body -->
       <section>
@@ -122,21 +129,7 @@
 
               <tr>
                 <td class="bg-light">TIPO DE FUNCIÓN</td>
-                <td colspan="2">DOCENTE</td>
-              </tr>
-
-              <tr>
-                <td class="bg-light">NIVEL O MODALIDAD ENSEÑANZA</td>
-                <td colspan="2">
-                  <div class="highlight-yellow p-1 w-100">
-                    <input
-                      class="form-control form-control-sm"
-                      v-model="fields.nivel"
-                      placeholder="(4) EDUCACIÓN BÁSICA/ (40) EDUCACIÓN MEDIA"
-                      aria-label="Nivel o modalidad"
-                    />
-                  </div>
-                </td>
+                <td colspan="2">{{ fields.funcionContrato }}</td>
               </tr>
               <tr>
                 <td>FECHA DE INICIO</td>
@@ -210,115 +203,107 @@
                 </td>
                 <td></td>
               </tr>
-
-              <tr>
-                <td colspan="3">Distribución horaria</td>
-              </tr>
-
-              <tr>
-                <td colspan="3">
-                  <div class="table-responsive">
-                    <table class="table table-bordered">
-                      <thead class="thead-light">
-                        <tr>
-                          <th>Fuente de financiamiento</th>
-                          <th>Nivel</th>
-                          <th>Horas</th>
-                          <th>Asignatura / Función</th>
-                          <th>Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr
-                          v-for="(item, index) in fields.distribucion"
-                          :key="index"
-                        >
-                          <td>
-                            <select
-                              class="form-control form-control-sm"
-                              v-model="item.fuente"
-                              required
-                            >
-                              <option value="">Seleccione…</option>
-                              <option>A CONTRATA SUBV. NORMAL</option>
-                              <option>JORNADA ESCOLAR COMPLETA</option>
-                              <option>SUBVENCIÓN PIE D.170</option>
-                              <option>SUBVENCIÓN PIE</option>
-                              <option>SUBVENCIÓN SEP</option>
-                            </select>
-                          </td>
-                          <td>
-                            <select
-                              class="form-control form-control-sm"
-                              v-model="item.nivel"
-                              required
-                            >
-                              <option value="">Seleccione…</option>
-                              <option>Basica</option>
-                              <option>Media</option>
-                            </select>
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              class="form-control form-control-sm"
-                              v-model.number="item.horas"
-                              min="1"
-                              max="44"
-                              required
-                            />
-                          </td>
-                          <td>
-                            <input
-                              type="text"
-                              class="form-control form-control-sm"
-                              v-model="item.funcion"
-                              required
-                            />
-                          </td>
-                          <td>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-danger"
-                              @click="removeRow(index)"
-                            >
-                              Eliminar
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-secondary"
-                    @click="addRow"
-                  >
-                    Agregar fila
-                  </button>
-
-                  <!-- Totales -->
-                  <div class="mt-3">
-                    <p>
-                      <strong>Total horas Básica:</strong>
-                      {{ totalHorasBasica }}
-                    </p>
-                    <p>
-                      <strong>Total horas Media:</strong>
-                      {{ totalHorasMedia }}
-                    </p>
-                    <p>
-                      <strong>Total horas Global:</strong>
-                      {{ totalHorasTotal }}
-                    </p>
-                    <small class="text-muted"
-                      >El total debe estar entre 1 y 44 horas.</small
-                    >
-                  </div>
-                </td>
-              </tr>
             </tbody>
           </table>
+          <!-- <div class="font-weight-bold">RESUELVO:</div> -->
+          <div class="small text-muted mb-2">2. Distribución horaria:</div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="thead-light">
+                <tr>
+                  <th>Fuente de financiamiento</th>
+                  <th>Nivel</th>
+                  <th>Horas</th>
+                  <th>Asignatura / Función</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in fields.distribucion" :key="index">
+                  <td>
+                    <select
+                      class="form-control form-control-sm"
+                      v-model="item.fuente"
+                      required
+                    >
+                      <option value="">Seleccione…</option>
+                      <option>A CONTRATA SUBV. NORMAL</option>
+                      <option>JORNADA ESCOLAR COMPLETA</option>
+                      <option>SUBVENCIÓN PIE D.170</option>
+                      <option>SUBVENCIÓN PIE</option>
+                      <option>SUBVENCIÓN SEP</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      class="form-control form-control-sm"
+                      v-model="item.nivel"
+                      required
+                    >
+                      <option value="">Seleccione…</option>
+                      <option>Basica</option>
+                      <option>Media</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control form-control-sm"
+                      v-model.number="item.horas"
+                      min="1"
+                      max="44"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      v-model="item.funcion"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      @click="removeRow(index)"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-sm btn-secondary"
+            @click="addRow"
+          >
+            Agregar fila
+          </button>
+
+          <!-- Totales -->
+          <div class="mt-3">
+            <p>
+              <strong>Total horas Básica:</strong>
+              {{ totalHorasBasica }}
+            </p>
+            <p>
+              <strong>Total horas Media:</strong>
+              {{ totalHorasMedia }}
+            </p>
+            <p>
+              <strong>Total horas Global:</strong>
+              {{ totalHorasTotal }}
+            </p>
+            <small class="text-muted"
+              >El total debe estar entre 1 y 44 horas.</small
+            >
+          </div>
         </div>
 
         <!-- Párrafos estáticos -->
@@ -404,7 +389,7 @@
 
           <button
             class="btn btn-outline-secondary"
-            @click="resetFromApi"
+            @click="loadFromApi"
             type="button"
           >
             Recargar desde API
@@ -443,6 +428,7 @@ import {
 } from "../services/cartaOfertaService";
 import { formatDate, FormatearFecha } from "../utils/validaciones";
 import ResolucionPDF from "../components/Resolucion.vue";
+import swal from "sweetalert2";
 
 const showPdfComponent = ref(false);
 const autoGeneratePdf = ref(true);
@@ -454,13 +440,7 @@ const isGeneratingPdf = ref(false);
 
 /* Editable "VISTO" */
 const vistoText = ref(
-  `La ley N°21.722 de Presupuestos del Sector Público para el año 2025; La ley N° 21.040 que crea el Sistema de Educación Pública; el Decreto con fuerza de ley N°39, 
-  de fecha 21 de Diciembre 2018, del Ministerio de Educación, que fija planta de personal del Servicio Local de Educación Pública de Chinchorro que 
-  comprende las comunas de Arica, Camarones, Putre y General Lagos y otras materias que indica; la Ley N° 18.575 Orgánica Constitucional de Bases Generales de la 
-  Administración del Estado; la Ley N°19.880 que establece Bases de los Procedimiento Administrativos; la Ley N° 18.834, sobre Estatuto Administrativo; la 
-  Resolución N° 06, de 2019 fija normas sobre exención del trámite de toma de razón de las materias de personal que indica; el Decreto N° 11 de 2021 que establece 
-  el orden de subrogancia de Director Ejecutivo; el Decreto Supremo N° 50 de 2024 que nombra Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro; 
-  y las, facultades que invisto como Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro;`
+  `La ley N°21.722 de Presupuestos del Sector Público para el año 2025; La ley N° 21.040 que crea el Sistema de Educación Pública; el Decreto con fuerza de ley N°39,de fecha 21 de Diciembre 2018, del Ministerio de Educación, que fija planta de personal del Servicio Local de Educación Pública de Chinchorro que comprende las comunas de Arica, Camarones, Putre y General Lagos y otras materias que indica; la Ley N° 18.575 Orgánica Constitucional de Bases Generales de la Administración del Estado; la Ley N°19.880 que establece Bases de los Procedimiento Administrativos; la Ley N° 18.834, sobre Estatuto Administrativo; la Resolución N° 06, de 2019 fija normas sobre exención del trámite de toma de razón de las materias de personal que indica; el Decreto N° 11 de 2021 que establece el orden de subrogancia de Director Ejecutivo; el Decreto Supremo N° 50 de 2024 que nombra Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro; y las, facultades que invisto como Director Ejecutivo del Servicio Local de Educación Pública de Chinchorro;`
 );
 
 let nextId = 1;
@@ -471,15 +451,11 @@ function newId() {
 const considerandoList = ref([
   {
     id: newId(),
-    text: `Que, la Ley 19.070 en su artículo N°6 establece “La función docente es aquella de carácter profesional de nivel superior, que lleva a 
-    cabo directamente los procesos sistemáticos de enseñanza y educación, lo que incluye el diagnóstico, planificación, ejecución y evaluación de los mismos 
-    procesos y de las actividades educativas generales y complementarias que tienen lugar en las unidades educacionales de nivel parvulario, básico y medio”.`,
+    text: `Que, la Ley 19.070 en su artículo N°6 establece “La función docente es aquella de carácter profesional de nivel superior, que lleva a cabo directamente los procesos sistemáticos de enseñanza y educación, lo que incluye el diagnóstico, planificación, ejecución y evaluación de los mismos procesos y de las actividades educativas generales y complementarias que tienen lugar en las unidades educacionales de nivel parvulario, básico y medio”.`,
   },
   {
     id: newId(),
-    text: `Que, el Art. 22 de la ley 21.040 letra d establece que el director ejecutivo podrá “Contratar y designar, así como poner término a las 
-    funciones del personal del Servicio Local y de los profesionales de la educación, asistentes de la educación y otros profesionales de los establecimientos 
-    educacionales de su dependencia, de conformidad a la normativa vigente, según corresponda”.`,
+    text: `Que, el Art. 22 de la ley 21.040 letra d establece que el director ejecutivo podrá “Contratar y designar, así como poner término a las funciones del personal del Servicio Local y de los profesionales de la educación, asistentes de la educación y otros profesionales de los establecimientos educacionales de su dependencia, de conformidad a la normativa vigente, según corresponda”.`,
   },
 ]);
 
@@ -488,7 +464,7 @@ const fields = reactive({
   nombre: "",
   rut: "",
   horasContrata: null,
-  funcionContrata: "DOCENTE",
+  funcionContrato: "",
   firmanteId: 1,
   firmanteRut: "",
   firmanteCargo: "",
@@ -496,16 +472,20 @@ const fields = reactive({
   fechaInicio: "",
   fechaTermino: "28/02/2025",
   calidadJuridica: 1,
+  tipo_vacante_id: 0,
   distribucion: [],
 });
 
 // Agregar una fila nueva
-function addRow() {
+function addRow(funcion = "") {
+  if (typeof funcion === "object") {
+    funcion = "";
+  }
   fields.distribucion.push({
     fuente: "", // Ej: "A CONTRATA SUBV. NORMAL"
     nivel: "", // "Basica" o "Media"
     horas: 0, // Número de horas
-    funcion: "", // Asignatura o función
+    funcion: funcion || "", // Asignatura o función
   });
 }
 
@@ -580,12 +560,14 @@ const pdfData = computed(() => ({
   rut: fields.rut,
   nivel_ensenanza: updateNivel(),
   horas: fields.horasContrata,
-  funcion: fields.funcionContrata,
+  funcion: fields.funcionContrato,
   total_horas: totalHorasTotal.value,
   fecha_inicio: fields.fechaInicio,
   fecha_termino: fields.fechaTermino,
   sign_name: fields.firmanteNombre,
   sign_role: fields.firmanteCargo,
+  tipo_vacante_id: fields.tipo_vacante_id,
+  calidad_juridica: fields.calidadJuridica,
   distribucion_horaria: fields.distribucion,
   distribution: distribucionList.value,
 }));
@@ -608,20 +590,23 @@ async function loadFromApi() {
     firmantes.value = await listarFirmantes();
     cambiarFirmante();
     const data = await obtenerCartaOfertaPorId(route.params.id);
+    console.log(data);
     fields.establecimiento = data.institucione.nombre.toUpperCase();
     fields.nombre = data.Candidato.nombre_completo.toUpperCase();
     fields.rut = data.Candidato.rut;
     fields.totalHoras = data.horas_pactadas;
+    fields.tipo_vacante_id = data.Convocatorium.tipo_vacante_id;
     fields.fechaInicio = formatDate(data.fecha_ingreso);
+    fields.funcionContrato = data.cargo.nombre.toUpperCase();
     considerandoList.value.push({
       id: newId(),
       text: `Que, con fecha ${FormatearFecha(
         data.fecha_ingreso
-      )}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 
-      2025, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional ${
+      )}, la Subdirección de Apoyo Técnico y Pedagógico remite a la Subdirección de Gestión y Desarrollo de Personas, planilla de distribución horaria año escolar 2026, insumo necesario para gestionar nombramientos de profesionales de la educación del establecimiento educacional ${
         fields.establecimiento
       }.`,
     });
+    addRow(data.cargo.nombre.toUpperCase());
   } catch (e) {
     console.warn("No se cargaron datos desde API, usando valores por defecto");
   }
@@ -638,7 +623,6 @@ onMounted(() => {
     alert("error");
   }
   loadFromApi();
-  addRow();
 });
 
 function addConsiderando() {
@@ -664,6 +648,9 @@ async function GeneratePDF(params) {
       title: "Error",
       text: "La distribución horaria no coincide con las horas pactadas",
     });
+    showPdfComponent.value = false;
+    autoGeneratePdf.value = false;
+    isGeneratingPdf.value = false;
     return;
   }
 
@@ -684,14 +671,9 @@ async function GeneratePDF(params) {
 function onPdfGenerated() {
   console.log("PDF generado exitosamente");
 }
-
 function onPdfError(error) {
   console.error("Error al generar PDF:", error);
   alert("Error al generar el PDF");
-}
-
-function resetFromApi() {
-  loadFromApi();
 }
 </script>
 

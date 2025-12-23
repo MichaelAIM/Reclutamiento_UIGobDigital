@@ -39,7 +39,6 @@
               >
                 <i class="bi bi-eye"></i>
               </button>
-              {{ c.cargo }}
               <button
                 v-if="c.estado_carta_ofertum.id === 3"
                 class="btn btn-sm btn-outline-primary me-1"
